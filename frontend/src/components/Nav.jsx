@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDemoModal } from '@/context/DemoModalContext';
-import DuodataMark from '@/components/DuodataMark';
+import { DuodataFullLogo } from '@/components/DuodataMark';
 
 const navLinks = [
   { label: 'Product', href: '/#product', type: 'anchor' },
@@ -13,9 +13,8 @@ const navLinks = [
 ];
 
 const Logo = () => (
-  <Link to="/" className="flex items-center gap-2">
-    <DuodataMark size={22} />
-    <span className="font-semibold text-[16px] tracking-tight text-slate-900">Duodata</span>
+  <Link to="/" className="flex items-center">
+    <DuodataFullLogo height={22} />
   </Link>
 );
 

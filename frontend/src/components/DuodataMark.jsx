@@ -1,50 +1,62 @@
 import React from 'react';
 
+// Official Duodata logo asset (CDN-hosted)
+export const DUODATA_LOGO_URL =
+  'https://customer-assets-0z36b82j.emergentagent.net/job_duodata-metrics/artifacts/4g4xfpik_Logo.png';
+
 /**
- * Duodata brand mark.
- * Two interlocking rounded capsules forming a stylised S:
- *   - Top-left capsule: deep royal blue (#1E5FEE)
- *   - Bottom-right capsule: bright cyan   (#22D3EE)
- * A thin white arc between them creates the interlock illusion.
+ * DuodataMark
+ * Renders ONLY the blue+cyan "S" symbol portion of the logo image
+ * by scaling the image to a fixed height and clipping to a square container.
+ * Works on both light and dark backgrounds because the mark is a
+ * self-contained coloured graphic.
  */
-const DuodataMark = ({ size = 24, className = '' }) => {
-  const h = Math.round(size * (72 / 64));
+const DuodataMark = ({ size = 28, className = '' }) => {
+  // The S mark occupies roughly the left ~22% of the source image.
+  // We render the image at `height = size` (scaling width proportionally)
+  // and clip the container to `size x size` so only the mark shows.
   return (
-    <svg
-      width={size}
-      height={h}
-      viewBox="0 0 64 72"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <div
       className={className}
+      style={{
+        width: size,
+        height: size,
+        overflow: 'hidden',
+        flexShrink: 0,
+        display: 'inline-block',
+      }}
       aria-label="Duodata"
+      role="img"
     >
-      {/* Bottom cyan capsule (rendered first) */}
-      <rect x="12" y="32" width="50" height="38" rx="19" ry="19" fill="#22D3EE" />
-      {/* Top blue capsule */}
-      <rect x="2" y="2" width="50" height="38" rx="19" ry="19" fill="#1E5FEE" />
-      {/* White interlock arc where the two lobes cross */}
-      <path
-        d="M 12 32 Q 32 32 32 42 Q 32 52 52 40"
-        stroke="#ffffff"
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
+      <img
+        src={DUODATA_LOGO_URL}
+        alt=""
+        style={{
+          height: size,
+          width: 'auto',
+          maxWidth: 'none',
+          display: 'block',
+          objectFit: 'contain',
+        }}
+        draggable={false}
       />
-    </svg>
+    </div>
   );
 };
 
-export const DuodataLogo = ({ size = 22, textClass = 'text-slate-900' }) => (
-  <div className="flex items-center gap-2">
-    <DuodataMark size={size} />
-    <span
-      className={`font-semibold tracking-tight ${textClass}`}
-      style={{ fontSize: Math.round(size * 0.72) }}
-    >
-      Duodata
-    </span>
-  </div>
+/**
+ * DuodataFullLogo
+ * Renders the complete brand lockup image (mark + wordmark).
+ * Use only on light backgrounds \u2014 the wordmark is black.
+ */
+export const DuodataFullLogo = ({ height = 26, className = '' }) => (
+  <img
+    src={DUODATA_LOGO_URL}
+    alt="Duodata"
+    className={className}
+    style={{ height, width: 'auto', display: 'block' }}
+    draggable={false}
+  />
 );
 
 export default DuodataMark;
