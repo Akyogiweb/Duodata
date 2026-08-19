@@ -148,6 +148,7 @@ class SliceModel(BaseModel):
     owner: Optional[str] = None
     source: Optional[str] = None
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    history: List[dict] = Field(default_factory=list)
 
 
 class SliceCreate(BaseModel):
@@ -198,6 +199,12 @@ async def create_slice(payload: SliceCreate):
         tag=payload.tag,
         owner=payload.owner,
         source=payload.source,
+        history=[{
+            "action": "created",
+            "by": payload.owner or "system",
+            "at": datetime.now(timezone.utc).isoformat(),
+            "details": f"Slice created with status {status}",
+        }],
     )
     doc = obj.model_dump()
     doc['updated_at'] = doc['updated_at'].isoformat()
@@ -205,13 +212,80 @@ async def create_slice(payload: SliceCreate):
     return obj
 
 
+class BulkImportItem(BaseModel):
+    name: str
+    status: Optional[str] = "Proposed"
+    tag: Optional[str] = None
+    owner: Optional[str] = None
+    source: Optional[str] = None
+
+
+class BulkImportPayload(BaseModel):
+    items: List[BulkImportItem]
+    default_status: Optional[str] = "Proposed"
+
+
+@api_router.post("/slices/bulk")
+async def bulk_import_slices(payload: BulkImportPayload):
+    default_status = payload.default_status if payload.default_status in ALLOWED_STATUSES else "Proposed"
+    created = 0
+    skipped = 0
+    now_iso = datetime.now(timezone.utc).isoformat()
+    for item in payload.items:
+        name = (item.name or "").strip()
+        if not name:
+            skipped += 1
+            continue
+        status = item.status if item.status in ALLOWED_STATUSES else default_status
+        obj = SliceModel(
+            name=name,
+            status=status,
+            tag=item.tag,
+            owner=item.owner,
+            source=item.source,
+            history=[{
+                "action": "imported",
+                "by": item.owner or "bulk-import",
+                "at": now_iso,
+                "details": f"Imported via bulk with status {status}",
+            }],
+        )
+        doc = obj.model_dump()
+        doc['updated_at'] = doc['updated_at'].isoformat()
+        await db.slices.insert_one(doc)
+        created += 1
+    return {"created": created, "skipped": skipped}
+
+
 @api_router.patch("/slices/{slice_id}", response_model=SliceModel)
 async def update_slice(slice_id: str, payload: SliceUpdate):
     updates = {k: v for k, v in payload.model_dump().items() if v is not None}
     if 'status' in updates and updates['status'] not in ALLOWED_STATUSES:
         updates.pop('status')
-    updates['updated_at'] = datetime.now(timezone.utc).isoformat()
-    await db.slices.update_one({"id": slice_id}, {"$set": updates})
+    existing = await db.slices.find_one({"id": slice_id}, {"_id": 0})
+    now_iso = datetime.now(timezone.utc).isoformat()
+    updates['updated_at'] = now_iso
+
+    # Compute history entries for changed fields
+    history_events = []
+    if existing:
+        for k, v in updates.items():
+            if k in ('updated_at',):
+                continue
+            prev = existing.get(k)
+            if prev != v:
+                history_events.append({
+                    "action": f"updated_{k}",
+                    "by": existing.get('owner') or "system",
+                    "at": now_iso,
+                    "details": f"{k}: {prev} \u2192 {v}",
+                })
+
+    ops = {"$set": updates}
+    if history_events:
+        ops["$push"] = {"history": {"$each": history_events}}
+
+    await db.slices.update_one({"id": slice_id}, ops)
     item = await db.slices.find_one({"id": slice_id}, {"_id": 0})
     if item and isinstance(item.get('updated_at'), str):
         item['updated_at'] = datetime.fromisoformat(item['updated_at'])

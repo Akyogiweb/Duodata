@@ -195,6 +195,48 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ Test passed. Returns list of demo requests, found the just-created request. Mongo _id hidden, created_at properly deserialized."
+  - task: "POST /api/slices/bulk (bulk import)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Bulk import endpoint that creates multiple slices, skips invalid ones (empty names), returns {created: X, skipped: Y}."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Payload with 3 items (2 valid, 1 empty name) returned {created:2, skipped:1}. Both 'Bulk Metric A' (Approved) and 'Bulk Metric B' (Proposed default) are visible via GET /api/slices with correct statuses."
+  - task: "POST /api/slices seeds history=created"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/slices now returns slice with history array containing entry with action='created', including by, at, and details fields."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Created slice returns history array with action='created', by='History QA', details='Slice created with status Proposed'. All required fields present."
+  - task: "PATCH /api/slices/{id} history tracking"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "PATCH /api/slices/{id} now appends history entries for changed fields with action='updated_{field}', includes transition details (e.g., 'status: Proposed → Approved')."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. PATCH with {status:'Approved'} appended history entry with action='updated_status', details='status: Proposed → Approved'. History array properly grows with each update."
 
 frontend:
   - task: "Landing sections + Nav + Book Demo modal wiring"
@@ -211,8 +253,8 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 1
+  version: "1.2"
+  test_sequence: 3
   run_ui: false
 
 test_plan:
@@ -224,17 +266,23 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      Please test only the backend endpoints listed in test_plan.current_focus.
-      Base URL: use REACT_APP_BACKEND_URL from frontend/.env then append /api.
-      Detailed scenarios:
-      1) GET /api/slices returns 200 with >=16 slices, each having id/name/status/owner/source/updated_at.
-      2) POST /api/slices with {name:"Customer Segment", status:"Proposed", tag:"GTM", owner:"QA Bot", source:"Snowflake"} returns 200 with an id.
-      3) PATCH /api/slices/{id} with {status:"Approved"} updates; subsequent GET reflects it.
-      4) PATCH with {status:"Bogus"} must NOT change status (silent ignore) and must not 500.
-      5) DELETE /api/slices/{id} returns {ok:true}; slice absent from subsequent GET.
-      6) POST /api/demo-requests with valid payload returns 200 with id + created_at.
-      7) POST /api/demo-requests with invalid email returns 422.
-      8) GET /api/demo-requests contains the just-created demo request.
+      NEW ROUND: only test the following changes, plus a quick regression.
+      1) POST /api/slices/bulk with body:
+         {"items":[
+            {"name":"Bulk Metric A","status":"Approved","source":"Snowflake","owner":"Bulk QA"},
+            {"name":"Bulk Metric B","source":"dbt"},
+            {"name":"","status":"Proposed"}
+         ],"default_status":"Proposed"}
+         Expect 200 with {"created":2,"skipped":1}. GET /api/slices must then contain
+         "Bulk Metric A" (Approved) and "Bulk Metric B" (Proposed default).
+      2) POST /api/slices creating a slice should return one with history array
+         containing an entry with action="created".
+      3) PATCH /api/slices/{id} with {"status":"Approved"} then GET /api/slices —
+         the returned slice must have history with a new entry action="updated_status"
+         (or the previously seen "created" plus this new one). details must include
+         the transition.
+      4) Regression: GET /api/slices, DELETE /api/slices/{id}, POST/GET /api/demo-requests
+         still work as before.
   - agent: "testing"
     message: |
       ✅ ALL 8 BACKEND TEST SCENARIOS PASSED
@@ -252,4 +300,23 @@ agent_communication:
       8. ✅ GET /api/demo-requests - Found the created demo request
       
       All backend APIs are functioning correctly. No critical issues found.
+      Test file: /app/backend_test.py
+  - agent: "testing"
+    message: |
+      ✅ ALL 7 TESTS PASSED - NEW FEATURES + REGRESSION
+      
+      Executed test suite for new history tracking features and bulk import:
+      
+      NEW FEATURE TESTS (3/3 passed):
+      1. ✅ POST /api/slices/bulk - Returned {created:2, skipped:1} as expected. Both "Bulk Metric A" (Approved) and "Bulk Metric B" (Proposed) are visible via GET /api/slices with correct statuses.
+      2. ✅ POST /api/slices history - Returns slice with history array containing action='created', by='History QA', details='Slice created with status Proposed'.
+      3. ✅ PATCH /api/slices/{id} history - Appends history entry with action='updated_status', details='status: Proposed → Approved'. History array properly grows.
+      
+      REGRESSION TESTS (4/4 passed):
+      4. ✅ GET /api/slices - Still working (returned 19 slices)
+      5. ✅ DELETE /api/slices/{id} - Still working
+      6. ✅ POST /api/demo-requests - Still working
+      7. ✅ GET /api/demo-requests - Still working (returned 2 demo requests)
+      
+      All backend APIs functioning correctly. No critical issues found.
       Test file: /app/backend_test.py

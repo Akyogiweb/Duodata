@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import { Search, Plus, Filter, ChevronDown, BookOpen, Layers, FileText, Database, Settings, Trash2, X } from 'lucide-react';
+import { Search, Plus, Filter, ChevronDown, BookOpen, Layers, FileText, Database, Settings, Trash2, X, Upload } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,8 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
+import BulkImportDialog from '@/components/BulkImportDialog';
+import MetricDetailDrawer from '@/components/MetricDetailDrawer';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -149,6 +151,8 @@ const ExplorePage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
   const [newOpen, setNewOpen] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [detailSlice, setDetailSlice] = useState(null);
 
   const fetchSlices = async () => {
     try {
@@ -162,6 +166,14 @@ const ExplorePage = () => {
   };
 
   useEffect(() => { fetchSlices(); }, []);
+
+  // Keep drawer in sync with latest slice data after edits
+  useEffect(() => {
+    if (!detailSlice) return;
+    const fresh = slices.find((s) => s.id === detailSlice.id);
+    if (fresh && fresh !== detailSlice) setDetailSlice(fresh);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slices]);
 
   const sources = useMemo(() => Array.from(new Set(slices.map((s) => s.source).filter(Boolean))), [slices]);
 
@@ -178,7 +190,9 @@ const ExplorePage = () => {
     const prev = slices;
     setSlices(slices.map((s) => (s.id === id ? { ...s, status } : s)));
     try {
-      await axios.patch(`${API}/slices/${id}`, { status });
+      const res = await axios.patch(`${API}/slices/${id}`, { status });
+      // Merge the fresh server slice back (includes history + updated_at)
+      setSlices((cur) => cur.map((s) => (s.id === id ? { ...s, ...res.data } : s)));
       toast({ title: 'Status updated' });
     } catch (e) {
       setSlices(prev);
@@ -272,9 +286,18 @@ const ExplorePage = () => {
                   <span className="text-slate-500">List View</span>
                   <span className="text-slate-500">Hierarchy View</span>
                 </div>
-                <Button onClick={() => setNewOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white text-[13px] font-medium px-3 py-1.5 rounded-md flex items-center gap-1.5 h-auto">
-                  <Plus size={14} /> New Slice
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => setBulkOpen(true)}
+                    variant="outline"
+                    className="bg-white/5 border-white/10 text-slate-100 hover:bg-white/10 hover:text-white text-[13px] font-medium px-3 py-1.5 h-auto"
+                  >
+                    <Upload size={14} className="mr-1.5" /> Bulk import
+                  </Button>
+                  <Button onClick={() => setNewOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white text-[13px] font-medium px-3 py-1.5 rounded-md flex items-center gap-1.5 h-auto">
+                    <Plus size={14} /> New Slice
+                  </Button>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 mb-5">
@@ -306,8 +329,12 @@ const ExplorePage = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {filtered.map((s) => (
-                    <div key={s.id} className="slice-card group">
-                      <div className="flex items-start justify-between">
+                    <div
+                      key={s.id}
+                      className="slice-card group cursor-pointer"
+                      onClick={() => setDetailSlice(s)}
+                    >
+                      <div className="flex items-start justify-between" onClick={(e) => e.stopPropagation()}>
                         <span className="font-semibold text-white text-[14px]">{s.name}</span>
                         <StatusPill status={s.status} onChange={(v) => updateStatus(s.id, v)} />
                       </div>
@@ -324,7 +351,7 @@ const ExplorePage = () => {
                       <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5">
                         <span className="text-[11px] text-slate-500">{s.owner || 'Unowned'}</span>
                         <button
-                          onClick={() => deleteSlice(s.id)}
+                          onClick={(e) => { e.stopPropagation(); deleteSlice(s.id); }}
                           className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                           title="Delete"
                         >
@@ -341,6 +368,16 @@ const ExplorePage = () => {
       </div>
 
       <NewSliceDialog open={newOpen} onOpenChange={setNewOpen} onCreate={createSlice} />
+      <BulkImportDialog
+        open={bulkOpen}
+        onOpenChange={setBulkOpen}
+        onImported={fetchSlices}
+      />
+      <MetricDetailDrawer
+        slice={detailSlice}
+        open={!!detailSlice}
+        onOpenChange={(o) => { if (!o) setDetailSlice(null); }}
+      />
       <Footer />
     </div>
   );
