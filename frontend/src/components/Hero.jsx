@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronRight, Database, Layers, GitBranch, Sparkles, ShieldCheck, Lock } from 'lucide-react';
 import { complianceBadges } from '@/mock';
+import { useDemoModal } from '@/context/DemoModalContext';
 
 const ChipTop = ({ text, className = '' }) => (
   <div className={`floating-chip ${className}`}>{text}</div>
@@ -16,6 +17,7 @@ const EndpointIcon = ({ Icon, label, className = '' }) => (
 );
 
 const Hero = () => {
+  const demo = useDemoModal();
   return (
     <section className="relative w-full overflow-hidden bg-white pt-32 pb-16 md:pt-40 md:pb-24">
       {/* Vertical grid backdrop */}
@@ -83,10 +85,10 @@ const Hero = () => {
             For your metrics, dashboards, data platforms and AI
           </p>
 
-          <a href="#get-started" className="pill-btn-dark mt-8">
+          <button onClick={demo.open} className="pill-btn-dark mt-8">
             Get started for free
             <ChevronRight size={16} strokeWidth={2.2} />
-          </a>
+          </button>
         </div>
 
         {/* Endpoint icons at bottom of curves */}

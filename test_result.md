@@ -101,3 +101,155 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Build Duodata (Qatalog-inspired) marketing site plus:
+  - Ontology Diagram (scroll-triggered lineage) on landing.
+  - Case Studies index + detail pages under /case-studies.
+  - Book a Demo modal that captures form to backend (/api/demo-requests).
+  - Live Metrics Explorer at /explore with real search, filters, status editing,
+    create and delete slices via /api/slices CRUD.
+
+backend:
+  - task: "GET /api/slices (seed + list)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Endpoint auto-seeds 16 default slices on first call if empty, returns list sorted by name."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Returned 16 slices with all required fields (id, name, status, owner, source, updated_at). Auto-seeding works correctly."
+  - task: "POST /api/slices (create)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Creates a new slice; falls back to 'Proposed' if status not in {Implemented, Approved, Proposed}."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Successfully created slice with payload {name:'Customer Segment', status:'Proposed', tag:'GTM', owner:'QA Bot', source:'Snowflake'}. Returns 200 with id."
+  - task: "PATCH /api/slices/{id} (update status/fields)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updates only provided non-null fields; invalid status values are silently ignored."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Valid status update (Approved) works correctly and is reflected in subsequent GET. Invalid status (Bogus) is silently ignored without 500 error - correct behavior."
+  - task: "DELETE /api/slices/{id}"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Deletes slice; returns {ok: true}."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Returns {ok: true} and slice is absent from subsequent GET request."
+  - task: "POST /api/demo-requests (create + validation)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Uses EmailStr; invalid email should 422. Persists to Mongo demo_requests."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Valid email creates demo request with id and created_at. Invalid email correctly returns 422 validation error."
+  - task: "GET /api/demo-requests (list)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Returns latest demo requests, hides Mongo _id, deserialises created_at."
+      - working: true
+        agent: "testing"
+        comment: "✅ Test passed. Returns list of demo requests, found the just-created request. Mongo _id hidden, created_at properly deserialized."
+
+frontend:
+  - task: "Landing sections + Nav + Book Demo modal wiring"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/Landing.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Frontend already screenshot-verified; do not auto-test unless user asks."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus: []
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      Please test only the backend endpoints listed in test_plan.current_focus.
+      Base URL: use REACT_APP_BACKEND_URL from frontend/.env then append /api.
+      Detailed scenarios:
+      1) GET /api/slices returns 200 with >=16 slices, each having id/name/status/owner/source/updated_at.
+      2) POST /api/slices with {name:"Customer Segment", status:"Proposed", tag:"GTM", owner:"QA Bot", source:"Snowflake"} returns 200 with an id.
+      3) PATCH /api/slices/{id} with {status:"Approved"} updates; subsequent GET reflects it.
+      4) PATCH with {status:"Bogus"} must NOT change status (silent ignore) and must not 500.
+      5) DELETE /api/slices/{id} returns {ok:true}; slice absent from subsequent GET.
+      6) POST /api/demo-requests with valid payload returns 200 with id + created_at.
+      7) POST /api/demo-requests with invalid email returns 422.
+      8) GET /api/demo-requests contains the just-created demo request.
+  - agent: "testing"
+    message: |
+      ✅ ALL 8 BACKEND TEST SCENARIOS PASSED
+      
+      Executed comprehensive backend test suite against https://duodata-metrics.preview.emergentagent.com/api
+      
+      Results:
+      1. ✅ GET /api/slices - Returned 16 slices with all required fields
+      2. ✅ POST /api/slices - Created slice successfully with id
+      3. ✅ PATCH /api/slices (valid status) - Status updated to Approved and verified
+      4. ✅ PATCH /api/slices (invalid status) - Invalid status silently ignored (correct behavior)
+      5. ✅ DELETE /api/slices - Slice deleted and verified absent
+      6. ✅ POST /api/demo-requests (valid) - Created demo request with id and created_at
+      7. ✅ POST /api/demo-requests (invalid email) - Correctly returned 422
+      8. ✅ GET /api/demo-requests - Found the created demo request
+      
+      All backend APIs are functioning correctly. No critical issues found.
+      Test file: /app/backend_test.py

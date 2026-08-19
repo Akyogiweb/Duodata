@@ -1,6 +1,8 @@
 import React from 'react';
 import { useCases, testimonials } from '@/mock';
 import { ArrowRight, Quote } from 'lucide-react';
+import { useDemoModal } from '@/context/DemoModalContext';
+import { Link } from 'react-router-dom';
 
 export const UseCases = () => (
   <section id="resources" className="py-24 md:py-32 bg-slate-50 border-y border-black/5">
@@ -56,23 +58,26 @@ export const Testimonials = () => (
   </section>
 );
 
-export const CTA = () => (
-  <section id="get-started" className="py-24 md:py-32 bg-white">
-    <div className="max-w-4xl mx-auto text-center px-6">
-      <h2 className="hero-headline text-[48px] md:text-[80px] text-slate-950">
-        Meaning that scales.
-      </h2>
-      <p className="mt-6 max-w-xl mx-auto text-slate-600 text-[15px] leading-relaxed">
-        Give your metrics the governed context your business, data platform and AI actually need.
-      </p>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="#demo" className="pill-btn-dark">
-          Book a demo <ArrowRight size={16} />
-        </a>
-        <a href="#" className="px-5 py-2.5 rounded-full border border-slate-300 text-[14px] font-medium text-slate-900 hover:bg-slate-50 transition-colors">
-          Explore the platform
-        </a>
+export const CTA = () => {
+  const demo = useDemoModal();
+  return (
+    <section id="get-started" className="py-24 md:py-32 bg-white">
+      <div className="max-w-4xl mx-auto text-center px-6">
+        <h2 className="hero-headline text-[48px] md:text-[80px] text-slate-950">
+          Meaning that scales.
+        </h2>
+        <p className="mt-6 max-w-xl mx-auto text-slate-600 text-[15px] leading-relaxed">
+          Give your metrics the governed context your business, data platform and AI actually need.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <button onClick={demo.open} className="pill-btn-dark">
+            Book a demo <ArrowRight size={16} />
+          </button>
+          <Link to="/explore" className="px-5 py-2.5 rounded-full border border-slate-300 text-[14px] font-medium text-slate-900 hover:bg-slate-50 transition-colors">
+            Explore the platform
+          </Link>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
