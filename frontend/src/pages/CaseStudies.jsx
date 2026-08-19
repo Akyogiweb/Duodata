@@ -22,7 +22,7 @@ const CaseStudiesIndex = () => {
         <div className="max-w-[1200px] mx-auto px-6">
           <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Resources — Case studies</p>
           <h1 className="hero-headline text-[48px] md:text-[80px] text-slate-950 max-w-4xl">
-            Enterprises that stopped fighting about numbers.
+            Enterprises that stopped fighting about <span style={{ color: '#1E5FEE' }}>numbers.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
             In-depth stories from private markets and enterprise data teams. Every case study is downloadable and safe to share with your CDO, procurement or board.

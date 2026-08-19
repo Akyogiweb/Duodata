@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from '@/hooks/use-toast';
 import BulkImportDialog from '@/components/BulkImportDialog';
 import MetricDetailDrawer from '@/components/MetricDetailDrawer';
+import DuodataMark from '@/components/DuodataMark';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -234,7 +235,7 @@ const ExplorePage = () => {
         <div className="max-w-[1200px] mx-auto px-6">
           <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Live demo — Metrics ontology</p>
           <h1 className="hero-headline text-[42px] md:text-[64px] text-slate-950 max-w-3xl">
-            Explore the ontology.<br />Edit definitions in real time.
+            Explore the ontology.<br /><span style={{ color: '#1E5FEE' }}>Edit definitions in real time.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
             This is a live sandbox connected to a Duodata backend. Filter, search, edit statuses, add and remove slices — every change persists.
@@ -261,10 +262,8 @@ const ExplorePage = () => {
           <div className="flex bg-[#0f0f10] text-slate-200 min-h-[600px]">
             <aside className="w-[220px] shrink-0 border-r border-white/5 p-4">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
-                  <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
-                </div>
-                <span className="font-semibold text-[14px]">Duodata</span>
+                <DuodataMark size={22} />
+                <span className="font-semibold text-[14px] text-white">Duodata</span>
               </div>
               <div className="text-[10px] tracking-widest uppercase text-slate-500 mb-2 px-1">Metrics Ontology</div>
               <nav className="flex flex-col gap-1 text-[13px]">

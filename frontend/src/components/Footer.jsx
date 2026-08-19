@@ -1,5 +1,6 @@
 import React from 'react';
 import { footerColumns } from '@/mock';
+import DuodataMark from '@/components/DuodataMark';
 
 const Footer = () => (
   <footer className="bg-[#0a0a0b] text-slate-300 pt-20 pb-10">
@@ -7,10 +8,8 @@ const Footer = () => (
       <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
         <div className="col-span-2">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-full bg-white/95 flex items-center justify-center">
-              <div className="w-3 h-3 rounded-full bg-slate-900" />
-            </div>
-            <span className="font-semibold text-white text-[17px]">Duodata</span>
+            <DuodataMark size={28} />
+            <span className="font-semibold text-white text-[18px] tracking-tight">Duodata</span>
           </div>
           <p className="text-[13px] leading-relaxed text-slate-400 max-w-xs">
             The business-approved metric context platform. Governed meaning for your data platform and AI.

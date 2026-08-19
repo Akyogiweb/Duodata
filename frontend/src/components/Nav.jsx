@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDemoModal } from '@/context/DemoModalContext';
+import DuodataMark from '@/components/DuodataMark';
 
 const navLinks = [
   { label: 'Product', href: '/#product', type: 'anchor' },
@@ -13,10 +14,8 @@ const navLinks = [
 
 const Logo = () => (
   <Link to="/" className="flex items-center gap-2">
-    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center">
-      <div className="w-2.5 h-2.5 rounded-full bg-white/90" />
-    </div>
-    <span className="font-semibold text-[15px] tracking-tight text-slate-900">Duodata</span>
+    <DuodataMark size={22} />
+    <span className="font-semibold text-[16px] tracking-tight text-slate-900">Duodata</span>
   </Link>
 );
 

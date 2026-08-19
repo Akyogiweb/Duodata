@@ -19,8 +19,8 @@ const SOURCES = [
   { id: 'agents', label: 'AI Agents', icon: Sparkles, xPct: 88 },
 ];
 
-// Colors are soft pastels only, restrained.
-const PALETTE = ['#B9B4E8', '#A9C7E8', '#A9D8CF', '#E5B9AF'];
+// Colors are soft pastels only, restrained — leaning into the Duodata blue/cyan brand.
+const PALETTE = ['#A9C7E8', '#7FD1E8', '#B9B4E8', '#A9D8CF'];
 
 // Question card positions in percent (x from left, y from top of hero canvas)
 // Each STATE binds a question to a source and defines a distinct curve.
@@ -345,8 +345,9 @@ const Hero = () => {
           <h1 className="hero-headline text-[64px] md:text-[128px] text-slate-950 select-none">
             Context
           </h1>
-          <p className="mt-3 md:mt-4 text-[11px] md:text-[13px] tracking-[0.28em] uppercase text-slate-500 font-medium">
-            For your metrics, dashboards, data platforms and AI
+          <p className="mt-3 md:mt-4 text-[11px] md:text-[13px] tracking-[0.28em] uppercase font-medium">
+            <span className="text-slate-500">For your metrics, dashboards, </span>
+            <span style={{ color: '#1E5FEE' }}>data platforms and AI</span>
           </p>
           <button onClick={demo.open} className="pill-btn-dark mt-8">
             Get started for free

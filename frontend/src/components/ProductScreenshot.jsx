@@ -1,6 +1,7 @@
 import React from 'react';
 import { slicesMock } from '@/mock';
 import { Search, Plus, Filter, ChevronDown, BookOpen, Layers, FileText, Database, Settings } from 'lucide-react';
+import DuodataMark from '@/components/DuodataMark';
 
 const StatusPill = ({ status }) => {
   const cls =
@@ -21,7 +22,8 @@ const ProductScreenshot = () => {
             The Metrics Ontology
           </p>
           <h2 className="hero-headline text-[42px] md:text-[64px] text-slate-950">
-            One home for<br />business meaning.
+            One home for<br />
+            <span style={{ color: '#1E5FEE' }}>business meaning.</span>
           </h2>
           <p className="mt-6 max-w-2xl mx-auto text-slate-600 text-[15px] leading-relaxed">
             Metrics, slices, reports, sources and governance — in a single business-owned ontology that projects into every downstream system.
@@ -44,10 +46,8 @@ const ProductScreenshot = () => {
             {/* Sidebar */}
             <aside className="w-[220px] shrink-0 border-r border-white/5 p-4">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
-                  <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
-                </div>
-                <span className="font-semibold text-[14px]">Duodata</span>
+                <DuodataMark size={22} />
+                <span className="font-semibold text-[14px] text-white">Duodata</span>
               </div>
               <div className="text-[10px] tracking-widest uppercase text-slate-500 mb-2 px-1">Metrics Ontology</div>
               <nav className="flex flex-col gap-1 text-[13px]">
