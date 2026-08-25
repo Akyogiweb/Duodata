@@ -154,3 +154,16 @@
   width: max-content;
   animation: marquee 30s linear infinite;
 }
+
+/* Vertical marquee for the DataSourcesSection background table */
+@keyframes dsTableScroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+.ds-table-marquee {
+  animation: dsTableScroll 40s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-table-marquee { animation: none; }
+}

@@ -250,18 +250,115 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Frontend already screenshot-verified; do not auto-test unless user asks."
+  - task: "Hero animation - source label lifecycle"
+    implemented: true
+    working: false
+    file: "frontend/src/components/Hero.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: |
+          Re-tested hero source-label lifecycle at viewport 1440x900 over 25 seconds (9 frames @ 3s intervals).
+          
+          ✅ CHECK 1 PASS: At most ONE visible source label at any moment - all 9 frames showed exactly 1 visible label.
+          
+          ❌ CHECK 2 FAIL: Labels never fade to zero during transitions. Requirement states "the previously visible label must fully fade out (opacity 0) BEFORE / WHILE the new label fades in — i.e. during the brief 'exit' phase there should be a moment where zero source labels are visible". Currently labels transition directly from one to another without a zero-label moment.
+          
+          ❌ CHECK 3 FAIL: Label visibility does NOT sync with question card visibility. Found 4 frames (3, 6, 7, 8) where question card was invisible but source label remained visible. Requirement states "Whenever the top question card is invisible (between cycles / exit), the source labels should also all be invisible."
+          
+          Root cause: In Hero.jsx SourceNode component, when phase='exit', visible becomes false (opacity:0) but the CSS transition takes 700ms. During this fade-out, the NEXT cycle starts with phase='enter' for a new source, causing overlap. The old label is still fading out (opacity > 0.1) while new label fades in, violating the zero-label requirement.
+          
+          Fix needed: Adjust timing/visibility logic so labels fully fade to opacity 0 during exit phase BEFORE next label begins fading in. Consider adding a brief delay between cycles or ensuring exit completes before enter begins.
+      - working: false
+        agent: "testing"
+        comment: |
+          RE-VERIFIED hero source-label sync fix with 450ms gap phase at viewport 1440x900.
+          Polled every 150ms for 30 seconds (200 polls total).
+          
+          ✅ CHECK A PASS: Gap phase working - 23 polls (11.5%) observed 0 cards AND 0 labels simultaneously. The 450ms blank phase IS functioning.
+          
+          ❌ CHECK B FAIL: Card/label sync issue during 'enter' phase - 6 polls (3%) showed question card fully visible (opacity 1.0) but NO source labels visible (0 labels). Violations at polls 18, 48, 82, 115, 149 (~every 4.5s, matching cycle time). Card appears to reach full opacity before label does.
+          
+          ❌ CHECK C FAIL: Minor desync during transitions - 1 poll showed card hidden (opacity 0.08) but label still visible (opacity 0.11). This is a borderline case near the 0.1 threshold.
+          
+          ✅ CHECK D PASS: At most 1 source label visible at any time - verified across all 200 polls.
+          
+          ROOT CAUSE: Question card and source label have slightly different transition timings:
+          - QuestionCard: 650ms transition
+          - SourceNode label: 650ms transition (enter), but 700ms transition (exit)
+          This 50ms difference, plus potential timing in the 'enter' phase, causes the card to become fully visible before the label reaches visibility threshold.
+          
+          FIX NEEDED: Ensure question card and source label transitions are perfectly synchronized:
+          1. Use identical transition durations for both card and label (currently card=650ms, label exit=700ms)
+          2. Ensure both reach opacity thresholds at the same time during 'enter' phase
+          3. Consider adding a small delay to card appearance to let label catch up, OR
+          4. Make label transition faster during 'enter' to match card timing
+          
+          Screenshots: .screenshots/hero_gap_frame.png (gap phase), .screenshots/hero_hold_frame.png (hold phase)
 
 metadata:
   created_by: "main_agent"
-  version: "1.2"
-  test_sequence: 3
-  run_ui: false
+  version: "1.4"
+  test_sequence: 5
+  run_ui: true
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Animated background table in DataSourcesSection"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      FRONTEND UI TEST REQUIRED at REACT_APP_BACKEND_URL landing page (viewport 1440x900).
+      New feature: the faded data-table background in the "and key data sources" section
+      now scrolls vertically continuously. Two stacked table blocks translate by -50%
+      over 40s and loop seamlessly via a CSS keyframe (.ds-table-marquee in App.css).
+
+      Verify:
+        1) Scroll to the "and key data sources" section on the landing page.
+        2) Capture 4 screenshots ~3s apart while viewing the section (0s, 3s, 6s, 9s).
+        3) The faded rows on the left and right sides of the section must visibly move
+           vertically across the 4 frames \u2014 the same row labels (REVENUE / MARGIN /
+           PIPELINE / etc.) should appear at DIFFERENT Y positions across the frames.
+           Confirm by pixel diff or by tracking one label's Y coordinate over time.
+        4) The central "and key data sources" headline, its description paragraph and
+           the connector chip row (Snowflake, Databricks, dbt, BigQuery, + more) must
+           remain sharp, static and readable \u2014 they must NOT move.
+        5) There should be no jarring jump-back / blank gap when the loop restarts
+           (seamless continuous scroll).
+
+      Report per-check pass/fail with observations and screenshots.
+
+agent_communication:
+  - agent: "main"
+    message: |
+      FRONTEND UI TEST REQUIRED for the landing page hero at REACT_APP_BACKEND_URL frontend root.
+      User bug report on the animated hero:
+        1) Curved lines looked inconsistent / unprofessional across cycles.
+        2) Bottom source labels never disappeared (should sync with the top question card).
+        3) Top question card was hiding behind the fixed navigation pill.
+
+      Verify:
+        A) The fixed Duodata nav pill is visible at the top. The animated question card
+           never overlaps or is clipped by it \u2014 the card sits clearly below the nav.
+        B) Watch the hero for ~25 seconds capturing screenshots every 3 seconds.
+        C) Across every state, all curved lines use the SAME visual style
+           (consistent S-shape sweep, similar length/curvature). None is a straight
+           line or a wildly different shape.
+        D) At the bottom, exactly ONE source label is visible at any moment \u2014 the one
+           connected to the currently-active question card. The other three source
+           icons must have NO visible label text under them. When a new state starts,
+           the previously visible label must have already faded away.
+        E) Line color rotates through soft pastel blue/cyan/lavender/mint. No neon.
+        F) Central "Context" headline / tagline / CTA never shift or animate.
+
+      Please report per-check pass/fail and attach screenshots.
 
 agent_communication:
   - agent: "main"
@@ -320,3 +417,52 @@ agent_communication:
       
       All backend APIs functioning correctly. No critical issues found.
       Test file: /app/backend_test.py
+
+  - agent: "testing"
+    message: |
+      RE-TEST COMPLETE: Hero source-label lifecycle
+      
+      Tested at https://duodata-metrics.preview.emergentagent.com/ (viewport 1440x900) over 25 seconds with 9 frames captured every 3 seconds.
+      
+      RESULTS:
+      1) ✅ CHECK 1 PASS: At most ONE visible source label at any moment - verified across all 9 frames
+      2) ❌ CHECK 2 FAIL: Labels never fade to zero during transitions - always 1 label visible, never observed zero-label moment
+      3) ❌ CHECK 3 FAIL: Label visibility does NOT sync with question card - 4 frames showed card invisible but label still visible
+      
+      ROOT CAUSE:
+      In Hero.jsx SourceNode component, when phase='exit' the label opacity is set to 0 but CSS transition takes 700ms. During this fade-out, the NEXT cycle starts with phase='enter' for a new source, causing overlap. Old label still fading out (opacity > 0.1) while new label fades in.
+      
+      FIX REQUIRED:
+      Adjust timing/visibility logic in Hero.jsx so labels fully fade to opacity 0 during exit phase BEFORE next label begins fading in. Consider:
+      - Add brief delay between exit completion and next enter
+      - Ensure exit animation completes before starting new cycle
+      - Make label transitions match question card transitions exactly
+      
+      Screenshots saved in .screenshots/hero_targeted_frame_*.png
+  - agent: "testing"
+    message: |
+      RE-VERIFICATION COMPLETE: Hero source-label sync with 450ms gap phase
+      
+      Tested at https://duodata-metrics.preview.emergentagent.com/ (viewport 1440x900).
+      Polled every 150ms for 30 seconds (200 polls total).
+      
+      RESULTS:
+      ✅ CHECK A PASS: Gap phase working - 23 polls (11.5%) observed 0 cards AND 0 labels simultaneously
+      ❌ CHECK B FAIL: 6 polls (3%) showed card visible (opacity 1.0) but 0 labels - violations at polls 18, 48, 82, 115, 149
+      ❌ CHECK C FAIL: 1 poll showed card hidden (opacity 0.08) but label visible (opacity 0.11) - minor borderline case
+      ✅ CHECK D PASS: At most 1 source label visible at any time - verified across all 200 polls
+      
+      CRITICAL ISSUE:
+      The 450ms gap phase IS working (CHECK A passed), but card and label are NOT synchronized during 'enter' phase.
+      Question card reaches full opacity before source label does, creating ~6 moments per 30 seconds where card is fully visible but label is not yet visible.
+      
+      ROOT CAUSE:
+      Transition timing mismatch between QuestionCard (650ms) and SourceNode label (650ms enter, 700ms exit).
+      During 'enter' phase, card becomes fully opaque before label reaches visibility threshold.
+      
+      FIX REQUIRED:
+      1. Synchronize transition durations: Make both card and label use identical 650ms transitions
+      2. Ensure both reach opacity thresholds simultaneously during 'enter' phase
+      3. Consider delaying card appearance slightly OR speeding up label transition during 'enter'
+      
+      Screenshots: .screenshots/hero_gap_frame.png (gap phase), .screenshots/hero_hold_frame.png (hold phase)

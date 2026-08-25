@@ -23,57 +23,15 @@ const SOURCES = [
 const PALETTE = ['#A9C7E8', '#7FD1E8', '#B9B4E8', '#A9D8CF'];
 
 // Question card positions in percent (x from left, y from top of hero canvas)
-// Each STATE binds a question to a source and defines a distinct curve.
+// Each STATE binds a question to a source. Curves use a single consistent
+// S-shape; only chip horizontal offset varies (small) for gentle variety.
 const STATES = [
-  {
-    id: 's1',
-    question: 'How is enterprise Revenue defined?',
-    color: PALETTE[0],
-    // start (chip anchor), control 1, control 2, end (source)
-    chip: { xPct: 18, yPct: 10 },
-    endTargetIdx: 0, // Snowflake
-    curve: 'gentle-left',
-  },
-  {
-    id: 's2',
-    question: 'Who owns Net Retention?',
-    color: PALETTE[1],
-    chip: { xPct: 40, yPct: 6 },
-    endTargetIdx: 1, // dbt
-    curve: 'shallow-mid',
-  },
-  {
-    id: 's3',
-    question: 'Latest churn definition & lineage',
-    color: PALETTE[2],
-    chip: { xPct: 60, yPct: 6 },
-    endTargetIdx: 2, // Databricks
-    curve: 'shallow-mid',
-  },
-  {
-    id: 's4',
-    question: 'What metric powers this AI answer?',
-    color: PALETTE[3],
-    chip: { xPct: 82, yPct: 10 },
-    endTargetIdx: 3, // AI Agents
-    curve: 'gentle-right',
-  },
-  {
-    id: 's5',
-    question: 'SFDR ESG slice lineage',
-    color: PALETTE[0],
-    chip: { xPct: 28, yPct: 14 },
-    endTargetIdx: 0,
-    curve: 'deep-left',
-  },
-  {
-    id: 's6',
-    question: 'Governed formula for Gross Margin',
-    color: PALETTE[2],
-    chip: { xPct: 72, yPct: 14 },
-    endTargetIdx: 2,
-    curve: 'deep-right',
-  },
+  { id: 's1', question: 'How is enterprise Revenue defined?', color: PALETTE[0], sourceIdx: 0, offset: +4 },
+  { id: 's2', question: 'Who owns Net Retention?',            color: PALETTE[1], sourceIdx: 1, offset: -3 },
+  { id: 's3', question: 'Latest churn definition & lineage',  color: PALETTE[2], sourceIdx: 2, offset: +3 },
+  { id: 's4', question: 'What metric powers this AI answer?', color: PALETTE[3], sourceIdx: 3, offset: -4 },
+  { id: 's5', question: 'SFDR ESG slice lineage',             color: PALETTE[1], sourceIdx: 0, offset: -4 },
+  { id: 's6', question: 'Governed formula for Gross Margin',  color: PALETTE[0], sourceIdx: 2, offset: -3 },
 ];
 
 // Phase timings (ms) — elegant and slow
@@ -82,46 +40,30 @@ const TIMING = {
   draw: 1500,
   hold: 2100,
   exit: 700,
+  gap: 450, // fully-blank moment BETWEEN cycles so the top card AND bottom
+            // label are both invisible at the same time
 };
-const CYCLE_MS = TIMING.enter + TIMING.draw + TIMING.hold + TIMING.exit;
+const CYCLE_MS =
+  TIMING.enter + TIMING.draw + TIMING.hold + TIMING.exit + TIMING.gap;
 
 const HERO_H = 640; // canvas height in px used to compute SVG coords
+const CHIP_Y_PCT = 20; // safe zone below fixed navigation
 
-function buildPath(chipPct, sourceXPct, curveKind) {
-  // Coord space (SVG viewBox): 1440 x HERO_H (we’ll use 1440 x 640)
+// Single consistent S-curve for every state. Only the two endpoints move.
+function buildPath(startXPct, startYPct, endXPct) {
   const W = 1440;
-  const startX = (chipPct.xPct / 100) * W;
-  const startY = (chipPct.yPct / 100) * HERO_H + 40; // just below chip
-  const endX = (sourceXPct / 100) * W;
+  const startX = (startXPct / 100) * W;
+  const startY = (startYPct / 100) * HERO_H + 40; // just below chip
+  const endX = (endXPct / 100) * W;
   const endY = HERO_H - 90; // source node y
 
-  // Control points create a soft S-curve; kind alters the sweep.
-  let c1x, c1y, c2x, c2y;
-  switch (curveKind) {
-    case 'deep-left':
-      c1x = startX - 40; c1y = startY + 180;
-      c2x = endX + 40;   c2y = endY - 160;
-      break;
-    case 'deep-right':
-      c1x = startX + 40; c1y = startY + 180;
-      c2x = endX - 40;   c2y = endY - 160;
-      break;
-    case 'shallow-mid':
-      c1x = startX;      c1y = startY + 220;
-      c2x = endX;        c2y = endY - 220;
-      break;
-    case 'gentle-right':
-      c1x = startX + 30; c1y = startY + 220;
-      c2x = endX - 30;   c2y = endY - 200;
-      break;
-    case 'gentle-left':
-    default:
-      c1x = startX - 30; c1y = startY + 220;
-      c2x = endX + 30;   c2y = endY - 200;
-      break;
-  }
+  const c1x = startX;
+  const c1y = startY + 220;
+  const c2x = endX;
+  const c2y = endY - 220;
   return `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
 }
+
 
 const FixedGrid = () => (
   // Permanent architectural grid — does NOT animate
@@ -183,8 +125,14 @@ const QuestionCard = ({ text, color, phase, xPct, yPct }) => {
   );
 };
 
-const SourceNode = ({ source, active, color }) => {
+const SourceNode = ({ source, isTarget, color, phase }) => {
   const Icon = source.icon;
+  // Match the question card lifecycle exactly: appear on enter, stay through
+  // draw & hold, fade away on exit \u2014 so the top chip / line / bottom label
+  // all appear and disappear together.
+  const visible = isTarget && (phase === 'enter' || phase === 'draw' || phase === 'hold');
+  const active = isTarget && (phase === 'draw' || phase === 'hold');
+
   return (
     <div
       className="absolute"
@@ -201,25 +149,30 @@ const SourceNode = ({ source, active, color }) => {
             height: 40,
             borderRadius: 12,
             background: '#ffffff',
-            border: active ? `1.5px solid ${color}` : '1px solid rgba(15,23,42,0.12)',
+            border: active ? `1.5px solid ${color}` : '1px solid rgba(15,23,42,0.10)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: active
-              ? `0 6px 22px ${color}44, 0 1px 3px rgba(15,23,42,0.06)`
+              ? `0 6px 22px ${color}55, 0 1px 3px rgba(15,23,42,0.06)`
               : '0 1px 2px rgba(15,23,42,0.04)',
-            transform: `scale(${active ? 1.05 : 1})`,
+            transform: `scale(${active ? 1.06 : 1})`,
             transition:
               'transform 500ms ease-out, box-shadow 500ms ease-out, border-color 500ms ease-out',
           }}
         >
-          <Icon size={17} color={active ? color : '#1e293b'} />
+          <Icon size={17} color={active ? color : '#94a3b8'} />
         </div>
         <span
           className="text-[11px] font-medium"
           style={{
-            color: active ? '#0a0a0a' : '#64748b',
-            transition: 'color 500ms ease-out',
+            color: '#0a0a0a',
+            opacity: visible ? 1 : 0,
+            transform: `translateY(${visible ? '0' : '-4px'})`,
+            // Identical transition to the QuestionCard so top chip and bottom
+            // label appear/disappear perfectly in sync.
+            transition:
+              'opacity 650ms cubic-bezier(0.4, 0, 0.2, 1), transform 650ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {source.label}
@@ -280,6 +233,12 @@ const Hero = () => {
         setTimeout(() => !cancelled && setPhase('exit'), TIMING.enter + TIMING.draw + TIMING.hold)
       );
       timers.push(
+        setTimeout(
+          () => !cancelled && setPhase('gap'),
+          TIMING.enter + TIMING.draw + TIMING.hold + TIMING.exit
+        )
+      );
+      timers.push(
         setTimeout(() => {
           if (cancelled) return;
           setActiveIndex((i) => (i + 1) % STATES.length);
@@ -296,8 +255,12 @@ const Hero = () => {
   }, []);
 
   const state = STATES[activeIndex];
-  const target = SOURCES[state.endTargetIdx];
-  const pathD = useMemo(() => buildPath(state.chip, target.xPct, state.curve), [state, target]);
+  const target = SOURCES[state.sourceIdx];
+  const chipX = target.xPct + (state.offset || 0);
+  const pathD = useMemo(
+    () => buildPath(chipX, CHIP_Y_PCT, target.xPct),
+    [chipX, target.xPct]
+  );
 
   return (
     <section
@@ -314,8 +277,8 @@ const Hero = () => {
           text={state.question}
           color={state.color}
           phase={phase}
-          xPct={state.chip.xPct}
-          yPct={state.chip.yPct}
+          xPct={chipX}
+          yPct={CHIP_Y_PCT}
         />
 
         {/* SVG lines */}
@@ -328,13 +291,15 @@ const Hero = () => {
           <AnimatedPath d={pathD} color={state.color} phase={phase} />
         </svg>
 
-        {/* Source nodes — all visible; active one lights up */}
+        {/* Source nodes — icons always subtle; the targeted one lights up
+            and its label fades in/out in sync with the question card */}
         {SOURCES.map((s, i) => (
           <SourceNode
             key={s.id}
             source={s}
-            active={i === state.endTargetIdx && (phase === 'draw' || phase === 'hold')}
+            isTarget={i === state.sourceIdx}
             color={state.color}
+            phase={phase}
           />
         ))}
       </div>
