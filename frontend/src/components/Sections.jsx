@@ -63,12 +63,20 @@ export const CTA = () => {
   return (
     <section id="get-started" className="py-24 md:py-32 bg-white">
       <div className="max-w-4xl mx-auto text-center px-6">
-        <h2 className="hero-headline text-[48px] md:text-[80px] text-slate-950">
-          Meaning that <span style={{ color: '#1E5FEE' }}>scales.</span>
+        <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-4">The connective tissue</p>
+        <h2 className="hero-headline text-[42px] md:text-[72px] text-slate-950 leading-[0.98]">
+          Connect business meaning to your <span style={{ color: '#1E5FEE' }}>data reality.</span>
         </h2>
-        <p className="mt-6 max-w-xl mx-auto text-slate-600 text-[15px] leading-relaxed">
-          Give your metrics the governed context your business, data platform and AI actually need.
+        <p className="mt-6 max-w-2xl mx-auto text-slate-600 text-[16px] leading-relaxed">
+          One semantic foundation. Every platform. Every report. Every agent.
         </p>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12px] text-slate-500">
+          <span><span className="text-slate-900 font-medium">Business.</span> Define the meaning.</span>
+          <span><span className="text-slate-900 font-medium">Governance.</span> Own the meaning.</span>
+          <span><span className="text-slate-900 font-medium">Engineering.</span> Implement the meaning.</span>
+          <span><span className="text-slate-900 font-medium">Platforms.</span> Propagate the meaning.</span>
+          <span><span className="text-slate-900 font-medium">AI.</span> Give machines the meaning.</span>
+        </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <button onClick={demo.open} className="pill-btn-dark">
             Book a demo <ArrowRight size={16} />

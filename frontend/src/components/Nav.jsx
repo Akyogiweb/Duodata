@@ -5,11 +5,12 @@ import { useDemoModal } from '@/context/DemoModalContext';
 import { DuodataFullLogo } from '@/components/DuodataMark';
 
 const navLinks = [
-  { label: 'Product', href: '/#product', type: 'anchor' },
+  { label: 'Platform', href: '/#ontology', type: 'anchor' },
+  { label: 'Governance', href: '/#governance', type: 'anchor' },
+  { label: 'AI', href: '/#ai', type: 'anchor' },
+  { label: 'Industries', href: '/#industries', type: 'anchor' },
   { label: 'Explore', href: '/explore', type: 'route' },
   { label: 'Case Studies', href: '/case-studies', type: 'route' },
-  { label: 'Resources', href: '/#resources', type: 'anchor' },
-  { label: 'Pricing', href: '/#pricing', type: 'anchor' },
 ];
 
 const Logo = () => (
