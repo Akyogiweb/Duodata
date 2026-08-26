@@ -50,6 +50,12 @@ export const platformItems = [
     href: '/#mega-diagram',
     type: 'anchor',
   },
+  {
+    label: 'Metric Card: MOIC',
+    description: 'A live example of a governed single-KPI page.',
+    href: '/metrics/moic',
+    type: 'route',
+  },
 ];
 
 export const solutionsItems = [
@@ -101,12 +107,12 @@ export const industriesItems = [
 ];
 
 export const resourcesItems = [
-  { label: 'Product Demo', description: 'A guided 10-minute walkthrough of Duo Data.', href: '/#mega-diagram', type: 'anchor' },
+  { label: 'Product Demo', description: 'A guided 10-minute walkthrough of Duo Data.', href: '/product-demo', type: 'route' },
+  { label: 'Metric Cards', description: 'Live single-KPI pages: MOIC, EBITDA, NRR.', href: '/metrics/moic', type: 'route' },
   { label: 'Architecture', description: 'The full business ↔ technical semantic spine.', href: '/#mega-diagram', type: 'anchor' },
   { label: 'Case Studies', description: 'How teams use Duo Data in production.', href: '/case-studies', type: 'route' },
   { label: 'Explore', description: 'Browse the interactive ontology explorer.', href: '/explore', type: 'route' },
   { label: 'Blog', description: 'Points of view on semantics, governance and AI.', href: '/#get-started', type: 'anchor' },
-  { label: 'Videos', description: 'Short product and thought-leadership videos.', href: '/#get-started', type: 'anchor' },
 ];
 
 export const navSections = [
