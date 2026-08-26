@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GitBranch, Database, Layers, Sparkles, Sigma, Slice, Users, FileCode2 } from 'lucide-react';
+import useInView from '@/hooks/useInView';
 
 const NODES = {
   moic: {
@@ -76,14 +77,21 @@ const iconFor = (id) => {
   return map[id] || Layers;
 };
 
-const Node = ({ id, active, onClick, x, y, w = 140, dark = false }) => {
+const Node = ({ id, active, onClick, x, y, w = 140, dark = false, revealDelay = 0, revealIn = true }) => {
   const Icon = iconFor(id);
   const isActive = active === id;
   return (
     <div
       onClick={() => onClick(id)}
       className="absolute cursor-pointer transition-all"
-      style={{ left: x, top: y, width: w, transform: 'translate(-50%, -50%)' }}
+      style={{
+        left: x,
+        top: y,
+        width: w,
+        transform: `translate(-50%, -50%) scale(${revealIn ? 1 : 0.85})`,
+        opacity: revealIn ? 1 : 0,
+        transitionDelay: `${revealDelay}ms`,
+      }}
     >
       <div
         className={`px-3 py-2.5 rounded-xl text-center border-2 transition-all ${
@@ -103,6 +111,7 @@ const Node = ({ id, active, onClick, x, y, w = 140, dark = false }) => {
 
 const MegaDiagram = () => {
   const [active, setActive] = useState('moic');
+  const [diagRef, diagIn] = useInView({ threshold: 0.2 });
 
   // Layout coordinates on an 1100 x 720 svg canvas
   const P = {
@@ -149,12 +158,13 @@ const MegaDiagram = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Diagram */}
-          <div className="lg:col-span-2 relative bg-white rounded-3xl border border-black/10 overflow-hidden" style={{ height: 760 }}>
+          <div ref={diagRef} className="lg:col-span-2 relative bg-white rounded-3xl border border-black/10 overflow-hidden" style={{ height: 760 }}>
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1100 760" preserveAspectRatio="xMidYMid meet">
-              {connections.map(([a, b]) => {
+              {connections.map(([a, b], i) => {
                 const p1 = P[a];
                 const p2 = P[b];
                 const isActive = activeSet.has(`${a}-${b}`);
+                const len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
                 return (
                   <line
                     key={`${a}-${b}`}
@@ -164,14 +174,16 @@ const MegaDiagram = () => {
                     y2={p2.y}
                     stroke={isActive ? '#1E5FEE' : '#cbd5e1'}
                     strokeWidth={isActive ? 2 : 1}
-                    strokeDasharray={isActive ? '0' : '4 4'}
+                    strokeDasharray={isActive ? '0' : `${len}`}
+                    className="draw-path"
+                    data-draw={diagIn ? 'in' : 'out'}
+                    style={{ '--dash': len, transitionDelay: `${i * 90}ms` }}
                   />
                 );
               })}
             </svg>
-            {Object.keys(P).map((id) => {
+            {Object.keys(P).map((id, i) => {
               const p = P[id];
-              // Convert svg coordinates (1100x760) to percentage of container
               const xPct = (p.x / 1100) * 100;
               const yPct = (p.y / 760) * 100;
               return (
@@ -183,6 +195,8 @@ const MegaDiagram = () => {
                   x={`${xPct}%`}
                   y={`${yPct}%`}
                   dark={['gov', 'git', 'agent', 'answer'].includes(id)}
+                  revealIn={diagIn}
+                  revealDelay={400 + i * 60}
                 />
               );
             })}

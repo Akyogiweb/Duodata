@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowLeftRight, Database, Layers } from 'lucide-react';
+import useInView from '@/hooks/useInView';
+import Reveal from '@/components/Reveal';
 
 const platforms = [
   {
@@ -18,10 +20,71 @@ const platforms = [
   },
 ];
 
+const PlatformCard = ({ p }) => {
+  const [ref, inView] = useInView({ threshold: 0.25 });
+  return (
+    <div ref={ref} className="p-8 rounded-3xl border border-black/10 bg-white">
+      <div className="flex items-center gap-3 mb-6">
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center"
+          style={{ background: `${p.color}18` }}
+        >
+          <p.Icon size={18} style={{ color: p.color }} />
+        </div>
+        <div>
+          <div className="text-[20px] font-semibold text-slate-950">{p.name}</div>
+          <div className="text-[12px] text-slate-500">{p.tagline}</div>
+        </div>
+      </div>
+
+      {/* Bidirectional flow */}
+      <div className="flex flex-col gap-2 relative">
+        {p.steps.map((s, i) => (
+          <React.Fragment key={s}>
+            <div
+              className="px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[13px] font-medium text-slate-800 transition-all duration-500"
+              style={{
+                opacity: inView ? 1 : 0,
+                transform: inView ? 'translateX(0)' : 'translateX(-14px)',
+                transitionDelay: `${i * 140}ms`,
+              }}
+            >
+              {s}
+            </div>
+            {i < p.steps.length - 1 && (
+              <div
+                className="pl-4 transition-all duration-500"
+                style={{
+                  color: p.color,
+                  opacity: inView ? 1 : 0,
+                  transitionDelay: `${i * 140 + 70}ms`,
+                }}
+              >
+                <ArrowLeftRight size={14} />
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div className="mt-6 grid grid-cols-2 gap-2">
+        <div className="p-3 rounded-lg bg-slate-950 text-white">
+          <div className="text-[10px] uppercase tracking-widest text-slate-400">Capture</div>
+          <div className="text-[12px] mt-1">Platform → Duo Data / Git</div>
+        </div>
+        <div className="p-3 rounded-lg" style={{ background: `${p.color}12`, color: p.color }}>
+          <div className="text-[10px] uppercase tracking-widest">Deploy</div>
+          <div className="text-[12px] mt-1 text-slate-800">Duo Data / Git → Platform</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PlatformIntegration = () => (
   <section id="platforms" className="py-24 md:py-32 bg-white border-y border-black/5">
     <div className="max-w-[1200px] mx-auto px-6">
-      <div className="max-w-3xl mb-14">
+      <Reveal className="max-w-3xl mb-14">
         <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Platform Integrations</p>
         <h2 className="hero-headline text-[40px] md:text-[56px] text-slate-950 leading-[0.98]">
           Meet your data where it lives.
@@ -30,51 +93,11 @@ const PlatformIntegration = () => (
           Duo Data is platform-aware without being platform-dependent. Governed semantics travel bidirectionally between
           Duo Data and the technical platforms where data is actually implemented.
         </p>
-      </div>
+      </Reveal>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {platforms.map((p) => (
-          <div key={p.name} className="p-8 rounded-3xl border border-black/10 bg-white">
-            <div className="flex items-center gap-3 mb-6">
-              <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center"
-                style={{ background: `${p.color}18` }}
-              >
-                <p.Icon size={18} style={{ color: p.color }} />
-              </div>
-              <div>
-                <div className="text-[20px] font-semibold text-slate-950">{p.name}</div>
-                <div className="text-[12px] text-slate-500">{p.tagline}</div>
-              </div>
-            </div>
-
-            {/* Bidirectional flow */}
-            <div className="flex flex-col gap-2">
-              {p.steps.map((s, i) => (
-                <React.Fragment key={s}>
-                  <div className="px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[13px] font-medium text-slate-800">
-                    {s}
-                  </div>
-                  {i < p.steps.length - 1 && (
-                    <div className="pl-4 text-slate-400">
-                      <ArrowLeftRight size={14} />
-                    </div>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-2">
-              <div className="p-3 rounded-lg bg-slate-950 text-white">
-                <div className="text-[10px] uppercase tracking-widest text-slate-400">Capture</div>
-                <div className="text-[12px] mt-1">Platform → Duo Data / Git</div>
-              </div>
-              <div className="p-3 rounded-lg" style={{ background: `${p.color}12`, color: p.color }}>
-                <div className="text-[10px] uppercase tracking-widest">Deploy</div>
-                <div className="text-[12px] mt-1 text-slate-800">Duo Data / Git → Platform</div>
-              </div>
-            </div>
-          </div>
+          <PlatformCard key={p.name} p={p} />
         ))}
       </div>
 

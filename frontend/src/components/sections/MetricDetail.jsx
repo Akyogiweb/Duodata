@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Tag, User, GitBranch, Code2 } from 'lucide-react';
+import useInView from '@/hooks/useInView';
+import Reveal from '@/components/Reveal';
 
 const lifecycle = ['Draft', 'Proposed', 'Approved', 'Implemented'];
 const currentStage = 3;
@@ -18,6 +20,8 @@ const LineageNode = ({ label, muted = false }) => (
 
 const MetricDetail = () => {
   const [showImpl, setShowImpl] = useState(false);
+  const [rightRef, rightIn] = useInView({ threshold: 0.15 });
+  const [lifeRef, lifeIn] = useInView({ threshold: 0.35 });
 
   return (
     <section id="metric-detail" className="py-24 md:py-32 bg-slate-50 border-y border-black/5">
@@ -126,17 +130,22 @@ const MetricDetail = () => {
             </div>
 
             {/* Lifecycle */}
-            <div className="mt-6">
+            <div className="mt-6" ref={lifeRef}>
               <div className="text-[11px] uppercase tracking-widest text-slate-500 mb-2">Lifecycle</div>
               <div className="flex items-center gap-1">
                 {lifecycle.map((s, i) => (
                   <React.Fragment key={s}>
                     <div
-                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-all duration-500 ${
                         i <= currentStage
                           ? 'bg-[#1E5FEE] text-white'
                           : 'bg-slate-100 text-slate-500'
                       }`}
+                      style={{
+                        opacity: lifeIn ? 1 : 0,
+                        transform: lifeIn ? 'scale(1)' : 'scale(0.9)',
+                        transitionDelay: `${i * 160}ms`,
+                      }}
                     >
                       {s}
                     </div>
@@ -148,23 +157,37 @@ const MetricDetail = () => {
           </div>
 
           {/* Right: Lineage + Value drivers */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6" ref={rightRef}>
             <div className="p-6 rounded-3xl bg-white border border-black/10">
               <div className="text-[11px] uppercase tracking-widest text-slate-500 font-medium mb-4 flex items-center gap-2">
                 <GitBranch size={12} /> Lineage
               </div>
               <div className="flex flex-col gap-2">
-                <LineageNode label="Investment Cost" muted />
-                <LineageNode label="Portfolio Value" muted />
-                <div className="pl-6 relative">
-                  <div className="absolute left-2 top-0 bottom-0 border-l border-slate-300" />
-                  <div className="absolute left-2 top-4 w-4 border-t border-slate-300" />
-                  <div className="pt-1"><LineageNode label="Invested Capital" muted /></div>
-                </div>
-                <div className="pl-6 relative pt-2">
-                  <div className="absolute left-2 top-2 w-4 border-t border-slate-300" />
-                  <LineageNode label="MOIC" />
-                </div>
+                {[
+                  <LineageNode key="ic" label="Investment Cost" muted />,
+                  <LineageNode key="pv" label="Portfolio Value" muted />,
+                  <div key="invcap" className="pl-6 relative">
+                    <div className="absolute left-2 top-0 bottom-0 border-l border-slate-300" />
+                    <div className="absolute left-2 top-4 w-4 border-t border-slate-300" />
+                    <div className="pt-1"><LineageNode label="Invested Capital" muted /></div>
+                  </div>,
+                  <div key="moic" className="pl-6 relative pt-2">
+                    <div className="absolute left-2 top-2 w-4 border-t border-slate-300" />
+                    <LineageNode label="MOIC" />
+                  </div>,
+                ].map((node, i) => (
+                  <div
+                    key={i}
+                    className="transition-all duration-500"
+                    style={{
+                      opacity: rightIn ? 1 : 0,
+                      transform: rightIn ? 'translateY(0)' : 'translateY(10px)',
+                      transitionDelay: `${i * 180}ms`,
+                    }}
+                  >
+                    {node}
+                  </div>
+                ))}
               </div>
               <p className="text-[11px] text-slate-500 mt-3 italic">How this metric is calculated.</p>
             </div>
@@ -174,19 +197,30 @@ const MetricDetail = () => {
                 Business Value Drivers
               </div>
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3">
-                  <div className="px-3 py-1.5 rounded-lg bg-[#0EA5E9]/10 border border-[#0EA5E9]/30 text-[12px] font-medium text-slate-800 flex-1">
-                    EBITDA Multiple
+                {['EBITDA Multiple', 'Net Leverage Ratio'].map((d, i) => (
+                  <div
+                    key={d}
+                    className="flex items-center gap-3 transition-all duration-500"
+                    style={{
+                      opacity: rightIn ? 1 : 0,
+                      transform: rightIn ? 'translateX(0)' : 'translateX(-14px)',
+                      transitionDelay: `${800 + i * 160}ms`,
+                    }}
+                  >
+                    <div className="px-3 py-1.5 rounded-lg bg-[#0EA5E9]/10 border border-[#0EA5E9]/30 text-[12px] font-medium text-slate-800 flex-1">
+                      {d}
+                    </div>
+                    <div className="text-slate-400">→</div>
                   </div>
-                  <div className="text-slate-400">→</div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="px-3 py-1.5 rounded-lg bg-[#0EA5E9]/10 border border-[#0EA5E9]/30 text-[12px] font-medium text-slate-800 flex-1">
-                    Net Leverage Ratio
-                  </div>
-                  <div className="text-slate-400">→</div>
-                </div>
-                <div className="flex items-center gap-3 mt-1">
+                ))}
+                <div
+                  className="flex items-center gap-3 mt-1 transition-all duration-500"
+                  style={{
+                    opacity: rightIn ? 1 : 0,
+                    transform: rightIn ? 'scale(1)' : 'scale(0.94)',
+                    transitionDelay: '1150ms',
+                  }}
+                >
                   <div className="px-3 py-1.5 rounded-lg bg-slate-950 text-white text-[12px] font-medium flex-1 text-center">
                     MOIC
                   </div>

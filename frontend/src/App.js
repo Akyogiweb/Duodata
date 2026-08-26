@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "@/pages/Landing";
 import CaseStudiesIndex, { CaseStudyDetail } from "@/pages/CaseStudies";
 import ExplorePage from "@/pages/ExplorePage";
+import IndustryDetail from "@/pages/IndustryDetail";
 import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import BookDemoModal from "@/components/BookDemoModal";
@@ -22,6 +23,7 @@ function App() {
             <Route path="/case-studies" element={<CaseStudiesIndex />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/industries/:slug" element={<IndustryDetail />} />
           </Routes>
           <GlobalDemoModal />
         </DemoModalProvider>

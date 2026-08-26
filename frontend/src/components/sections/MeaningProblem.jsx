@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart3, Database, FileSpreadsheet, Sparkles } from 'lucide-react';
+import useInView from '@/hooks/useInView';
 
 const columns = [
   { icon: BarChart3, label: 'Dashboard', value: '$42M', color: '#1E5FEE' },
@@ -9,6 +10,7 @@ const columns = [
 ];
 
 const MeaningProblem = () => {
+  const [vizRef, vizIn] = useInView({ threshold: 0.3 });
   return (
     <section id="meaning-problem" className="py-24 md:py-32 bg-white border-y border-black/5">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -25,7 +27,7 @@ const MeaningProblem = () => {
         </div>
 
         {/* Divergence visualization */}
-        <div className="relative mt-16">
+        <div className="relative mt-16" ref={vizRef}>
           {/* Metric at top */}
           <div className="flex justify-center">
             <div className="px-6 py-3 rounded-2xl bg-slate-950 text-white text-[20px] font-semibold tracking-tight shadow-lg">
@@ -45,6 +47,9 @@ const MeaningProblem = () => {
                   strokeWidth={1.4}
                   strokeOpacity={0.5}
                   fill="none"
+                  className="draw-path"
+                  data-draw={vizIn ? 'in' : 'out'}
+                  style={{ '--dash': 500, strokeDasharray: 500, transitionDelay: `${i * 180}ms` }}
                 />
               );
             })}
@@ -52,10 +57,18 @@ const MeaningProblem = () => {
 
           {/* 4 columns */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {columns.map((c) => {
+            {columns.map((c, i) => {
               const Icon = c.icon;
               return (
-                <div key={c.label} className="p-6 rounded-2xl border border-black/10 bg-white text-center">
+                <div
+                  key={c.label}
+                  className="p-6 rounded-2xl border border-black/10 bg-white text-center transition-all duration-500"
+                  style={{
+                    opacity: vizIn ? 1 : 0,
+                    transform: vizIn ? 'translateY(0)' : 'translateY(14px)',
+                    transitionDelay: `${400 + i * 140}ms`,
+                  }}
+                >
                   <div
                     className="w-10 h-10 rounded-xl mx-auto mb-4 flex items-center justify-center"
                     style={{ background: `${c.color}18` }}

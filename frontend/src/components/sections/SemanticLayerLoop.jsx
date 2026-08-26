@@ -1,4 +1,5 @@
 import React from 'react';
+import useInView from '@/hooks/useInView';
 
 const steps = [
   { name: 'Define', color: '#1E5FEE' },
@@ -14,6 +15,7 @@ const SemanticLayerLoop = () => {
   const R = 160;
   const CX = 200;
   const CY = 200;
+  const [ringRef, ringIn] = useInView({ threshold: 0.3 });
 
   return (
     <section id="semantic-layer" className="py-24 md:py-32 bg-slate-50 border-y border-black/5">
@@ -38,7 +40,7 @@ const SemanticLayerLoop = () => {
             </div>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center" ref={ringRef}>
             <svg width="420" height="420" viewBox="0 0 400 400">
               {/* Outer ring */}
               <circle cx={CX} cy={CY} r={R} fill="none" stroke="#e2e8f0" strokeWidth={2} strokeDasharray="4 6" />
@@ -52,7 +54,15 @@ const SemanticLayerLoop = () => {
                 const x = CX + R * Math.cos(angle);
                 const y = CY + R * Math.sin(angle);
                 return (
-                  <g key={s.name}>
+                  <g
+                    key={s.name}
+                    style={{
+                      opacity: ringIn ? 1 : 0,
+                      transform: ringIn ? 'scale(1)' : 'scale(0.6)',
+                      transformOrigin: `${x}px ${y}px`,
+                      transition: `opacity 500ms ease ${i * 140}ms, transform 500ms cubic-bezier(0.22, 1, 0.36, 1) ${i * 140}ms`,
+                    }}
+                  >
                     <circle cx={x} cy={y} r={22} fill="#fff" stroke={s.color} strokeWidth={2} />
                     <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fontWeight="600" fill={s.color}>
                       {s.name}
