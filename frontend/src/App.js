@@ -6,7 +6,6 @@ import ExplorePage from "@/pages/ExplorePage";
 import IndustryDetail from "@/pages/IndustryDetail";
 import MetricPage from "@/pages/MetricPage";
 import ProductDemoPage from "@/pages/ProductDemoPage";
-import GridBackdrop from "@/components/GridBackdrop";
 import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import BookDemoModal from "@/components/BookDemoModal";
@@ -19,7 +18,6 @@ const GlobalDemoModal = () => {
 function App() {
   return (
     <div className="App">
-      <GridBackdrop opacity={0.85} />
       <BrowserRouter>
         <DemoModalProvider>
           <Routes>
