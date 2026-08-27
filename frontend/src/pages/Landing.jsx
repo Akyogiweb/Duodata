@@ -21,6 +21,11 @@ import BeforeAfter from '@/components/sections/BeforeAfter';
 import CompetitiveCategories from '@/components/sections/CompetitiveCategories';
 import MegaDiagram from '@/components/sections/MegaDiagram';
 
+// Dark-banner visualizations (baseline design)
+import LemniscateBanner from '@/components/banners/LemniscateBanner';
+import AtomicOntologyBanner from '@/components/banners/AtomicOntologyBanner';
+import IcosahedronBanner from '@/components/banners/IcosahedronBanner';
+
 const Landing = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -32,11 +37,16 @@ const Landing = () => {
       <MeaningProblem />
       <ModernDataProblem />
 
-      {/* Positioning: Two sides */}
+      {/* Positioning banner + section */}
+      <LemniscateBanner />
       <TwoSides />
 
-      {/* The Metrics Ontology */}
+      {/* Ontology banner + intro + cards */}
+      <AtomicOntologyBanner />
       <MetricsOntology />
+
+      {/* Big Metric Ontology hero banner + metric detail */}
+      <IcosahedronBanner />
       <MetricDetail />
 
       {/* Governance & Git */}
