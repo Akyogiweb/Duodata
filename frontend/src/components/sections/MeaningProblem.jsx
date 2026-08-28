@@ -16,13 +16,11 @@ const MeaningProblem = () => {
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-14">
           <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">The real problem</p>
-          <h2 className="hero-headline text-[40px] md:text-[64px] text-slate-950 leading-[0.98]">
-            Your organization doesn’t have a data problem.<br />
-            <span style={{ color: '#1E5FEE' }}>It has a meaning problem.</span>
+          <h2 className="hero-headline text-[40px] md:text-[64px] text-slate-950 leading-[0.98]" data-testid="real-problem-heading">
+            From business definition to technical implementation with an integrated semantic foundation
           </h2>
-          <p className="mt-6 text-slate-600 text-[15px] leading-relaxed">
-            The same metric can exist in a dashboard, warehouse, spreadsheet, SQL model and AI application —
-            and still mean something slightly different in each place.
+          <p className="mt-6 text-slate-600 text-[15px] leading-relaxed" data-testid="real-problem-subheading">
+            Connecting metrics, definitions, formulas, slices, reports, sources, ownership, lineage, and technical implementations in one governed system.
           </p>
         </div>
 

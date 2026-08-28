@@ -26,6 +26,11 @@ Build a comprehensive, multi-page website for Duo Data, the semantic layer conne
 
 ## Implemented
 
+### 2026-08-28 — Real Problem messaging update
+- Updated the section heading to “From business definition to technical implementation with an integrated semantic foundation.”
+- Updated the supporting copy to describe metrics, definitions, formulas, slices, reports, sources, ownership, lineage, and implementations as one governed system.
+- Preserved the existing visualization and verified responsive text wrapping.
+
 ### 2026-08-28 — Cohesive visualization redesign
 - Rebuilt Lemniscate, Atomic Ontology, and Icosahedron banners with one dark Swiss/technical visual language.
 - Bound moving dots directly to SVG paths through `animateMotion` and `mpath` for exact alignment.
