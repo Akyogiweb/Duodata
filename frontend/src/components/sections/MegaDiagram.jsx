@@ -1,234 +1,121 @@
-import React, { useState } from 'react';
-import { GitBranch, Database, Layers, Sparkles, Sigma, Slice, Users, FileCode2 } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import useInView from '@/hooks/useInView';
+import Reveal from '@/components/Reveal';
 
-const NODES = {
-  moic: {
-    title: 'MOIC',
-    subtitle: 'Business metric — first-class citizen',
-    detail: 'The governed enterprise metric. Everything flows from the business question.',
-  },
-  formula: {
-    title: 'Formula',
-    subtitle: 'Platform-independent logic',
-    detail: 'MOIC = Total Value / Invested Capital — defined once, projected everywhere.',
-  },
-  slices: {
-    title: 'Slices',
-    subtitle: 'Fund · Portfolio · Vintage',
-    detail: 'The business lenses through which the metric is viewed.',
-  },
-  drivers: {
-    title: 'Value Drivers',
-    subtitle: 'EBITDA Multiple · Net Leverage',
-    detail: 'What the business believes drives the metric’s value — causal, not just calculated.',
-  },
-  gov: {
-    title: 'Governance',
-    subtitle: 'Lifecycle · Ownership · Approvals',
-    detail: 'Draft → Proposed → Approved → Implemented — fully configurable.',
-  },
-  git: {
-    title: 'Git',
-    subtitle: 'Versioned semantic contract',
-    detail: 'Every metric definition is a YAML file, versioned in Git, reviewed, released.',
-  },
-  agent: {
-    title: 'Duo Data Agent',
-    subtitle: 'Capture & Deploy',
-    detail: 'Bidirectional: captures platform schema, deploys governed semantics.',
-  },
-  snow: {
-    title: 'Snowflake',
-    subtitle: 'Semantic View',
-    detail: 'MOIC becomes a governed Semantic View in Snowflake — queried natively.',
-  },
-  brick: {
-    title: 'Databricks',
-    subtitle: 'Metric View · Unity Catalog',
-    detail: 'MOIC becomes a Metric View — discoverable in Unity Catalog.',
-  },
-  ai: {
-    title: 'AI / Agents',
-    subtitle: 'Grounded answers',
-    detail: 'Agents query through the semantic layer — answers reflect governed business meaning.',
-  },
-  answer: {
-    title: 'Business Answer',
-    subtitle: 'Consistent · Governed · Traceable',
-    detail: 'The same number, everywhere — with full lineage back to the business definition.',
-  },
+const nodes = {
+  moic: ['MOIC', 'Business metric', 'The governed business question that anchors the entire system.'],
+  formula: ['Formula', 'Portable logic', 'Total Value divided by Invested Capital, defined independently of any platform.'],
+  slices: ['Slices', 'Business lenses', 'Fund, portfolio, and vintage provide the approved ways to view the metric.'],
+  drivers: ['Value drivers', 'Causal context', 'EBITDA multiple and net leverage capture what the business believes creates value.'],
+  governance: ['Governance', 'Ownership and lifecycle', 'Definitions move from draft to approval with accountable owners and evidence.'],
+  git: ['Git contract', 'Versioned semantics', 'Every approved change becomes reviewable, testable, and releasable code.'],
+  agent: ['Duo agent', 'Capture and deploy', 'The bidirectional agent reads platform structure and deploys governed semantics.'],
+  platforms: ['Data platforms', 'Native execution', 'Snowflake and Databricks receive native semantic objects, not copied logic.'],
+  ai: ['AI answer', 'Grounded output', 'Answers resolve through governed meaning with lineage back to the source.'],
 };
 
-const iconFor = (id) => {
-  const map = {
-    moic: Sigma,
-    formula: FileCode2,
-    slices: Slice,
-    drivers: Sparkles,
-    gov: Users,
-    git: GitBranch,
-    agent: Layers,
-    snow: Database,
-    brick: Database,
-    ai: Sparkles,
-    answer: Sigma,
-  };
-  return map[id] || Layers;
+const positions = {
+  moic: [500, 60], formula: [210, 180], slices: [500, 180], drivers: [790, 180],
+  governance: [500, 320], git: [500, 450], agent: [500, 580], platforms: [270, 720], ai: [730, 720],
 };
 
-const Node = ({ id, active, onClick, x, y, w = 140, dark = false, revealDelay = 0, revealIn = true }) => {
-  const Icon = iconFor(id);
-  const isActive = active === id;
+const edges = [
+  ['moic', 'formula'], ['moic', 'slices'], ['moic', 'drivers'],
+  ['formula', 'governance'], ['slices', 'governance'], ['drivers', 'governance'],
+  ['governance', 'git'], ['git', 'agent'], ['agent', 'platforms'], ['agent', 'ai'], ['platforms', 'ai'],
+];
+
+const GraphNode = ({ id, active, onActivate }) => {
+  const [x, y] = positions[id];
+  const selected = active === id;
   return (
-    <div
-      onClick={() => onClick(id)}
-      className="absolute cursor-pointer transition-all"
-      style={{
-        left: x,
-        top: y,
-        width: w,
-        transform: `translate(-50%, -50%) scale(${revealIn ? 1 : 0.85})`,
-        opacity: revealIn ? 1 : 0,
-        transitionDelay: `${revealDelay}ms`,
-      }}
+    <g
+      role="button"
+      tabIndex="0"
+      aria-label={`Explore ${nodes[id][0]}`}
+      aria-pressed={selected}
+      onClick={() => onActivate(id)}
+      onKeyDown={(event) => (event.key === 'Enter' || event.key === ' ') && onActivate(id)}
+      className="cursor-pointer outline-none"
+      data-testid={`mega-node-${id}`}
     >
-      <div
-        className={`px-3 py-2.5 rounded-xl text-center border-2 transition-all ${
-          isActive
-            ? 'bg-[#1E5FEE] border-[#1E5FEE] text-white shadow-lg'
-            : dark
-            ? 'bg-slate-950 text-white border-slate-900 hover:border-[#1E5FEE]'
-            : 'bg-white border-slate-200 text-slate-800 hover:border-[#1E5FEE]'
-        }`}
-      >
-        <Icon size={14} className="mx-auto mb-1" />
-        <div className="text-[12px] font-semibold">{NODES[id].title}</div>
-      </div>
-    </div>
+      <rect x={x - 84} y={y - 32} width="168" height="64" rx="4" fill={selected ? '#0891B2' : '#FFFFFF'} stroke={selected ? '#22D3EE' : '#CBD5E1'} />
+      <text x={x} y={y - 2} textAnchor="middle" fill={selected ? '#FFFFFF' : '#0F172A'} fontSize="14" fontWeight="700">{nodes[id][0]}</text>
+      <text x={x} y={y + 17} textAnchor="middle" fill={selected ? '#CFFAFE' : '#64748B'} fontSize="10">{nodes[id][1]}</text>
+    </g>
   );
 };
 
 const MegaDiagram = () => {
   const [active, setActive] = useState('moic');
-  const [diagRef, diagIn] = useInView({ threshold: 0.2 });
-
-  // Layout coordinates on an 1100 x 720 svg canvas
-  const P = {
-    moic:    { x: 550, y: 40 },
-    formula: { x: 320, y: 150 },
-    slices:  { x: 550, y: 150 },
-    drivers: { x: 780, y: 150 },
-    gov:     { x: 550, y: 260 },
-    git:     { x: 550, y: 370 },
-    agent:   { x: 550, y: 480 },
-    snow:    { x: 320, y: 590 },
-    brick:   { x: 780, y: 590 },
-    ai:      { x: 550, y: 640 },
-    answer:  { x: 550, y: 700 },
-  };
-
-  const connections = [
-    ['moic', 'formula'], ['moic', 'slices'], ['moic', 'drivers'],
-    ['formula', 'gov'], ['slices', 'gov'], ['drivers', 'gov'],
-    ['gov', 'git'], ['git', 'agent'],
-    ['agent', 'snow'], ['agent', 'brick'],
-    ['snow', 'ai'], ['brick', 'ai'], ['ai', 'answer'],
-  ];
-
-  const activeSet = new Set();
-  connections.forEach(([a, b]) => {
-    if (a === active || b === active) {
-      activeSet.add(`${a}-${b}`);
-    }
-  });
+  const [diagramRef, inView] = useInView({ threshold: 0.15 });
+  const reduced = useReducedMotion();
+  const activeEdges = useMemo(() => new Set(edges.filter(([a, b]) => a === active || b === active).map(([a, b]) => `${a}-${b}`)), [active]);
 
   return (
-    <section id="mega-diagram" className="py-24 md:py-32 bg-slate-50 border-y border-black/5">
-      <div className="max-w-[1200px] mx-auto px-6">
-        <div className="max-w-3xl mb-10">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">The Duo Data architecture</p>
-          <h2 className="hero-headline text-[40px] md:text-[56px] text-slate-950 leading-[0.98]">
-            From business meaning to a governed AI answer.
-          </h2>
-          <p className="mt-6 text-slate-600 text-[15px] leading-relaxed">
-            Click any node to see what it does. Meaning → semantics → governance → code → platform → AI — all in one traceable spine.
-          </p>
-        </div>
+    <section id="mega-diagram" className="border-y border-black/5 bg-slate-50 py-24 md:py-32" data-testid="mega-diagram-section">
+      <div className="mx-auto max-w-[1200px] px-6">
+        <Reveal className="grid gap-8 border-b border-slate-200 pb-12 md:grid-cols-[180px_minmax(0,1fr)] md:gap-16">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500" data-testid="mega-diagram-eyebrow">System map</p>
+          <div className="max-w-4xl">
+            <h2 className="hero-headline text-4xl leading-none text-slate-950 sm:text-5xl lg:text-6xl" data-testid="mega-diagram-title">One traceable spine from metric to answer.</h2>
+            <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-600 md:text-base" data-testid="mega-diagram-description">Select any stage to inspect its role in the governed architecture.</p>
+          </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Diagram */}
-          <div ref={diagRef} className="lg:col-span-2 relative bg-white rounded-3xl border border-black/10 overflow-hidden" style={{ height: 760 }}>
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1100 760" preserveAspectRatio="xMidYMid meet">
-              {connections.map(([a, b], i) => {
-                const p1 = P[a];
-                const p2 = P[b];
-                const isActive = activeSet.has(`${a}-${b}`);
-                const len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]" ref={diagramRef}>
+          <div className="hidden min-h-[720px] overflow-hidden border border-slate-200 bg-white md:block" data-testid="mega-diagram-desktop-canvas">
+            <svg viewBox="0 0 1000 780" className="h-full w-full" role="img" aria-labelledby="mega-title mega-description" data-testid="mega-diagram-svg">
+              <title id="mega-title">Duo Data governed architecture</title>
+              <desc id="mega-description">An interactive architecture from MOIC business meaning through governance and data platforms to a grounded AI answer.</desc>
+              {edges.map(([a, b], index) => {
+                const selected = activeEdges.has(`${a}-${b}`);
                 return (
-                  <line
+                  <motion.line
                     key={`${a}-${b}`}
-                    x1={p1.x}
-                    y1={p1.y}
-                    x2={p2.x}
-                    y2={p2.y}
-                    stroke={isActive ? '#1E5FEE' : '#cbd5e1'}
-                    strokeWidth={isActive ? 2 : 1}
-                    strokeDasharray={isActive ? '0' : `${len}`}
-                    className="draw-path"
-                    data-draw={diagIn ? 'in' : 'out'}
-                    style={{ '--dash': len, transitionDelay: `${i * 90}ms` }}
+                    x1={positions[a][0]}
+                    y1={positions[a][1]}
+                    x2={positions[b][0]}
+                    y2={positions[b][1]}
+                    stroke={selected ? '#06B6D4' : '#CBD5E1'}
+                    strokeWidth={selected ? 2 : 1}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+                    transition={{ duration: reduced ? 0 : 0.7, delay: reduced ? 0 : index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    data-testid={`mega-edge-${a}-${b}`}
                   />
                 );
               })}
+              {Object.keys(nodes).map((id) => <GraphNode key={id} id={id} active={active} onActivate={setActive} />)}
             </svg>
-            {Object.keys(P).map((id, i) => {
-              const p = P[id];
-              const xPct = (p.x / 1100) * 100;
-              const yPct = (p.y / 760) * 100;
-              return (
-                <Node
-                  key={id}
-                  id={id}
-                  active={active}
-                  onClick={setActive}
-                  x={`${xPct}%`}
-                  y={`${yPct}%`}
-                  dark={['gov', 'git', 'agent', 'answer'].includes(id)}
-                  revealIn={diagIn}
-                  revealDelay={400 + i * 60}
-                />
-              );
-            })}
           </div>
 
-          {/* Detail panel */}
-          <div className="p-8 rounded-3xl bg-slate-950 text-white">
-            <div className="text-[11px] uppercase tracking-widest text-blue-300 font-medium mb-2">
-              {NODES[active].subtitle}
-            </div>
-            <h3 className="hero-headline text-[36px] mb-3">{NODES[active].title}</h3>
-            <p className="text-[14px] text-slate-300 leading-relaxed">{NODES[active].detail}</p>
-
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-2">Explore the spine</div>
-              <div className="flex flex-wrap gap-1.5">
-                {Object.keys(NODES).map((id) => (
-                  <button
-                    key={id}
-                    onClick={() => setActive(id)}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
-                      active === id
-                        ? 'bg-white text-slate-950'
-                        : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10'
-                    }`}
-                  >
-                    {NODES[id].title}
-                  </button>
-                ))}
-              </div>
-            </div>
+          <div className="grid grid-cols-2 gap-2 md:hidden" data-testid="mega-diagram-mobile-list">
+            {Object.keys(nodes).map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setActive(id)}
+                aria-pressed={active === id}
+                className={`min-h-20 border px-3 py-3 text-left transition-[background-color,border-color,color] duration-300 ${active === id ? 'border-cyan-500 bg-slate-950 text-white' : 'border-slate-200 bg-white text-slate-700'}`}
+                data-testid={`mega-mobile-node-${id}`}
+              >
+                <span className="block text-sm font-bold">{nodes[id][0]}</span>
+                <span className={`mt-1 block text-[11px] ${active === id ? 'text-cyan-200' : 'text-slate-500'}`}>{nodes[id][1]}</span>
+              </button>
+            ))}
           </div>
+
+          <aside className="border border-slate-900 bg-slate-950 p-7 text-white md:p-9" data-testid="mega-diagram-detail-panel">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300" data-testid="mega-active-subtitle">{nodes[active][1]}</p>
+            <h3 className="mt-4 text-3xl font-bold" data-testid="mega-active-title">{nodes[active][0]}</h3>
+            <p className="mt-5 text-sm leading-relaxed text-slate-300" data-testid="mega-active-detail">{nodes[active][2]}</p>
+            <div className="mt-10 border-t border-white/10 pt-6">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">Architecture stage</p>
+              <p className="mt-2 text-5xl font-bold text-white/10">{String(Object.keys(nodes).indexOf(active) + 1).padStart(2, '0')}</p>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

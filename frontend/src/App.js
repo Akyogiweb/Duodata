@@ -6,6 +6,7 @@ import ExplorePage from "@/pages/ExplorePage";
 import IndustryDetail from "@/pages/IndustryDetail";
 import MetricPage from "@/pages/MetricPage";
 import ProductDemoPage from "@/pages/ProductDemoPage";
+import VideosPage from "@/pages/VideosPage";
 import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import BookDemoModal from "@/components/BookDemoModal";
@@ -28,6 +29,7 @@ function App() {
             <Route path="/industries/:slug" element={<IndustryDetail />} />
             <Route path="/metrics/:slug" element={<MetricPage />} />
             <Route path="/product-demo" element={<ProductDemoPage />} />
+            <Route path="/videos" element={<VideosPage />} />
           </Routes>
           <GlobalDemoModal />
         </DemoModalProvider>

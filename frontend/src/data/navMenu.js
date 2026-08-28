@@ -107,6 +107,7 @@ export const industriesItems = [
 ];
 
 export const resourcesItems = [
+  { label: 'Video Library', description: 'Product tours, use cases, and platform integration demos.', href: '/videos', type: 'route' },
   { label: 'Product Demo', description: 'A guided 10-minute walkthrough of Duo Data.', href: '/product-demo', type: 'route' },
   { label: 'Metric Cards', description: 'Live single-KPI pages: MOIC, EBITDA, NRR.', href: '/metrics/moic', type: 'route' },
   { label: 'Architecture', description: 'The full business ↔ technical semantic spine.', href: '/#mega-diagram', type: 'anchor' },

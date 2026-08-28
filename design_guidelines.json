@@ -1,0 +1,112 @@
+{
+  "theme": "dark",
+  "typography": {
+    "headings": "Space Grotesk, sans-serif",
+    "body": "IBM Plex Sans, sans-serif",
+    "mono": "IBM Plex Mono, monospace"
+  },
+  "colors": {
+    "background": "#050505",
+    "foreground": "#FFFFFF",
+    "accent": "cyan",
+    "neutral": "#1A1A1A",
+    "border": "#333333"
+  },
+  "visual_enhancers": [
+    "Square / zero-radius geometry for cards (rounded-none).",
+    "No purple gradients.",
+    "No generic drop shadows.",
+    "1px solid cyan or neutral borders for active states to emphasize Swiss design.",
+    "Use monochromatic contrast and sharp edges."
+  ],
+  "layouts": {
+    "video_banner": {
+      "desktop": "Horizontal flex layout, h-[600px]. Active card gets flex-[4] or larger, inactive get flex-1.",
+      "mobile": "Vertical flex layout, min-h-[600px] or fixed heights. Active gets flex-[4], inactive flex-1."
+    }
+  },
+  "motion": {
+    "cards": "Use framer-motion layout transitions. spring stiffness 300, damping 30 for snappy, technical feel.",
+    "auto_advance": "setInterval every 5 seconds, clear on hover or focus."
+  },
+  "accessibility": [
+    "Keyboard navigable using Tab.",
+    "aria-roledescription='carousel'",
+    "Add 'data-testid' to all cards and play buttons.",
+    "Pause auto-play on focus/hover."
+  ],
+  "components": {
+    "VideoBanner": {
+      "path": "/app/frontend/src/components/VideoBanner.jsx",
+      "description": "An auto-advancing, accordion-style carousel of video cards.",
+      "videos": [
+        {
+          "id": "rUocvLAq-Gk",
+          "title": "Duodata Metrics Ontology and Platform Agents",
+          "category": "Product",
+          "thumbnail": "https://img.youtube.com/vi/rUocvLAq-Gk/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=rUocvLAq-Gk"
+        },
+        {
+          "id": "WB5hp94zpCc",
+          "title": "How to talk to your data with AI - Self-service BI with Duodata",
+          "category": "Use Case",
+          "thumbnail": "https://img.youtube.com/vi/WB5hp94zpCc/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=WB5hp94zpCc"
+        },
+        {
+          "id": "GESHr4irRmc",
+          "title": "Govern Metrics Across Snowflake and Databricks",
+          "category": "Integration",
+          "thumbnail": "https://img.youtube.com/vi/GESHr4irRmc/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=GESHr4irRmc"
+        },
+        {
+          "id": "f19-h-QsYTo",
+          "title": "From Business Metrics to Snowflake Semantic Views",
+          "category": "Integration",
+          "thumbnail": "https://img.youtube.com/vi/f19-h-QsYTo/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=f19-h-QsYTo"
+        },
+        {
+          "id": "6HJVm2tHdAg",
+          "title": "Business-Approved Metrics Layer for Snowflake",
+          "category": "Product",
+          "thumbnail": "https://img.youtube.com/vi/6HJVm2tHdAg/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=6HJVm2tHdAg"
+        },
+        {
+          "id": "tW71VuKqmfY",
+          "title": "Metric Trust, Semantic Views & Cortex Analyst",
+          "category": "Snowflake",
+          "thumbnail": "https://img.youtube.com/vi/tW71VuKqmfY/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=tW71VuKqmfY"
+        },
+        {
+          "id": "2Tg0AJz2auU",
+          "title": "Built-On Databricks Startup Challenge 2025",
+          "category": "Databricks",
+          "thumbnail": "https://img.youtube.com/vi/2Tg0AJz2auU/maxresdefault.jpg",
+          "url": "https://www.youtube.com/watch?v=2Tg0AJz2auU"
+        }
+      ]
+    }
+  },
+  "instructions_to_main_agent": [
+    "Install 'framer-motion' if not present (e.g. `npm install framer-motion` or `yarn add framer-motion`).",
+    "Implement the VideoBanner in /app/frontend/src/components/VideoBanner.jsx and embed it into the Home page.",
+    "Use framer-motion `<motion.div layout>` for the cards to smoothly animate width changes between active and inactive states.",
+    "For the active card, render the thumbnail image with object-cover, overlaid with bg-black/60 so the white title text is readable.",
+    "For inactive cards, render a dark background (#111) with the category text rotated vertically (`writing-mode: vertical-rl; transform: rotate(180deg)`).",
+    "On active card click, reveal a responsive `iframe` overlay (or replace the card content inline) using the privacy-enhanced YouTube URL (`https://www.youtube-nocookie.com/embed/${id}?autoplay=1`).",
+    "Ensure 'data-testid' attributes are added to each card and play button."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Avoid generic 'AI slop' aesthetics. Do not use generic drop shadows; prefer 1px borders and distinct monochromatic layers.",
+    "DO NOT apply 'transition: all'. Apply specific transitions like 'transition-colors' or 'transition-opacity'.",
+    "DO NOT center align the app container. No '.App { text-align: center; }'.",
+    "Ensure high contrast and accessibility. Use standard HTML data-testid attributes for interactable elements (e.g., data-testid='video-card-0').",
+    "Do not use completely transparent backgrounds where text readability is an issue. Overlays must have a solid or semi-solid backdrop.",
+    "Stick strictly to the requested font families (Space Grotesk, IBM Plex) and the base color (#050505) with cyan accents."
+  ]
+}

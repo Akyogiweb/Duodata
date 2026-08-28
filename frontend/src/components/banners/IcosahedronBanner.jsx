@@ -1,132 +1,114 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import useInView from '@/hooks/useInView';
 import DarkBanner from './DarkBanner';
 
-/**
- * "The Metric Ontology" — icosahedron surrounded by a field of "Decision" circles.
- * A hero-scale visual anchor. The tiled Decision circles fade toward the edges
- * with a vignette so the central ontology cluster stays the focal point.
- */
-
-// Icosahedron approximation
-const vertices = [
-  { x: 0, y: -70 },
-  { x: 62, y: -30 },
-  { x: 40, y: 48 },
-  { x: -40, y: 48 },
-  { x: -62, y: -30 },
-  { x: 0, y: 0 },
-  { x: 34, y: -12 },
-  { x: 22, y: 30 },
-  { x: -22, y: 30 },
-  { x: -34, y: -12 },
-  { x: 0, y: -32 },
-  { x: 0, y: 32 },
+const PHI = (1 + Math.sqrt(5)) / 2;
+const rawVertices = [
+  [0, 1, PHI], [0, -1, PHI], [0, 1, -PHI], [0, -1, -PHI],
+  [1, PHI, 0], [-1, PHI, 0], [1, -PHI, 0], [-1, -PHI, 0],
+  [PHI, 0, 1], [-PHI, 0, 1], [PHI, 0, -1], [-PHI, 0, -1],
 ];
-const edges = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 0],
-  [0, 10], [1, 6], [2, 7], [3, 8], [4, 9],
-  [6, 7], [7, 8], [8, 9], [9, 6], [6, 10], [7, 11], [8, 11], [9, 10],
-  [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11],
-  [10, 11], [0, 5],
-];
-const nodeColors = ['#A78BFA', '#60A5FA', '#C4B5FD', '#93C5FD', '#7DD3FC', '#DDD6FE', '#A5B4FC', '#818CF8'];
 
-const IcosahedronCore = () => (
-  <svg viewBox="-100 -100 200 200" className="w-full h-full">
-    {edges.map(([a, b], i) => (
-      <line
-        key={i}
-        x1={vertices[a].x}
-        y1={vertices[a].y}
-        x2={vertices[b].x}
-        y2={vertices[b].y}
-        stroke="#93A5C4"
-        strokeOpacity="0.45"
-        strokeWidth="0.7"
-      />
-    ))}
-    {vertices.map((v, i) => (
-      <circle
-        key={i}
-        cx={v.x}
-        cy={v.y}
-        r={i === 5 ? 4.5 : 3.4}
-        fill={nodeColors[i % nodeColors.length]}
-      />
-    ))}
-    <text x="0" y="2" textAnchor="middle" fill="#60A5FA" fontSize="14" fontWeight="700">Metric</text>
-    <text x="0" y="16" textAnchor="middle" fill="#94A3B8" fontSize="9" fontWeight="500">Ontology</text>
-  </svg>
-);
-
-// Grid of decision circles that fill the background
-const DecisionField = () => {
-  const cols = 12;
-  const rows = 6;
-  const cells = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      cells.push({ r, c, key: `${r}-${c}` });
-    }
-  }
-  return (
-    <div className="absolute inset-0 grid grid-cols-6 md:grid-cols-12 grid-rows-6 gap-2 md:gap-4 p-6 md:p-10 pointer-events-none">
-      {cells.map(({ r, c, key }) => {
-        // Distance from center to fade opacity — the closer to center, the more faded (to make room for icosahedron)
-        const dx = c - (cols - 1) / 2;
-        const dy = r - (rows - 1) / 2;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const maxDist = Math.sqrt(((cols - 1) / 2) ** 2 + ((rows - 1) / 2) ** 2);
-        // Hide the 6 center cells to leave space
-        const isCenter = Math.abs(dx) < 2 && Math.abs(dy) < 1.5;
-        if (isCenter) return <div key={key} />;
-        // Fade based on outer distance too
-        const opacity = 0.15 + 0.55 * (1 - dist / maxDist);
-        return (
-          <div key={key} className="flex items-center justify-center">
-            <div
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full border flex items-center justify-center"
-              style={{
-                borderColor: 'rgba(148, 163, 184, 0.35)',
-                opacity: opacity.toFixed(2),
-              }}
-            >
-              <span className="text-[9px] md:text-[10px] font-medium text-slate-400">Decision</span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+const project = ([x, y, z]) => {
+  const yaw = Math.PI / 5;
+  const pitch = -Math.PI / 9;
+  const x1 = x * Math.cos(yaw) + z * Math.sin(yaw);
+  const z1 = -x * Math.sin(yaw) + z * Math.cos(yaw);
+  const y1 = y * Math.cos(pitch) - z1 * Math.sin(pitch);
+  return { x: 600 + x1 * 112, y: 315 - y1 * 112, z: y * Math.sin(pitch) + z1 * Math.cos(pitch) };
 };
 
-const IcosahedronBanner = () => (
-  <DarkBanner
-    eyebrow="The Metric Ontology"
-    title={<>The <span style={{ color: '#1E5FEE' }}>Metric</span> Ontology.</>}
-    subtitle="Powering real-time decisions amidst constantly changing internal and external conditions."
-  >
-    <div className="relative aspect-[16/8] w-full">
-      {/* Field of decisions */}
-      <DecisionField />
+const IcosahedronBanner = () => {
+  const [ref, inView] = useInView({ threshold: 0.2 });
+  const reduced = useReducedMotion();
+  const { vertices, edges } = useMemo(() => {
+    const projected = rawVertices.map(project);
+    const connected = [];
+    rawVertices.forEach((a, i) => rawVertices.slice(i + 1).forEach((b, offset) => {
+      const distance = Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+      if (Math.abs(distance - 2) < 0.001) connected.push([i, i + offset + 1]);
+    }));
+    return { vertices: projected, edges: connected.sort((a, b) => projected[a[0]].z - projected[b[0]].z) };
+  }, []);
 
-      {/* Vignette darkens the outer edges */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(closest-side at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%)',
-        }}
-      />
+  return (
+    <DarkBanner
+      index="03"
+      eyebrow="The metric ontology"
+      title={<>One semantic model. <span className="text-cyan-400">Every decision connected.</span></>}
+      subtitle="An exact network of governed relationships keeps every metric traceable as conditions, systems, and questions change."
+      testId="icosahedron-banner"
+    >
+      <div ref={ref} className="absolute inset-0" data-testid="icosahedron-visualization">
+        <svg
+          viewBox="0 0 1200 640"
+          className="h-full w-full"
+          role="img"
+          aria-labelledby="icosahedron-title icosahedron-description"
+          data-testid="icosahedron-svg"
+        >
+          <title id="icosahedron-title">Exact metric ontology network</title>
+          <desc id="icosahedron-description">An exact projected icosahedron draws thirty edges between twelve semantic vertices.</desc>
+          <defs>
+            <filter id="ico-glow" x="-300%" y="-300%" width="700%" height="700%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
 
-      {/* Central icosahedron */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[280px] h-[280px] md:w-[360px] md:h-[360px]">
-          <IcosahedronCore />
-        </div>
+          <circle cx="600" cy="315" r="250" fill="none" stroke="white" strokeOpacity="0.05" />
+          <circle cx="600" cy="315" r="210" fill="none" stroke="white" strokeOpacity="0.035" />
+          <line x1="600" y1="54" x2="600" y2="576" stroke="white" strokeOpacity="0.06" />
+          <line x1="338" y1="315" x2="862" y2="315" stroke="white" strokeOpacity="0.06" />
+
+          {edges.map(([a, b], index) => (
+            <motion.line
+              key={`${a}-${b}`}
+              x1={vertices[a].x}
+              y1={vertices[a].y}
+              x2={vertices[b].x}
+              y2={vertices[b].y}
+              stroke={index % 5 === 0 ? '#06B6D4' : '#FFFFFF'}
+              strokeOpacity={index % 5 === 0 ? 0.65 : 0.24}
+              strokeWidth={index % 5 === 0 ? 1.6 : 1}
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+              transition={{ duration: reduced ? 0 : 0.8, delay: reduced ? 0 : index * 0.035, ease: [0.16, 1, 0.3, 1] }}
+              data-testid={`icosahedron-edge-${index + 1}`}
+            />
+          ))}
+
+          {vertices.map((vertex, index) => (
+            <motion.circle
+              key={index}
+              cx={vertex.x}
+              cy={vertex.y}
+              r={index % 3 === 0 ? 5 : 3.5}
+              fill={index % 3 === 0 ? '#06B6D4' : '#FFFFFF'}
+              filter={index % 3 === 0 ? 'url(#ico-glow)' : undefined}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: [0, 1, 0.65], scale: [0, 1.35, 1] } : { opacity: 0, scale: 0 }}
+              transition={{ duration: reduced ? 0 : 0.7, delay: reduced ? 0 : 0.7 + index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              style={{ transformOrigin: `${vertex.x}px ${vertex.y}px` }}
+              data-testid={`icosahedron-vertex-${index + 1}`}
+            />
+          ))}
+
+          <g data-testid="icosahedron-core-label">
+            <circle cx="600" cy="315" r="70" fill="#090909" fillOpacity="0.92" stroke="white" strokeOpacity="0.12" />
+            <text x="600" y="303" textAnchor="middle" fill="white" fontSize="12" letterSpacing="2">METRIC</text>
+            <text x="600" y="335" textAnchor="middle" fill="#67E8F9" fontSize="22" fontWeight="700">Ontology</text>
+          </g>
+
+          <text x="102" y="104" fill="white" fillOpacity="0.42" fontSize="11" letterSpacing="1.5">12 SEMANTIC VERTICES</text>
+          <text x="1098" y="104" textAnchor="end" fill="white" fillOpacity="0.42" fontSize="11" letterSpacing="1.5">30 GOVERNED EDGES</text>
+          <text x="102" y="552" fill="white" fillOpacity="0.42" fontSize="11" letterSpacing="1.5">ONE SHARED MEANING</text>
+          <text x="1098" y="552" textAnchor="end" fill="white" fillOpacity="0.42" fontSize="11" letterSpacing="1.5">CONTINUOUS LINEAGE</text>
+        </svg>
       </div>
-    </div>
-  </DarkBanner>
-);
+    </DarkBanner>
+  );
+};
 
 export default IcosahedronBanner;

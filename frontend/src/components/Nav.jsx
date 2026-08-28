@@ -6,13 +6,14 @@ import { DuodataFullLogo } from '@/components/DuodataMark';
 import { navSections } from '@/data/navMenu';
 
 const Logo = () => (
-  <Link to="/" className="flex items-center">
+  <Link to="/" className="flex items-center" data-testid="nav-home-link">
     <DuodataFullLogo height={22} />
   </Link>
 );
 
 // A single item link inside a mega-menu panel.
 const MenuItem = ({ item, onNavigate, featured = false }) => {
+  const testId = `nav-item-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
   const inner = (
     <div className={`group flex items-start gap-3 px-3 py-2.5 rounded-xl transition-colors ${featured ? 'bg-slate-50 hover:bg-slate-100' : 'hover:bg-slate-50'}`}>
       <div className="flex-1 min-w-0">
@@ -32,13 +33,13 @@ const MenuItem = ({ item, onNavigate, featured = false }) => {
 
   if (item.type === 'route') {
     return (
-      <Link to={item.href} onClick={onNavigate}>
+      <Link to={item.href} onClick={onNavigate} data-testid={testId}>
         {inner}
       </Link>
     );
   }
   return (
-    <a href={item.href} onClick={onNavigate}>
+    <a href={item.href} onClick={onNavigate} data-testid={testId}>
       {inner}
     </a>
   );
@@ -86,6 +87,7 @@ const DesktopNav = ({ activeKey, setActiveKey, onDemoOpen }) => {
                 ? 'bg-slate-950 text-white'
                 : 'text-slate-700 hover:bg-slate-100'
             }`}
+            data-testid={`nav-menu-${section.key}`}
           >
             {section.label}
             <ChevronDown
@@ -99,7 +101,7 @@ const DesktopNav = ({ activeKey, setActiveKey, onDemoOpen }) => {
           )}
         </div>
       ))}
-      <button onClick={onDemoOpen} className="px-3.5 py-2 rounded-full text-[13.5px] font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+      <button onClick={onDemoOpen} className="px-3.5 py-2 rounded-full text-[13.5px] font-medium text-slate-700 hover:bg-slate-100 transition-colors" data-testid="nav-book-demo-button">
         Book a demo
       </button>
     </div>
@@ -119,6 +121,7 @@ const MobileMenu = ({ open, onClose, onDemoOpen }) => {
             <button
               onClick={() => setExpanded(isOpen ? null : section.key)}
               className="w-full flex items-center justify-between px-3 py-3 text-left text-[14px] font-semibold text-slate-950"
+              data-testid={`mobile-nav-menu-${section.key}`}
             >
               {section.label}
               <ChevronDown
@@ -139,6 +142,7 @@ const MobileMenu = ({ open, onClose, onDemoOpen }) => {
       <button
         onClick={() => { onClose(); onDemoOpen(); }}
         className="w-full mt-2 px-4 py-3 rounded-xl bg-slate-950 text-white text-[13.5px] font-semibold flex items-center justify-center gap-1.5"
+        data-testid="mobile-nav-book-demo-button"
       >
         Book a demo <ArrowRight size={14} />
       </button>
@@ -166,7 +170,7 @@ const Nav = () => {
         <DesktopNav activeKey={activeKey} setActiveKey={setActiveKey} onDemoOpen={demo.open} />
 
         <div className="ml-auto flex items-center gap-1">
-          <button onClick={demo.open} className="pill-btn-dark">
+          <button onClick={demo.open} className="pill-btn-dark" data-testid="nav-primary-demo-button">
             <span className="hidden sm:inline">See Duo in action</span>
             <span className="sm:hidden">Get started</span>
             <ChevronRight size={16} strokeWidth={2.2} />
@@ -175,6 +179,7 @@ const Nav = () => {
             className="lg:hidden ml-1 p-2 rounded-full hover:bg-black/5"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
+            data-testid="nav-mobile-toggle-button"
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>

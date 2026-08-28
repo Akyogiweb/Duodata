@@ -1,34 +1,35 @@
 import React from 'react';
 
-/**
- * Reusable dark-mode banner shell used for the three baseline visuals.
- * - eyebrow / title / subtitle sit above the visualization on light bg
- * - the dark stage renders inside a rounded card with generous padding
- */
-const DarkBanner = ({ eyebrow, title, subtitle, children, className = '', stageClassName = '' }) => (
-  <section className={`py-16 md:py-24 bg-white ${className}`}>
-    <div className="max-w-[1200px] mx-auto px-6">
-      <div className="text-center max-w-3xl mx-auto mb-8">
-        {eyebrow && (
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">
-            {eyebrow}
-          </p>
-        )}
-        {title && (
-          <h2 className="hero-headline text-[32px] md:text-[52px] text-slate-950 leading-[0.98]">
+const DarkBanner = ({ index, eyebrow, title, subtitle, children, testId }) => (
+  <section
+    className="dark-banner-shell border-y border-white/10 bg-[#050505] text-white"
+    data-testid={testId}
+  >
+    <div className="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+      <header className="grid gap-8 border-b border-white/10 pb-10 md:grid-cols-[180px_minmax(0,1fr)] md:gap-16 md:pb-14">
+        <div className="flex items-start gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">
+          <span className="text-cyan-400" data-testid={`${testId}-index`}>{index}</span>
+          <span data-testid={`${testId}-eyebrow`}>{eyebrow}</span>
+        </div>
+        <div className="max-w-4xl">
+          <h2
+            className="hero-headline text-4xl leading-none text-white sm:text-5xl lg:text-6xl"
+            data-testid={`${testId}-title`}
+          >
             {title}
           </h2>
-        )}
-        {subtitle && (
-          <p className="mt-4 text-slate-600 text-[15px] leading-relaxed">{subtitle}</p>
-        )}
-      </div>
+          <p
+            className="mt-6 max-w-2xl text-sm leading-relaxed text-white/60 md:text-base"
+            data-testid={`${testId}-subtitle`}
+          >
+            {subtitle}
+          </p>
+        </div>
+      </header>
 
       <div
-        className={`relative rounded-[28px] overflow-hidden ${stageClassName}`}
-        style={{
-          background: 'radial-gradient(80% 100% at 50% 50%, #0f172a 0%, #050912 70%, #030509 100%)',
-        }}
+        className="relative mt-10 min-h-[360px] overflow-hidden border border-white/10 bg-[#090909] md:mt-14 md:min-h-[560px]"
+        data-testid={`${testId}-stage`}
       >
         {children}
       </div>

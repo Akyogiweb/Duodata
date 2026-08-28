@@ -4,6 +4,7 @@ import Hero from '@/components/Hero';
 import LogoMarquee from '@/components/LogoMarquee';
 import { Testimonials, CTA } from '@/components/Sections';
 import Footer from '@/components/Footer';
+import VideoShowcase from '@/components/VideoShowcase';
 
 // New narrative sections
 import MeaningProblem from '@/components/sections/MeaningProblem';
@@ -32,6 +33,7 @@ const Landing = () => {
       <Nav />
       <Hero />
       <LogoMarquee />
+      <VideoShowcase />
 
       {/* Problem narrative */}
       <MeaningProblem />

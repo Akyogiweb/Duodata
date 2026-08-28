@@ -1,135 +1,94 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import useInView from '@/hooks/useInView';
 import DarkBanner from './DarkBanner';
-import { UserSquare2, Cpu } from 'lucide-react';
 
-/**
- * "Why DuoData is called DuoData" — Lemniscate / infinity visualization.
- * Two side circles connected via a lemniscate; center icosahedron labelled Metric Ontology.
- * Under the circles: Humans (left) and AI (right).
- */
-const IcosahedronMini = () => {
-  // 12 vertex icosahedron approximation projected onto 2D
-  const vertices = [
-    { x: 0, y: -46 },
-    { x: 41, y: -20 },
-    { x: 26, y: 32 },
-    { x: -26, y: 32 },
-    { x: -41, y: -20 },
-    { x: 0, y: 0 },
-    { x: 22, y: -8 },
-    { x: 14, y: 20 },
-    { x: -14, y: 20 },
-    { x: -22, y: -8 },
-    { x: 0, y: -22 },
-    { x: 0, y: 22 },
-  ];
-  const edges = [
-    [0, 1], [1, 2], [2, 3], [3, 4], [4, 0],
-    [0, 10], [1, 6], [2, 7], [3, 8], [4, 9],
-    [6, 7], [7, 8], [8, 9], [9, 6], [6, 10], [7, 11], [8, 11], [9, 10],
-    [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11],
-    [10, 11],
-  ];
-  const colors = ['#A78BFA', '#60A5FA', '#C4B5FD', '#93C5FD', '#7DD3FC', '#DDD6FE'];
+const LEMNISCATE = 'M 600 300 C 510 128 260 118 220 300 C 260 482 510 472 600 300 C 690 128 940 118 980 300 C 940 482 690 472 600 300 Z';
+
+const OrbitDot = ({ delay, duration, reduced, accent = false, testId }) => (
+  <circle
+    cx={reduced ? 600 : 0}
+    cy={reduced ? 300 : 0}
+    r={accent ? 6 : 4}
+    fill={accent ? '#06B6D4' : '#FFFFFF'}
+    filter={accent ? 'url(#lemniscate-dot-glow)' : undefined}
+    data-testid={testId}
+  >
+    {!reduced && (
+      <animateMotion begin={`${delay}s`} dur={`${duration}s`} repeatCount="indefinite" rotate="auto">
+        <mpath href="#duo-lemniscate-path" />
+      </animateMotion>
+    )}
+  </circle>
+);
+
+const LemniscateBanner = () => {
+  const [ref, inView] = useInView({ threshold: 0.25 });
+  const reduced = useReducedMotion();
+
   return (
-    <svg viewBox="-70 -70 140 140" className="w-full h-full">
-      {edges.map(([a, b], i) => (
-        <line
-          key={i}
-          x1={vertices[a].x}
-          y1={vertices[a].y}
-          x2={vertices[b].x}
-          y2={vertices[b].y}
-          stroke="#93A5C4"
-          strokeOpacity="0.35"
-          strokeWidth="0.6"
-        />
-      ))}
-      {vertices.map((v, i) => (
-        <circle
-          key={i}
-          cx={v.x}
-          cy={v.y}
-          r={i === 5 ? 3.5 : 2.6}
-          fill={colors[i % colors.length]}
-        />
-      ))}
-      <text x="0" y="2" textAnchor="middle" fill="#60A5FA" fontSize="10" fontWeight="700">Metric</text>
-      <text x="0" y="12" textAnchor="middle" fill="#94A3B8" fontSize="6.5" fontWeight="500">Ontology</text>
-    </svg>
+    <DarkBanner
+      index="01"
+      eyebrow="Why Duo Data"
+      title={<>Two systems. <span className="text-cyan-400">One continuous truth.</span></>}
+      subtitle="Business meaning and technical implementation stay synchronized through a governed metric ontology."
+      testId="lemniscate-banner"
+    >
+      <div ref={ref} className="absolute inset-0" data-testid="lemniscate-visualization">
+        <svg
+          viewBox="0 0 1200 600"
+          className="h-full w-full"
+          role="img"
+          aria-labelledby="lemniscate-title lemniscate-description"
+          data-testid="lemniscate-svg"
+        >
+          <title id="lemniscate-title">Continuous semantic synchronization</title>
+          <desc id="lemniscate-description">A precise figure eight connects human business context and machine implementation through Duo Data.</desc>
+          <defs>
+            <filter id="lemniscate-dot-glow" x="-300%" y="-300%" width="700%" height="700%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+
+          <line x1="600" y1="72" x2="600" y2="528" stroke="white" strokeOpacity="0.08" />
+          <line x1="120" y1="300" x2="1080" y2="300" stroke="white" strokeOpacity="0.08" />
+          <path d={LEMNISCATE} fill="none" stroke="white" strokeOpacity="0.12" strokeWidth="2" />
+          <motion.path
+            id="duo-lemniscate-path"
+            d={LEMNISCATE}
+            fill="none"
+            stroke="#06B6D4"
+            strokeWidth="2"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={inView ? { pathLength: 1, opacity: 0.82 } : { pathLength: 0, opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 1.8, ease: [0.16, 1, 0.3, 1] }}
+            data-testid="lemniscate-path"
+          />
+
+          {inView && <OrbitDot delay={0} duration={11} reduced={reduced} accent testId="lemniscate-dot-primary" />}
+          {inView && <OrbitDot delay={-3.7} duration={11} reduced={reduced} testId="lemniscate-dot-secondary" />}
+          {inView && <OrbitDot delay={-7.4} duration={11} reduced={reduced} testId="lemniscate-dot-tertiary" />}
+
+          <g data-testid="lemniscate-human-node">
+            <text x="350" y="282" textAnchor="middle" fill="white" fontSize="26" fontWeight="700">Human context</text>
+            <text x="350" y="314" textAnchor="middle" fill="white" fillOpacity="0.46" fontSize="13">definitions · ownership · decisions</text>
+          </g>
+          <g data-testid="lemniscate-machine-node">
+            <text x="850" y="282" textAnchor="middle" fill="white" fontSize="26" fontWeight="700">Machine context</text>
+            <text x="850" y="314" textAnchor="middle" fill="white" fillOpacity="0.46" fontSize="13">models · lineage · execution</text>
+          </g>
+          <g data-testid="lemniscate-core-node">
+            <circle cx="600" cy="300" r="46" fill="#090909" stroke="#06B6D4" strokeOpacity="0.75" />
+            <circle cx="600" cy="300" r="34" fill="none" stroke="white" strokeOpacity="0.12" />
+            <text x="600" y="296" textAnchor="middle" fill="white" fontSize="13" fontWeight="700">DUO</text>
+            <text x="600" y="314" textAnchor="middle" fill="#67E8F9" fontSize="9" letterSpacing="1.5">ONTOLOGY</text>
+          </g>
+        </svg>
+      </div>
+    </DarkBanner>
   );
 };
-
-const LemniscateBanner = () => (
-  <DarkBanner
-    eyebrow="Why the name?"
-    title={<>Why DuoData is called <span style={{ color: '#F97316' }}>DuoData</span>.</>}
-    subtitle="Two sides of the same problem — connected by one governed semantic layer."
-  >
-    <div className="relative aspect-[16/8] w-full">
-      <svg viewBox="0 0 1200 600" className="absolute inset-0 w-full h-full">
-        <defs>
-          <radialGradient id="lb-glow-left" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#F97316" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#F97316" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="lb-glow-right" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#60A5FA" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#60A5FA" stopOpacity="0" />
-          </radialGradient>
-          <marker id="lb-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B" />
-          </marker>
-        </defs>
-
-        {/* Glow behind side circles */}
-        <circle cx="290" cy="300" r="220" fill="url(#lb-glow-left)" />
-        <circle cx="910" cy="300" r="220" fill="url(#lb-glow-right)" />
-
-        {/* Left circle */}
-        <circle cx="290" cy="300" r="180" fill="none" stroke="#334155" strokeOpacity="0.55" strokeWidth="1" />
-        {/* Right circle */}
-        <circle cx="910" cy="300" r="180" fill="none" stroke="#334155" strokeOpacity="0.55" strokeWidth="1" />
-
-        {/* Lemniscate arcs — top and bottom crossing through center */}
-        <path d="M 290 120 C 500 120, 700 480, 910 480" fill="none" stroke="#475569" strokeOpacity="0.55" strokeWidth="1.2" markerEnd="url(#lb-arrow)" />
-        <path d="M 290 480 C 500 480, 700 120, 910 120" fill="none" stroke="#475569" strokeOpacity="0.55" strokeWidth="1.2" markerEnd="url(#lb-arrow)" />
-
-        {/* Left circle labels */}
-        <text x="290" y="220" textAnchor="middle" fill="#E2E8F0" fontSize="22" fontWeight="600">Business</text>
-        <text x="290" y="278" textAnchor="middle" fill="#F87171" fontSize="16" fontWeight="500" textDecoration="line-through" style={{ textDecoration: 'line-through' }}>Low Code</text>
-        <text x="290" y="316" textAnchor="middle" fill="#F97316" fontSize="20" fontWeight="700">NOCODE</text>
-        <text x="290" y="348" textAnchor="middle" fill="#F97316" fontSize="16" fontWeight="600">4 Simple concepts</text>
-
-        {/* Right circle labels */}
-        <text x="910" y="220" textAnchor="middle" fill="#E2E8F0" fontSize="22" fontWeight="600">IT Teams</text>
-        <text x="910" y="270" textAnchor="middle" fill="#CBD5E1" fontSize="14">Connect various data platforms</text>
-        <text x="910" y="298" textAnchor="middle" fill="#CBD5E1" fontSize="14">Closer to the business team</text>
-        <text x="910" y="326" textAnchor="middle" fill="#CBD5E1" fontSize="14">day to day</text>
-
-        {/* Under labels: Humans / AI */}
-      </svg>
-
-      {/* Center icosahedron overlay */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[220px] h-[220px]">
-          <IcosahedronMini />
-        </div>
-      </div>
-
-      {/* Bottom row: Humans and AI icons */}
-      <div className="absolute left-0 right-0 bottom-6 md:bottom-10 flex justify-around max-w-[900px] mx-auto px-16">
-        <div className="flex flex-col items-center gap-1 text-slate-200">
-          <UserSquare2 size={28} className="text-slate-300" />
-          <span className="text-[16px] md:text-[18px] font-semibold">Humans</span>
-        </div>
-        <div className="flex flex-col items-center gap-1 text-slate-200">
-          <Cpu size={28} className="text-slate-300" />
-          <span className="text-[16px] md:text-[18px] font-semibold">AI</span>
-        </div>
-      </div>
-    </div>
-  </DarkBanner>
-);
 
 export default LemniscateBanner;
