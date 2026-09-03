@@ -13,7 +13,7 @@ const LogoMarquee = () => {
   return (
     <section className="py-16 bg-slate-50/50 border-y border-black/5 overflow-hidden">
       <p className="text-center text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-8">
-        Projects into the modern data stack
+        Meaning that reaches the stack you already run
       </p>
       <div className="marquee">
         {list.map((c, i) => (

@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 const FeatureBlocks = () => {
   return (
-    <section id="solutions" className="py-24 md:py-32 bg-white">
+    <section className="py-24 md:py-32 bg-white">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
           {featureBlocks.map((f) => (

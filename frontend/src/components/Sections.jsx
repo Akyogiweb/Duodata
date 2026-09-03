@@ -10,7 +10,7 @@ export const UseCases = () => (
       <div className="max-w-2xl mb-14">
         <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Who it’s for</p>
         <h2 className="hero-headline text-[38px] md:text-[52px] text-slate-950">
-          Built for the people who own the numbers.
+          Built for the people who use the numbers — and the people who make them true.
         </h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,10 +64,10 @@ export const CTA = () => {
     <section id="get-started" className="py-24 md:py-32 bg-white">
       <div className="max-w-4xl mx-auto text-center px-6">
         <h2 className="hero-headline text-[48px] md:text-[80px] text-slate-950">
-          Meaning that <span style={{ color: '#1E5FEE' }}>scales.</span>
+          One meaning. <span style={{ color: '#1E5FEE' }}>Two experiences.</span>
         </h2>
         <p className="mt-6 max-w-xl mx-auto text-slate-600 text-[15px] leading-relaxed">
-          Give your metrics the governed context your business, data platform and AI actually need.
+          Give business teams answers they can trust, and give data teams the workspace to implement that meaning across the stack.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <button onClick={demo.open} className="pill-btn-dark">

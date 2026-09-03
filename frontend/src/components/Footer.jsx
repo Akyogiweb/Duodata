@@ -12,7 +12,7 @@ const Footer = () => (
             <span className="font-semibold text-white text-[18px] tracking-tight">Duodata</span>
           </div>
           <p className="text-[13px] leading-relaxed text-slate-400 max-w-xs">
-            The business-approved metric context platform. Governed meaning for your data platform and AI.
+            One business meaning. Two ways to work with it — business experience and technical experience, connected by shared semantics.
           </p>
         </div>
         {footerColumns.map((col) => (

@@ -1,0 +1,10 @@
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - duodata_mongo:/data/db
+
+volumes:
+  duodata_mongo:
