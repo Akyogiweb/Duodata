@@ -29,15 +29,27 @@ const Hero = () => {
       <div className="relative max-w-[1200px] mx-auto px-6">
         <div className="flex flex-col items-center text-center">
           <p className="text-[11px] md:text-[12px] tracking-[0.32em] uppercase font-medium text-slate-500 mb-5">
-            Duo Data
+            {isBusiness ? 'Business experience' : 'Technical experience'}
           </p>
           <h1 className="hero-headline text-[40px] sm:text-[56px] md:text-[80px] lg:text-[96px] text-slate-950 max-w-5xl leading-[0.95]">
-            One business meaning.
-            <br />
-            <span style={{ color: '#1E5FEE' }}>Two ways to work with it.</span>
+            {isBusiness ? (
+              <>
+                Ask better questions.
+                <br />
+                <span style={{ color: '#1E5FEE' }}>Trust the answer.</span>
+              </>
+            ) : (
+              <>
+                Define it. Govern it.
+                <br />
+                <span style={{ color: '#1E5FEE' }}>Implement it.</span>
+              </>
+            )}
           </h1>
           <p className="mt-6 max-w-2xl text-slate-600 text-[15px] md:text-[17px] leading-relaxed">
-            Duo Data brings together the business meaning behind your data and the technology that puts that meaning to work.
+            {isBusiness
+              ? 'A simple way to understand metrics, improve products and services, and get answers you can stand behind — connected to how those numbers are actually built.'
+              : 'The workspace to define, version, map, and ship the same business concepts across your data platforms — connected to the questions the business asks.'}
           </p>
           <div className="mt-8">
             <ExperienceSwitch />

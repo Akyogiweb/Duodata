@@ -7,13 +7,6 @@ import DuodataMark from '@/components/DuodataMark';
 import ExperienceSwitch from '@/components/ExperienceSwitch';
 import { useExperience } from '@/context/ExperienceContext';
 
-const navLinks = [
-  { label: 'Product', href: '/#product', type: 'anchor' },
-  { label: 'Explore', href: '/explore', type: 'route' },
-  { label: 'Case Studies', href: '/case-studies', type: 'route' },
-  { label: 'Resources', href: '/#resources', type: 'anchor' },
-];
-
 const Logo = () => {
   const { isTechnical } = useExperience();
   if (isTechnical) {
@@ -48,6 +41,21 @@ const Nav = () => {
   const demo = useDemoModal();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isBusiness } = useExperience();
+
+  const navLinks = isBusiness
+    ? [
+        { label: 'Product', href: '/#product', type: 'anchor' },
+        { label: 'Your teams', href: '/#solutions', type: 'anchor' },
+        { label: 'Case Studies', href: '/case-studies', type: 'route' },
+        { label: 'How it’s built', href: '/#connect', type: 'anchor' },
+      ]
+    : [
+        { label: 'Product', href: '/#product', type: 'anchor' },
+        { label: 'Workspace', href: '/explore', type: 'route' },
+        { label: 'Case Studies', href: '/case-studies', type: 'route' },
+        { label: 'For the business', href: '/#connect', type: 'anchor' },
+      ];
 
   const goHomeIfNeeded = () => {
     if (location.pathname !== '/') navigate('/');
