@@ -1,41 +1,75 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import {
+  EXPERIENCE_CHOSEN_COOKIE,
+  EXPERIENCE_COOKIE,
+  getCookie,
+  setCookie,
+} from '@/lib/cookies';
 
 export const EXPERIENCES = {
   business: 'business',
   technical: 'technical',
 };
 
-const STORAGE_KEY = 'duodata-experience';
+function normalize(value) {
+  return value === EXPERIENCES.technical ? EXPERIENCES.technical : EXPERIENCES.business;
+}
+
+function applyTheme(experience) {
+  if (typeof document === 'undefined') return;
+  const root = document.documentElement;
+  root.dataset.experience = experience;
+  root.classList.toggle('dark', experience === EXPERIENCES.technical);
+}
+
+function readStoredExperience() {
+  const fromCookie = getCookie(EXPERIENCE_COOKIE);
+  if (fromCookie === EXPERIENCES.business || fromCookie === EXPERIENCES.technical) {
+    return fromCookie;
+  }
+  return null;
+}
+
+function hasStoredChoice() {
+  return getCookie(EXPERIENCE_CHOSEN_COOKIE) === '1' || Boolean(readStoredExperience());
+}
 
 const ExperienceContext = createContext({
   experience: EXPERIENCES.business,
   setExperience: () => {},
+  chooseExperience: () => {},
+  hasChosen: false,
   isBusiness: true,
   isTechnical: false,
 });
 
 export const ExperienceProvider = ({ children }) => {
-  const [experience, setExperienceState] = useState(EXPERIENCES.business);
+  const [experience, setExperienceState] = useState(() => normalize(readStoredExperience() || EXPERIENCES.business));
+  const [hasChosen, setHasChosen] = useState(() => hasStoredChoice());
 
   useEffect(() => {
+    applyTheme(hasChosen ? experience : EXPERIENCES.business);
+  }, [experience, hasChosen]);
+
+  const persist = (value) => {
+    const next = normalize(value);
+    setExperienceState(next);
+    setCookie(EXPERIENCE_COOKIE, next);
     try {
-      const saved = window.sessionStorage.getItem(STORAGE_KEY);
-      if (saved === EXPERIENCES.business || saved === EXPERIENCES.technical) {
-        setExperienceState(saved);
-      }
+      window.sessionStorage.setItem(EXPERIENCE_COOKIE, next);
     } catch {
       /* ignore */
     }
-  }, []);
+  };
 
   const setExperience = (next) => {
-    const value = next === EXPERIENCES.technical ? EXPERIENCES.technical : EXPERIENCES.business;
-    setExperienceState(value);
-    try {
-      window.sessionStorage.setItem(STORAGE_KEY, value);
-    } catch {
-      /* ignore */
-    }
+    persist(next);
+    setHasChosen(true);
+    setCookie(EXPERIENCE_CHOSEN_COOKIE, '1');
+  };
+
+  const chooseExperience = (next) => {
+    setExperience(next);
   };
 
   return (
@@ -43,6 +77,8 @@ export const ExperienceProvider = ({ children }) => {
       value={{
         experience,
         setExperience,
+        chooseExperience,
+        hasChosen,
         isBusiness: experience === EXPERIENCES.business,
         isTechnical: experience === EXPERIENCES.technical,
       }}

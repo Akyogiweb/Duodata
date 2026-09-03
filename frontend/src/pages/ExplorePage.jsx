@@ -229,7 +229,7 @@ const ExplorePage = () => {
   }), [slices]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen relative">
       <Nav />
       <div className="pt-32 pb-8">
         <div className="max-w-[1200px] mx-auto px-6">

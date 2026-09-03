@@ -3,7 +3,9 @@ import { ChevronRight, Menu, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDemoModal } from '@/context/DemoModalContext';
 import { DuodataFullLogo } from '@/components/DuodataMark';
+import DuodataMark from '@/components/DuodataMark';
 import ExperienceSwitch from '@/components/ExperienceSwitch';
+import { useExperience } from '@/context/ExperienceContext';
 
 const navLinks = [
   { label: 'Product', href: '/#product', type: 'anchor' },
@@ -12,11 +14,22 @@ const navLinks = [
   { label: 'Resources', href: '/#resources', type: 'anchor' },
 ];
 
-const Logo = () => (
-  <Link to="/" className="flex items-center">
-    <DuodataFullLogo height={22} />
-  </Link>
-);
+const Logo = () => {
+  const { isTechnical } = useExperience();
+  if (isTechnical) {
+    return (
+      <Link to="/" className="flex items-center gap-2">
+        <DuodataMark size={22} />
+        <span className="font-semibold text-[15px] tracking-tight text-white">Duodata</span>
+      </Link>
+    );
+  }
+  return (
+    <Link to="/" className="flex items-center">
+      <DuodataFullLogo height={22} />
+    </Link>
+  );
+};
 
 const NavLink = ({ link, onClick }) => {
   const cls = 'pill-btn-ghost';
@@ -42,7 +55,7 @@ const Nav = () => {
 
   return (
     <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-      <nav className="nav-pill-shadow bg-white/95 backdrop-blur-md rounded-full flex items-center pl-5 pr-2 py-2 gap-1 border border-black/5 max-w-full">
+      <nav className="site-nav nav-pill-shadow rounded-full flex items-center pl-5 pr-2 py-2 gap-1 max-w-full">
         <Logo />
         <div className="hidden lg:flex items-center gap-1 ml-4">
           {navLinks.map((l) => <NavLink key={l.label} link={l} />)}
@@ -56,7 +69,7 @@ const Nav = () => {
           <ChevronRight size={16} strokeWidth={2.2} />
         </button>
         <button
-          className="lg:hidden ml-1 p-2 rounded-full hover:bg-black/5"
+          className="lg:hidden ml-1 p-2 rounded-full site-nav-icon"
           onClick={() => setOpen(!open)}
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
@@ -64,7 +77,7 @@ const Nav = () => {
         </button>
       </nav>
       {open && (
-        <div className="absolute top-16 left-4 right-4 lg:hidden bg-white rounded-2xl border border-black/10 shadow-xl p-4 flex flex-col gap-2">
+        <div className="absolute top-16 left-4 right-4 lg:hidden site-nav-menu rounded-2xl shadow-xl p-4 flex flex-col gap-2">
           <ExperienceSwitch size="sm" testId="nav-mobile-experience-switch" onSelect={() => { goHomeIfNeeded(); setOpen(false); }} />
           {navLinks.map((l) => <NavLink key={l.label} link={l} onClick={() => setOpen(false)} />)}
           <button onClick={() => { setOpen(false); demo.open(); }} className="pill-btn-ghost text-left">Book a demo</button>

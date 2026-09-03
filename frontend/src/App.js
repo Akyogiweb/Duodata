@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import BookDemoModal from "@/components/BookDemoModal";
+import WaveField from "@/components/WaveField";
+import ExperienceGate from "@/components/ExperienceGate";
 
 const GlobalDemoModal = () => {
   const { isOpen, setIsOpen } = useDemoModal();
@@ -19,12 +21,16 @@ function App() {
       <BrowserRouter>
         <DemoModalProvider>
         <ExperienceProvider>
+          <WaveField />
+          <ExperienceGate />
+          <div className="site-canvas">
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/case-studies" element={<CaseStudiesIndex />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/explore" element={<ExplorePage />} />
           </Routes>
+          </div>
           <GlobalDemoModal />
         </ExperienceProvider>
         </DemoModalProvider>

@@ -13,7 +13,7 @@ const FixedGrid = () => (
     className="absolute inset-0 pointer-events-none"
     style={{
       backgroundImage:
-        'linear-gradient(to right, rgba(15,23,42,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.05) 1px, transparent 1px)',
+        'linear-gradient(to right, rgba(15,23,42,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.035) 1px, transparent 1px)',
       backgroundSize: '160px 100%, 100% 80px',
     }}
   />
@@ -24,7 +24,7 @@ const Hero = () => {
   const { isBusiness } = useExperience();
 
   return (
-    <section className="relative w-full overflow-hidden bg-white pt-32 pb-16 md:pt-40 md:pb-24">
+    <section className="relative w-full overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
       <FixedGrid />
       <div className="relative max-w-[1200px] mx-auto px-6">
         <div className="flex flex-col items-center text-center">

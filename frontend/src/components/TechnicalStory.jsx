@@ -2,7 +2,7 @@ import React from 'react';
 import { technicalCapabilities } from '@/mock';
 
 const TechnicalStory = () => (
-  <section id="solutions" className="py-20 md:py-28 bg-slate-50 border-y border-black/5" data-testid="home-technical-story">
+    <section className="py-20 md:py-28 bg-slate-50/80 border-y border-black/5" data-testid="home-technical-story">
     <div className="max-w-[1200px] mx-auto px-6">
       <div className="max-w-3xl mb-14">
         <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">For data and technology teams</p>
