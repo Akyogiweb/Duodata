@@ -1,20 +1,25 @@
 import React from 'react';
 
+const ribbon = (y, amp) =>
+  `M0,${y} C360,${y - amp} 1080,${y + amp} 1440,${y} C1800,${y - amp} 2520,${y + amp} 2880,${y}`;
+
+const filled = (y, amp) => `${ribbon(y, amp)} L2880,900 L0,900 Z`;
+
 const WaveField = () => (
   <div className="wave-field" aria-hidden>
-    <svg className="wave-field-svg" viewBox="0 0 1440 900" preserveAspectRatio="none">
-      <path
-        className="wave-path wave-a"
-        d="M0,520 C180,470 320,610 520,560 C720,510 820,430 1020,480 C1220,530 1320,500 1440,470 L1440,900 L0,900 Z"
-      />
-      <path
-        className="wave-path wave-b"
-        d="M0,580 C220,640 380,500 600,540 C820,580 980,680 1180,620 C1320,580 1380,600 1440,630 L1440,900 L0,900 Z"
-      />
-      <path
-        className="wave-path wave-c"
-        d="M0,430 C260,390 420,510 640,470 C860,430 980,360 1180,400 C1320,430 1400,410 1440,390 L1440,900 L0,900 Z"
-      />
+    <svg className="wave-field-svg wave-flow-slow" viewBox="0 0 2880 900" preserveAspectRatio="none">
+      <path className="wave-fill wave-fill-a" d={filled(520, 90)} />
+      <path className="wave-fill wave-fill-b" d={filled(640, 70)} />
+      <path className="wave-stroke wave-stroke-a" d={ribbon(280, 100)} />
+      <path className="wave-stroke wave-stroke-b" d={ribbon(450, 120)} />
+      <path className="wave-stroke wave-stroke-c" d={ribbon(620, 90)} />
+      <path className="wave-link" d="M720,280 C720,360 800,360 800,450 C800,530 720,530 720,620" />
+      <path className="wave-link" d="M2160,280 C2160,360 2080,360 2080,450 C2080,530 2160,530 2160,620" />
+    </svg>
+    <svg className="wave-field-svg wave-flow-fast" viewBox="0 0 2880 900" preserveAspectRatio="none">
+      <path className="wave-stroke wave-stroke-d" d={ribbon(360, 80)} />
+      <path className="wave-stroke wave-stroke-e" d={ribbon(540, 70)} />
+      <path className="wave-link wave-link-soft" d="M1440,360 C1440,430 1520,430 1520,540" />
     </svg>
   </div>
 );
