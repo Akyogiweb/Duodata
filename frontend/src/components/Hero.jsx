@@ -27,43 +27,39 @@ const Hero = () => {
     <section className="relative w-full overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
       <FixedGrid />
       <div className="relative max-w-[1200px] mx-auto px-6">
-        <div className="flex flex-col items-center text-center">
-          <p className="text-[11px] md:text-[12px] tracking-[0.32em] uppercase font-medium text-slate-500 mb-5">
-            {isBusiness ? 'Business experience' : 'Technical experience'}
-          </p>
-          <h1 className="hero-headline text-[40px] sm:text-[56px] md:text-[80px] lg:text-[96px] text-slate-950 max-w-5xl leading-[0.95]">
-            {isBusiness ? (
-              <>
-                Ask better questions.
-                <br />
-                <span style={{ color: '#1E5FEE' }}>Trust the answer.</span>
-              </>
-            ) : (
-              <>
+        {isBusiness ? (
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-8">
+              <ExperienceSwitch />
+            </div>
+            <ConversationHero />
+            <p className="mt-8 max-w-md text-[13px] text-slate-500">
+              Answers in business language — calculation, sources, and lineage stay one switch away.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col items-center text-center">
+              <p className="text-[11px] md:text-[12px] tracking-[0.32em] uppercase font-medium text-slate-500 mb-5">
+                Technical experience
+              </p>
+              <h1 className="hero-headline text-[40px] sm:text-[56px] md:text-[80px] lg:text-[96px] text-slate-950 max-w-5xl leading-[0.95]">
                 Define it. Govern it.
                 <br />
                 <span style={{ color: '#1E5FEE' }}>Implement it.</span>
-              </>
-            )}
-          </h1>
-          <p className="mt-6 max-w-2xl text-slate-600 text-[15px] md:text-[17px] leading-relaxed">
-            {isBusiness
-              ? 'A simple way to understand metrics, improve products and services, and get answers you can stand behind — connected to how those numbers are actually built.'
-              : 'The workspace to define, version, map, and ship the same business concepts across your data platforms — connected to the questions the business asks.'}
-          </p>
-          <div className="mt-8">
-            <ExperienceSwitch />
-          </div>
-          <p className="mt-4 text-[13px] text-slate-500 max-w-xl">
-            {isBusiness
-              ? 'Understand metrics. Ask better questions. Get answers you can trust — in business language.'
-              : 'Define it. Govern it. Implement it — from business meaning to your data platforms.'}
-          </p>
-        </div>
-
-        <div className="mt-12 md:mt-16">
-          {isBusiness ? <ConversationHero /> : <TechnicalWorkspace />}
-        </div>
+              </h1>
+              <p className="mt-6 max-w-2xl text-slate-600 text-[15px] md:text-[17px] leading-relaxed">
+                The workspace to define, version, map, and ship the same business concepts across your data platforms — connected to the questions the business asks.
+              </p>
+              <div className="mt-8">
+                <ExperienceSwitch />
+              </div>
+            </div>
+            <div className="mt-12 md:mt-16">
+              <TechnicalWorkspace />
+            </div>
+          </>
+        )}
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <button onClick={demo.open} className="pill-btn-dark" data-testid="home-hero-cta">
