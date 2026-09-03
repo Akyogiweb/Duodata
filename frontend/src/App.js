@@ -5,6 +5,7 @@ import CaseStudiesIndex, { CaseStudyDetail } from "@/pages/CaseStudies";
 import ExplorePage from "@/pages/ExplorePage";
 import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
+import { ExperienceProvider } from "@/context/ExperienceContext";
 import BookDemoModal from "@/components/BookDemoModal";
 
 const GlobalDemoModal = () => {
@@ -17,6 +18,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <DemoModalProvider>
+        <ExperienceProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/case-studies" element={<CaseStudiesIndex />} />
@@ -24,6 +26,7 @@ function App() {
             <Route path="/explore" element={<ExplorePage />} />
           </Routes>
           <GlobalDemoModal />
+        </ExperienceProvider>
         </DemoModalProvider>
       </BrowserRouter>
       <Toaster />

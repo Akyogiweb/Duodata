@@ -15,18 +15,18 @@ const StatusPill = ({ status }) => {
 
 const ProductScreenshot = () => {
   return (
-    <section id="product" className="relative py-24 md:py-32 bg-white">
+    <section className="relative py-24 md:py-32 bg-white">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-14">
           <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">
-            The Metrics Ontology
+            The technical experience
           </p>
           <h2 className="hero-headline text-[42px] md:text-[64px] text-slate-950">
-            One home for<br />
-            <span style={{ color: '#1E5FEE' }}>business meaning.</span>
+            One workspace for<br />
+            <span style={{ color: '#1E5FEE' }}>meaning that ships.</span>
           </h2>
           <p className="mt-6 max-w-2xl mx-auto text-slate-600 text-[15px] leading-relaxed">
-            Metrics, slices, reports, sources and governance — in a single business-owned ontology that projects into every downstream system.
+            Metrics, slices, reports, sources, formulas, lineage, versions, and platform mappings — the machinery behind every trusted business answer.
           </p>
         </div>
 

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { ChevronRight, Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDemoModal } from '@/context/DemoModalContext';
 import { DuodataFullLogo } from '@/components/DuodataMark';
+import ExperienceSwitch from '@/components/ExperienceSwitch';
 
 const navLinks = [
   { label: 'Product', href: '/#product', type: 'anchor' },
   { label: 'Explore', href: '/explore', type: 'route' },
   { label: 'Case Studies', href: '/case-studies', type: 'route' },
   { label: 'Resources', href: '/#resources', type: 'anchor' },
-  { label: 'Pricing', href: '/#pricing', type: 'anchor' },
 ];
 
 const Logo = () => (
@@ -33,28 +33,39 @@ const NavLink = ({ link, onClick }) => {
 const Nav = () => {
   const [open, setOpen] = useState(false);
   const demo = useDemoModal();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const goHomeIfNeeded = () => {
+    if (location.pathname !== '/') navigate('/');
+  };
 
   return (
     <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-      <nav className="nav-pill-shadow bg-white/95 backdrop-blur-md rounded-full flex items-center pl-5 pr-2 py-2 gap-1 border border-black/5">
+      <nav className="nav-pill-shadow bg-white/95 backdrop-blur-md rounded-full flex items-center pl-5 pr-2 py-2 gap-1 border border-black/5 max-w-full">
         <Logo />
-        <div className="hidden md:flex items-center gap-1 ml-6">
+        <div className="hidden lg:flex items-center gap-1 ml-4">
           {navLinks.map((l) => <NavLink key={l.label} link={l} />)}
           <button onClick={demo.open} className="pill-btn-ghost">Book a demo</button>
+        </div>
+        <div className="hidden md:block ml-2">
+          <ExperienceSwitch size="sm" testId="nav-experience-switch" onSelect={goHomeIfNeeded} />
         </div>
         <button onClick={demo.open} className="pill-btn-dark ml-2">
           Get started for free
           <ChevronRight size={16} strokeWidth={2.2} />
         </button>
         <button
-          className="md:hidden ml-1 p-2 rounded-full hover:bg-black/5"
+          className="lg:hidden ml-1 p-2 rounded-full hover:bg-black/5"
           onClick={() => setOpen(!open)}
+          aria-label={open ? 'Close menu' : 'Open menu'}
         >
           {open ? <X size={18} /> : <Menu size={18} />}
         </button>
       </nav>
       {open && (
-        <div className="absolute top-16 left-4 right-4 md:hidden bg-white rounded-2xl border border-black/10 shadow-xl p-4 flex flex-col gap-2">
+        <div className="absolute top-16 left-4 right-4 lg:hidden bg-white rounded-2xl border border-black/10 shadow-xl p-4 flex flex-col gap-2">
+          <ExperienceSwitch size="sm" testId="nav-mobile-experience-switch" onSelect={() => { goHomeIfNeeded(); setOpen(false); }} />
           {navLinks.map((l) => <NavLink key={l.label} link={l} onClick={() => setOpen(false)} />)}
           <button onClick={() => { setOpen(false); demo.open(); }} className="pill-btn-ghost text-left">Book a demo</button>
         </div>

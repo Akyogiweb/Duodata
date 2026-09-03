@@ -233,12 +233,12 @@ const ExplorePage = () => {
       <Nav />
       <div className="pt-32 pb-8">
         <div className="max-w-[1200px] mx-auto px-6">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Live demo — Metrics ontology</p>
+          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Live demo — technical workspace</p>
           <h1 className="hero-headline text-[42px] md:text-[64px] text-slate-950 max-w-3xl">
-            Explore the ontology.<br /><span style={{ color: '#1E5FEE' }}>Edit definitions in real time.</span>
+            Define it. Govern it.<br /><span style={{ color: '#1E5FEE' }}>Implement it in real time.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
-            This is a live sandbox connected to a Duodata backend. Filter, search, edit statuses, add and remove slices — every change persists.
+            This is the technical side of Duo Data: a live sandbox for slices, ownership, status, and sources. Every change persists.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 text-[13px]">
             <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 border border-blue-100">Implemented · {counts.Implemented}</span>
