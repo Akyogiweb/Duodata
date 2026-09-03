@@ -4,7 +4,82 @@ Marketing site and live metrics explorer.
 
 **One business meaning. Two ways to work with it.**
 
+## Run it on your computer (always)
+
+This project does not stay running in the cloud for you. After you clone it once, **you start it locally whenever you want.**
+
+1. Install [Node.js LTS](https://nodejs.org/) (18 or newer).
+2. Get this branch:
+
+```bash
+git clone https://github.com/Akyogiweb/Duodata.git
+cd Duodata
+git checkout Duodata/SIT/duo-story-website-redo-780c
+git pull
+```
+
+3. Start the site:
+
+**Mac / Linux**
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+**Windows**
+
+Double-click `start.bat`, or in Command Prompt:
+
+```bat
+start.bat
+```
+
+4. Open [http://localhost:3000](http://localhost:3000)
+
+Leave that terminal open. Stop with **Ctrl+C**. To run it again later, `cd` into the repo and run `./start.sh` (or `start.bat`) again.
+
+The chooser (Business / Technical) is stored in a cookie on your browser. Use a private window if you want to see it again.
+
+---
+
 ## What you need
+
+| Tool | Version |
+|------|---------|
+| Node.js | 18+ (20 or 22 is fine) |
+| Yarn | 1.22 (`corepack enable` then `corepack prepare yarn@1.22.22 --activate`) |
+| Python | 3.11 or 3.12 (only if you want Explore + demo form) |
+| Docker | Optional, for MongoDB |
+
+The **landing page, case studies, and Business/Technical switch** run with the frontend alone.
+
+**Explore** (`/explore`) and **Book a demo** need the FastAPI backend and MongoDB.
+
+---
+
+## 1. Website only (manual)
+
+```bash
+git clone https://github.com/Akyogiweb/Duodata.git
+cd Duodata
+git checkout Duodata/SIT/duo-story-website-redo-780c   # or SIT / main if this is merged
+
+cd frontend
+cp env.example .env
+yarn install
+yarn start
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+`env.example` sets:
+
+```
+REACT_APP_BACKEND_URL=http://localhost:8000
+```
+
+If the API is not running, marketing pages still work. Demo submit and `/explore` will fail until step 2.
 
 | Tool | Version |
 |------|---------|
@@ -80,7 +155,7 @@ In a second terminal, follow **Website only** above (`yarn start` on port 3000).
 
 | Goal | Command |
 |------|---------|
-| Start website | `cd frontend && yarn start` |
+| Start website | `./start.sh` (Mac/Linux) or `start.bat` (Windows) |
 | Production frontend build | `cd frontend && yarn build` |
 | Start API | `cd backend && .venv/bin/uvicorn server:app --reload --port 8000` |
 | Start Mongo | `docker compose up -d` |
