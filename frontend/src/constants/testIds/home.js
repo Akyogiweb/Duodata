@@ -7,5 +7,7 @@ export const HOME = {
 	experienceTechnical: 'home-experience-switch-technical',
 	askDuoData: 'home-ask-duo-data',
 	conversationAnswer: 'home-conversation-answer',
-	duoArchitecture: 'home-duo-architecture',
+	experienceGate: 'home-experience-gate',
+	gateBusiness: 'home-gate-business',
+	gateTechnical: 'home-gate-technical',
 };

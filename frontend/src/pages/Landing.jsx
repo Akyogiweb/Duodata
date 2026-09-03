@@ -4,6 +4,8 @@ import Hero from '@/components/Hero';
 import DuoArchitecture from '@/components/DuoArchitecture';
 import BusinessStory from '@/components/BusinessStory';
 import TechnicalStory from '@/components/TechnicalStory';
+import BusinessMeanings from '@/components/BusinessMeanings';
+import AudienceBridge from '@/components/AudienceBridge';
 import LogoMarquee from '@/components/LogoMarquee';
 import ProductScreenshot from '@/components/ProductScreenshot';
 import LineageDiagram from '@/components/LineageDiagram';
@@ -17,22 +19,25 @@ const Landing = () => {
   const { isBusiness } = useExperience();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen relative">
       <Nav />
       <Hero />
       <DuoArchitecture />
       {isBusiness ? <BusinessStory /> : <TechnicalStory />}
+      <FeatureBlocks />
       <LogoMarquee />
-      {!isBusiness && (
+      {isBusiness ? (
+        <BusinessMeanings />
+      ) : (
         <>
           <ProductScreenshot />
           <LineageDiagram />
           <DataSourcesSection />
         </>
       )}
-      <FeatureBlocks />
       <UseCases />
       <Testimonials />
+      <AudienceBridge />
       <CTA />
       <Footer />
     </div>

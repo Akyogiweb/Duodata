@@ -1,5 +1,6 @@
 import React from 'react';
-import { dataConnectors } from '@/mock';
+import { dataConnectors, businessTeams } from '@/mock';
+import { useExperience } from '@/context/ExperienceContext';
 
 const ConnectorPill = ({ name, color }) => (
   <div className="flex items-center gap-2 px-4 py-2 mx-3 rounded-full border border-slate-200 bg-white shadow-sm whitespace-nowrap">
@@ -9,15 +10,20 @@ const ConnectorPill = ({ name, color }) => (
 );
 
 const LogoMarquee = () => {
-  const list = [...dataConnectors, ...dataConnectors];
+  const { isBusiness } = useExperience();
+  const items = isBusiness ? businessTeams : dataConnectors;
+  const list = [...items, ...items];
+
   return (
     <section className="py-16 bg-slate-50/50 border-y border-black/5 overflow-hidden">
       <p className="text-center text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-8">
-        Meaning that reaches the stack you already run
+        {isBusiness
+          ? 'The teams who ask the questions'
+          : 'Meaning that reaches the stack you already run'}
       </p>
       <div className="marquee">
         {list.map((c, i) => (
-          <ConnectorPill key={i} name={c.name} color={c.color} />
+          <ConnectorPill key={`${c.name}-${i}`} name={c.name} color={c.color} />
         ))}
       </div>
     </section>

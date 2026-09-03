@@ -16,7 +16,7 @@ const CardTag = ({ children }) => (
 const CaseStudiesIndex = () => {
   const demo = useDemoModal();
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen relative">
       <Nav />
       <div className="pt-32 pb-16">
         <div className="max-w-[1200px] mx-auto px-6">
@@ -92,7 +92,7 @@ export const CaseStudyDetail = () => {
 
   if (!c) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen relative">
         <Nav />
         <div className="pt-40 pb-32 text-center">
           <p className="text-slate-500">Case study not found.</p>
@@ -111,7 +111,7 @@ export const CaseStudyDetail = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen relative">
       <Nav />
       <div className="pt-32 pb-10">
         <div className="max-w-[900px] mx-auto px-6">

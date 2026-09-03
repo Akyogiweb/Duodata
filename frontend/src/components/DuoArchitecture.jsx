@@ -26,7 +26,7 @@ const DuoArchitecture = () => {
             <span style={{ color: '#1E5FEE' }}>One shared meaning.</span>
           </h2>
           <p className="mt-5 max-w-2xl mx-auto text-slate-600 text-[15px] leading-relaxed">
-            One semantic foundation. Two experiences. Connected from business meaning to technical implementation.
+            Two audiences. One foundation. Business questions and technical implementation stay on the same metrics, slices, reports, and sources.
           </p>
         </div>
 
