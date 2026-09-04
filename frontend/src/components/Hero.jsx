@@ -43,7 +43,7 @@ const Hero = () => {
               <p className="text-[11px] md:text-[12px] tracking-[0.32em] uppercase font-medium text-slate-500 mb-5">
                 Technical experience
               </p>
-              <h1 className="hero-headline text-[40px] sm:text-[56px] md:text-[80px] lg:text-[96px] text-slate-950 max-w-5xl leading-[0.95]">
+              <h1 className="hero-headline text-[40px] sm:text-[56px] md:text-[80px] lg:text-[92px] text-slate-950 max-w-5xl leading-[0.92]">
                 Define it. Govern it.
                 <br />
                 <span style={{ color: '#1E5FEE' }}>Implement it.</span>

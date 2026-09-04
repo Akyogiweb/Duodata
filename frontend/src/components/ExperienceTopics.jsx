@@ -2,66 +2,211 @@ import React from 'react';
 import { BUSINESS_TOPIC_GROUPS, TECHNICAL_TOPIC_ROWS } from '@/data/experienceTaxonomy';
 import { useExperience } from '@/context/ExperienceContext';
 
-const TopicSection = ({ row }) => (
-  <article className="topic-section" id={row.id} data-testid={`topic-${row.id}`}>
-    <p className="topic-section-kicker">
-      {row.group === row.subGroup ? row.group : `${row.group} — ${row.subGroup}`}
-    </p>
-    <h3 className="hero-headline topic-section-title">{row.category}</h3>
-    <p className="topic-section-purpose">{row.purpose}</p>
-    {row.tools ? (
-      <p className="topic-card-tools">
-        <span className="topic-card-tools-label">Tool feature</span>
-        {row.tools}
-      </p>
-    ) : null}
-  </article>
-);
+const ONTOLOGY = ['Metrics', 'Slices', 'Reports', 'Sources'];
 
-const BusinessTopics = () => (
-  <div>
-    <header className="max-w-3xl mb-10">
-      <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Business experience</p>
-      <h2 className="hero-headline text-[36px] md:text-[52px] text-slate-950">
-        A section for every job the business needs to do.
-      </h2>
-      <p className="mt-5 text-slate-600 text-[15px] leading-relaxed">
-        Seven sections from the product table: purpose, metric consistency, clarity, and AI.
-      </p>
-    </header>
-    <nav className="experience-topics-nav" aria-label="Business topics">
-      {BUSINESS_TOPIC_GROUPS.map((group) => (
-        <a key={group.id} href={`#${group.id}`} className="experience-topics-nav-link">
-          {group.subGroup}
-        </a>
-      ))}
-    </nav>
-    <div className="flex flex-col gap-10">
+const Stage = ({ id }) => {
+  if (id === 'business-meaning') {
+    return (
+      <div className="stage-bento">
+        {ONTOLOGY.map((name) => (
+          <div key={name} className="stage-bento-cell">
+            <span>{name}</span>
+            <em>Shared</em>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (id === 'context-rot') {
+    return (
+      <div className="stage-meter">
+        <p>Context health</p>
+        <div className="stage-meter-track">
+          <span className="stage-meter-fill is-rot" />
+        </div>
+        <ol>
+          <li>Owned last quarter</li>
+          <li>Used in three reports</li>
+          <li className="is-fade">Definition unread this year</li>
+        </ol>
+      </div>
+    );
+  }
+  if (id === 'context-slip') {
+    return (
+      <div className="stage-diff">
+        <div>
+          <span>v2.1</span>
+          <code>revenue = booked</code>
+        </div>
+        <div className="is-alert">
+          <span>v2.2</span>
+          <code>revenue = booked − returns</code>
+        </div>
+        <p>One silent change. Twelve broken dashboards.</p>
+      </div>
+    );
+  }
+  if (id === 'metric-governance') {
+    return (
+      <div className="stage-owner">
+        <div className="stage-owner-row">
+          <span className="stage-avatar">IC</span>
+          <div>
+            <strong>MOIC</strong>
+            <em>Investment committee · Approved</em>
+          </div>
+          <span className="stage-lock">Owned</span>
+        </div>
+        <div className="stage-owner-row is-muted">
+          <span className="stage-avatar">CS</span>
+          <div>
+            <strong>Net retention</strong>
+            <em>Customer success · Review</em>
+          </div>
+          <span className="stage-lock">Control</span>
+        </div>
+      </div>
+    );
+  }
+  if (id === 'context-drift') {
+    return (
+      <div className="stage-drift">
+        <span>Q1 meaning</span>
+        <i />
+        <span>Q2 questions</span>
+        <i />
+        <span className="is-warn">Ungoverned AI</span>
+      </div>
+    );
+  }
+  if (id === 'institutional-knowledge') {
+    return (
+      <div className="stage-tenure">
+        <div className="is-out">In someone’s head</div>
+        <div className="is-in">In the ontology</div>
+      </div>
+    );
+  }
+  if (id === 'ai-business-question') {
+    return (
+      <div className="stage-ask">
+        <p>“What changed MOIC — and can I trust it?”</p>
+        <small>Value driver · Lineage · Owned definition</small>
+      </div>
+    );
+  }
+  if (id === 'metric-ontology') {
+    return (
+      <pre className="stage-code">{`agent.model({
+  metric: "MOIC",
+  from: ["slices", "reports", "sources"]
+})`}</pre>
+    );
+  }
+  if (id === 'ai-governance') {
+    return (
+      <div className="stage-policy">
+        <span className="ok">allow</span> governed context
+        <span className="no">deny</span> guessed schema
+      </div>
+    );
+  }
+  if (id === 'semantic-layer') {
+    return (
+      <div className="stage-layer">
+        <em>Business meaning</em>
+        <b />
+        <em>Integration agents</em>
+        <b />
+        <em>Snowflake · dbt · BI</em>
+      </div>
+    );
+  }
+  if (id === 'data-lineage') {
+    return (
+      <div className="stage-lineage">
+        define → formula → source → ship
+      </div>
+    );
+  }
+  if (id === 'ai-reliability') {
+    return (
+      <div className="stage-mcp">
+        <kbd>MCP</kbd>
+        <kbd>Native apps</kbd>
+        <kbd>Same objects</kbd>
+      </div>
+    );
+  }
+  return null;
+};
+
+const TopicSection = ({ row, index }) => {
+  const n = String(index + 1).padStart(2, '0');
+  return (
+    <article className="topic-section chapter" id={row.id} data-testid={`topic-${row.id}`}>
+      <div className="chapter-index" aria-hidden>
+        {n}
+      </div>
+      <div className="chapter-copy">
+        <p className="topic-section-kicker">
+          {row.group === row.subGroup ? row.group : `${row.group} — ${row.subGroup}`}
+        </p>
+        <h3 className="topic-section-title">{row.category}</h3>
+        <p className="topic-section-purpose">{row.purpose}</p>
+        {row.tools ? (
+          <p className="topic-card-tools">
+            <span className="topic-card-tools-label">Tool feature</span>
+            {row.tools}
+          </p>
+        ) : null}
+      </div>
+      <div className="chapter-stage" aria-hidden>
+        <Stage id={row.id} />
+      </div>
+    </article>
+  );
+};
+
+const BusinessTopics = () => {
+  let n = 0;
+  return (
+    <div>
+      <header className="chapter-head">
+        <p>Business experience</p>
+        <h2>Seven rooms. One meaning.</h2>
+        <p className="chapter-lede">
+          Purpose, consistency, clarity, then AI — designed as a product, not a spreadsheet.
+        </p>
+      </header>
+      <nav className="experience-topics-nav" aria-label="Business topics">
+        {BUSINESS_TOPIC_GROUPS.map((group) => (
+          <a key={group.id} href={`#${group.id}`} className="experience-topics-nav-link">
+            {group.subGroup}
+          </a>
+        ))}
+      </nav>
       {BUSINESS_TOPIC_GROUPS.map((group) => (
         <section key={group.id} id={group.id} className="experience-topic-group" data-testid={`topic-group-${group.id}`}>
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-5">
-            Business — {group.subGroup}
-          </p>
-          <div className="flex flex-col gap-5">
-            {group.items.map((row) => (
-              <TopicSection key={row.id} row={row} />
-            ))}
-          </div>
+          {group.items.map((row) => {
+            const section = <TopicSection key={row.id} row={row} index={n} />;
+            n += 1;
+            return section;
+          })}
         </section>
       ))}
     </div>
-  </div>
-);
+  );
+};
 
 const TechnicalTopics = () => (
   <div>
-    <header className="max-w-3xl mb-10">
-      <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Technical experience</p>
-      <h2 className="hero-headline text-[36px] md:text-[52px] text-slate-950">
-        A section for every layer you ship.
-      </h2>
-      <p className="mt-5 text-slate-600 text-[15px] leading-relaxed">
-        Five sections from the product table: ontology, AI governance, semantic layer, lineage, and reliability.
+    <header className="chapter-head">
+      <p>Technical experience</p>
+      <h2>Five layers you actually ship.</h2>
+      <p className="chapter-lede">
+        Ontology, governance, semantics, lineage, reliability — a pipeline, not a brochure.
       </p>
     </header>
     <nav className="experience-topics-nav" aria-label="Technical topics">
@@ -71,9 +216,9 @@ const TechnicalTopics = () => (
         </a>
       ))}
     </nav>
-    <div className="flex flex-col gap-5">
-      {TECHNICAL_TOPIC_ROWS.map((row) => (
-        <TopicSection key={row.id} row={row} />
+    <div className="tech-pipeline">
+      {TECHNICAL_TOPIC_ROWS.map((row, index) => (
+        <TopicSection key={row.id} row={row} index={index} />
       ))}
     </div>
   </div>
@@ -83,8 +228,8 @@ const ExperienceTopics = () => {
   const { isBusiness } = useExperience();
 
   return (
-    <section id="experience" className="experience-topics py-24 md:py-32" data-testid="home-experience-topics">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section id="experience" className="experience-topics py-20 md:py-28" data-testid="home-experience-topics">
+      <div className="max-w-[1180px] mx-auto px-6">
         {isBusiness ? <BusinessTopics /> : <TechnicalTopics />}
       </div>
     </section>

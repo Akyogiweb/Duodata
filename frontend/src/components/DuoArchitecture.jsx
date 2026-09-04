@@ -16,7 +16,7 @@ const DuoArchitecture = () => {
   const { isBusiness, isTechnical } = useExperience();
 
   return (
-    <section id="product" className="py-20 md:py-28 bg-white" data-testid="home-duo-architecture">
+    <section id="product" className="py-20 md:py-28" data-testid="home-duo-architecture">
       <div className="max-w-[1100px] mx-auto px-6">
         <div className="text-center mb-12">
           <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Why it’s called Duo</p>
