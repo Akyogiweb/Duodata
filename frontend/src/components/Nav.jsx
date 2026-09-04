@@ -46,18 +46,17 @@ const Nav = () => {
   const navLinks = isBusiness
     ? [
         { label: 'Product', href: '/#product', type: 'anchor' },
-        { label: 'Purpose', href: '/#purpose', type: 'anchor' },
-        { label: 'Consistency', href: '/#metric-consistency', type: 'anchor' },
-        { label: 'Clarity', href: '/#clarity', type: 'anchor' },
-        { label: 'AI', href: '/#business-ai', type: 'anchor' },
+        { label: 'Topics', href: '/#experience', type: 'anchor' },
+        { label: 'AI', href: '/#ai', type: 'anchor' },
+        { label: 'Videos', href: '/videos', type: 'route' },
         { label: 'Case Studies', href: '/case-studies', type: 'route' },
       ]
     : [
         { label: 'Product', href: '/#product', type: 'anchor' },
         { label: 'Topics', href: '/#experience', type: 'anchor' },
         { label: 'Workspace', href: '/explore', type: 'route' },
+        { label: 'Videos', href: '/videos', type: 'route' },
         { label: 'Case Studies', href: '/case-studies', type: 'route' },
-        { label: 'For the business', href: '/#connect', type: 'anchor' },
       ];
 
   const goHomeIfNeeded = () => {

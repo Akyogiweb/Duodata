@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "@/pages/Landing";
 import CaseStudiesIndex, { CaseStudyDetail } from "@/pages/CaseStudies";
 import ExplorePage from "@/pages/ExplorePage";
+import VideosPage from "@/pages/VideosPage";
 import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import { ExperienceProvider } from "@/context/ExperienceContext";
@@ -30,6 +31,7 @@ function App() {
             <Route path="/case-studies" element={<CaseStudiesIndex />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/videos" element={<VideosPage />} />
           </Routes>
           </div>
           <GlobalDemoModal />
