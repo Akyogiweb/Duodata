@@ -19,13 +19,17 @@ const Footer = () => (
           <div key={col.title}>
             <div className="text-[12px] tracking-widest uppercase text-slate-500 mb-4">{col.title}</div>
             <ul className="flex flex-col gap-2.5">
-              {col.links.map((l) => (
-                <li key={l}>
-                  <a href="#" className="text-[13px] text-slate-300 hover:text-white transition-colors">
-                    {l}
-                  </a>
-                </li>
-              ))}
+              {col.links.map((l) => {
+                const label = typeof l === 'string' ? l : l.label;
+                const href = typeof l === 'string' ? '#' : l.href;
+                return (
+                  <li key={label}>
+                    <a href={href} className="text-[13px] text-slate-300 hover:text-white transition-colors">
+                      {label}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
