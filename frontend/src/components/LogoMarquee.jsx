@@ -33,7 +33,7 @@ const LogoMarquee = () => {
   return (
     <section className="py-14 border-y border-black/5 overflow-hidden" data-testid="home-logo-marquee">
       <p className="text-center text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-8">
-        Works with the platforms you already pay for
+        Projects into the modern data stack
       </p>
       <div className="marquee">
         {list.map((c, i) => (
