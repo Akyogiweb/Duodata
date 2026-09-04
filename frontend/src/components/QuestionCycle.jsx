@@ -25,10 +25,10 @@ const TIMING = {
 };
 
 const SOURCE_POS = [
-  { x: 12, y: 56 },
-  { x: 88, y: 60 },
-  { x: 16, y: 70 },
-  { x: 84, y: 66 },
+  { x: 11, y: 40 },
+  { x: 89, y: 42 },
+  { x: 14, y: 48 },
+  { x: 86, y: 46 },
 ];
 
 export default function QuestionCycle({ experience }) {
@@ -66,9 +66,10 @@ export default function QuestionCycle({ experience }) {
   const drawing = phase === 'draw' || phase === 'hold';
 
   const startX = 50;
-  const startY = 34;
-  const dy = src.y - startY;
-  const d = `M ${startX} ${startY} C ${startX} ${startY + dy * 0.58}, ${src.x} ${src.y - dy * 0.42}, ${src.x} ${src.y}`;
+  const startY = 38;
+  const dir = src.x >= startX ? 1 : -1;
+  const dx = Math.abs(src.x - startX) * 0.5;
+  const d = `M ${startX} ${startY} C ${startX + dir * dx} ${startY}, ${src.x - dir * dx} ${src.y}, ${src.x} ${src.y}`;
 
   const stroke = experience === 'technical' ? DUO_CYAN : DUO_BLUE;
 
