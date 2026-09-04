@@ -1,5 +1,6 @@
 import {
   DEFAULT_JOURNEY_ID,
+  EVOLUTION_TRIGGERS,
   JOURNEY_NODES,
   VALUE_LAYERS,
   ancestorsOf,
@@ -7,6 +8,7 @@ import {
   journeyById,
   layerById,
   visibleJourneyIds,
+  visibleJourneyOrder,
 } from './journeyProposition';
 
 describe('journey proposition', () => {
@@ -17,11 +19,15 @@ describe('journey proposition', () => {
 
   test('every question maps to a value-proposition layer and an atom part', () => {
     const layerIds = VALUE_LAYERS.map((layer) => layer.id);
+    const shifts = EVOLUTION_TRIGGERS.map((trigger) => trigger.id);
     JOURNEY_NODES.forEach((node) => {
       expect(layerIds).toContain(node.layer);
       expect(['metric', 'slice', 'report', 'source']).toContain(node.atom);
+      expect(shifts).toContain(node.shift);
       expect(node.pain).toBeTruthy();
       expect(node.change).toBeTruthy();
+      expect(node.was).toBeTruthy();
+      expect(node.now).toBeTruthy();
       expect(node.short.length).toBeLessThan(28);
     });
   });
@@ -35,6 +41,7 @@ describe('journey proposition', () => {
     expect(visibleJourneyIds(DEFAULT_JOURNEY_ID).has('behaviour')).toBe(true);
     expect(visibleJourneyIds('pre-sales').has('pipeline-real')).toBe(true);
     expect(visibleJourneyIds('pre-sales').has('loyalty')).toBe(false);
+    expect(visibleJourneyOrder(DEFAULT_JOURNEY_ID)).toContain('loyalty');
   });
 
   test('tree edges resolve and layers have Duo copy', () => {
