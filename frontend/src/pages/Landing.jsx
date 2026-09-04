@@ -2,7 +2,9 @@ import React from 'react';
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
 import DuoArchitecture from '@/components/DuoArchitecture';
+import GetStarted from '@/components/GetStarted';
 import ExperienceTopics from '@/components/ExperienceTopics';
+import FeatureConnection from '@/components/FeatureConnection';
 import AudienceBridge from '@/components/AudienceBridge';
 import LogoMarquee from '@/components/LogoMarquee';
 import BusinessMeanings from '@/components/BusinessMeanings';
@@ -17,7 +19,9 @@ import PlatformIntegration from '@/components/sections/PlatformIntegration';
 import MegaDiagram from '@/components/sections/MegaDiagram';
 import TwoSides from '@/components/sections/TwoSides';
 import VideoShowcase from '@/components/VideoShowcase';
-import { CTA } from '@/components/Sections';
+import TrustStrip from '@/components/TrustStrip';
+import SiteFaq from '@/components/SiteFaq';
+import { CTA, Testimonials, UseCases } from '@/components/Sections';
 import Footer from '@/components/Footer';
 import { useExperience } from '@/context/ExperienceContext';
 
@@ -29,7 +33,9 @@ const Landing = () => {
       <Nav />
       <Hero />
       <DuoArchitecture />
+      <GetStarted />
       <ExperienceTopics />
+      <FeatureConnection />
       {isBusiness ? (
         <>
           <MeaningProblem />
@@ -49,7 +55,11 @@ const Landing = () => {
       )}
       <LogoMarquee />
       <TwoSides />
+      <UseCases />
+      <Testimonials />
       <VideoShowcase />
+      <TrustStrip />
+      <SiteFaq />
       <AudienceBridge />
       <CTA />
       <Footer />

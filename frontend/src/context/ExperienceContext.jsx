@@ -34,10 +34,19 @@ function hasStoredChoice() {
   return getCookie(EXPERIENCE_CHOSEN_COOKIE) === '1' || Boolean(readStoredExperience());
 }
 
+function scrollToSection(sectionId) {
+  if (!sectionId || typeof document === 'undefined') return;
+  const go = () => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  window.requestAnimationFrame(() => window.setTimeout(go, 180));
+}
+
 const ExperienceContext = createContext({
   experience: EXPERIENCES.business,
   setExperience: () => {},
   chooseExperience: () => {},
+  openExperience: () => {},
   hasChosen: false,
   isBusiness: true,
   isTechnical: false,
@@ -72,12 +81,18 @@ export const ExperienceProvider = ({ children }) => {
     setExperience(next);
   };
 
+  const openExperience = (next, sectionId) => {
+    setExperience(next);
+    scrollToSection(sectionId);
+  };
+
   return (
     <ExperienceContext.Provider
       value={{
         experience,
         setExperience,
         chooseExperience,
+        openExperience,
         hasChosen,
         isBusiness: experience === EXPERIENCES.business,
         isTechnical: experience === EXPERIENCES.technical,

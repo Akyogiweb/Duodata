@@ -272,10 +272,11 @@ export const footerColumns = [
   {
     title: 'Product',
     links: [
-      { label: 'Business experience', href: '/#experience' },
-      { label: 'Technical experience', href: '/#experience' },
+      { label: 'How to get started', href: '/#start' },
+      { label: 'Feature connection', href: '/#connection' },
       { label: 'Shared semantics', href: '/#product' },
       { label: 'Workspace', href: '/explore' },
+      { label: 'Videos', href: '/videos' },
       { label: 'Case studies', href: '/case-studies' },
     ],
   },
@@ -301,7 +302,8 @@ export const footerColumns = [
   {
     title: 'Company',
     links: [
-      { label: 'About', href: '/#connect' },
+      { label: 'Security', href: '/#security' },
+      { label: 'FAQ', href: '/#faq' },
       { label: 'Contact', href: '/#get-started' },
     ],
   },
