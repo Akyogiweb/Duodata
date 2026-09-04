@@ -2,16 +2,11 @@ import React from 'react';
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
 import DuoArchitecture from '@/components/DuoArchitecture';
-import BusinessStory from '@/components/BusinessStory';
-import TechnicalStory from '@/components/TechnicalStory';
-import BusinessMeanings from '@/components/BusinessMeanings';
+import ExperienceTopics from '@/components/ExperienceTopics';
 import AudienceBridge from '@/components/AudienceBridge';
 import LogoMarquee from '@/components/LogoMarquee';
-import ProductScreenshot from '@/components/ProductScreenshot';
-import LineageDiagram from '@/components/LineageDiagram';
-import ExperienceTopics from '@/components/ExperienceTopics';
-import DataSourcesSection from '@/components/DataSourcesSection';
-import { UseCases, Testimonials, CTA } from '@/components/Sections';
+import BusinessMeanings from '@/components/BusinessMeanings';
+import { CTA } from '@/components/Sections';
 import Footer from '@/components/Footer';
 import { useExperience } from '@/context/ExperienceContext';
 
@@ -23,20 +18,9 @@ const Landing = () => {
       <Nav />
       <Hero />
       <DuoArchitecture />
-      {isBusiness ? <BusinessStory /> : <TechnicalStory />}
       <ExperienceTopics />
       <LogoMarquee />
-      {isBusiness ? (
-        <BusinessMeanings />
-      ) : (
-        <>
-          <ProductScreenshot />
-          <LineageDiagram />
-          <DataSourcesSection />
-        </>
-      )}
-      <UseCases />
-      <Testimonials />
+      {isBusiness && <BusinessMeanings />}
       <AudienceBridge />
       <CTA />
       <Footer />

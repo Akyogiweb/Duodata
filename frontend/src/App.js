@@ -22,6 +22,7 @@ function App() {
         <DemoModalProvider>
         <ExperienceProvider>
           <WaveField />
+          <div className="site-grain" aria-hidden />
           <ExperienceGate />
           <div className="site-canvas">
           <Routes>
