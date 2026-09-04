@@ -5,7 +5,6 @@ import { useExperience } from '@/context/ExperienceContext';
 import ConversationHero from '@/components/ConversationHero';
 import TechnicalWorkspace from '@/components/TechnicalWorkspace';
 import QuestionCycle from '@/components/QuestionCycle';
-import WaveField from '@/components/WaveField';
 
 const Hero = () => {
   const demo = useDemoModal();
@@ -13,9 +12,6 @@ const Hero = () => {
 
   return (
     <section id="hero" className="hero-shell relative w-full overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
-      <div className="hero-waves" aria-hidden>
-        <WaveField />
-      </div>
       <div className="relative z-10 max-w-[1200px] mx-auto px-6">
         {isBusiness ? (
           <div className="flex flex-col items-center text-center">

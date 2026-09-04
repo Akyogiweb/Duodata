@@ -1722,7 +1722,7 @@ html[data-experience="technical"] .topic-atom-tag {
   gap: 8px 28px;
   align-items: stretch;
 }
-.viz-svg { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
+.viz-svg { display: block; width: 100%; height: auto; overflow: hidden; pointer-events: none; }
 .viz-node,
 .stack-ring { cursor: pointer; pointer-events: auto; }
 .viz-rail {
@@ -1862,11 +1862,17 @@ html[data-experience="technical"] .topic-atom-tag {
 .hero-shell {
   background: transparent;
 }
+html[data-experience="business"] .hero-shell {
+  background: #f4f6f8;
+}
+html[data-experience="technical"] .hero-shell {
+  background: #121826;
+}
 .question-rail {
   position: relative;
   z-index: 2;
   width: min(920px, 100%);
-  margin: 0 auto 28px;
+  margin: 0 auto 40px;
   text-align: center;
 }
 .question-rail-kicker {
@@ -1882,8 +1888,8 @@ html[data-experience="technical"] .topic-atom-tag {
   letter-spacing: -0.03em;
   line-height: 1.25;
   color: #0a0a0a;
-  min-height: 2.6em;
-  margin: 0 0 16px;
+  min-height: 0;
+  margin: 0 0 18px;
 }
 .question-rail-row {
   display: flex;
