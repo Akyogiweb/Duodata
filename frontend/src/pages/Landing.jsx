@@ -13,7 +13,7 @@ import LogoMarquee from '@/components/LogoMarquee';
 import BusinessMeanings from '@/components/BusinessMeanings';
 import LineageDiagram from '@/components/LineageDiagram';
 import MeaningProblem from '@/components/sections/MeaningProblem';
-import MetricDetail from '@/components/sections/MetricDetail';
+import BusinessExecutivePain from '@/components/sections/BusinessExecutivePain';
 import AISection from '@/components/sections/AISection';
 import BeforeAfter from '@/components/sections/BeforeAfter';
 import Governance from '@/components/sections/Governance';
@@ -36,18 +36,19 @@ const Landing = () => {
       <LogoMarquee />
       <SalesProof />
       <Testimonials />
-      <DecisionAtom />
-      <GetStarted />
-      <ExperienceTopics />
-      <FeatureConnection />
       {isBusiness ? (
         <>
           <BusinessJourney />
           <MeaningProblem />
-          <MetricDetail />
-          <AISection />
+          <ExperienceTopics />
           <BeforeAfter />
+          <AISection />
+          <BusinessExecutivePain />
+          <DecisionAtom />
+          <FeatureConnection />
           <BusinessMeanings />
+          <UseCases />
+          <GetStarted />
         </>
       ) : (
         <>
@@ -57,10 +58,10 @@ const Landing = () => {
           <PlatformIntegration />
           <LineageDiagram />
           <MegaDiagram />
+          <TwoSides />
+          <UseCases />
         </>
       )}
-      <TwoSides />
-      <UseCases />
       <VideoShowcase />
       <TrustStrip />
       <SiteFaq />

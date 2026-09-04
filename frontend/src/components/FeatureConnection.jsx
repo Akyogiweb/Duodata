@@ -15,6 +15,47 @@ const FeatureConnection = () => {
   const other = isBusiness ? EXPERIENCES.technical : EXPERIENCES.business;
   const otherSection = isBusiness ? pair.technicalSection : pair.businessSection;
 
+  if (isBusiness) {
+    return (
+      <section id="connection" className="py-20 md:py-28 border-y border-black/5 bg-white" data-testid="home-feature-connection">
+        <div className="max-w-[1100px] mx-auto px-6">
+          <p className="page-eyebrow">Sound familiar?</p>
+          <h2 className="hero-headline text-[36px] md:text-[52px] text-slate-950 max-w-3xl">
+            The questions that slow every meeting down.
+          </h2>
+          <p className="page-description">
+            These aren&apos;t curiosity — they&apos;re symptoms of misaligned meaning. Pick one your team argued about last quarter.
+          </p>
+
+          <div className="mt-10 flex flex-wrap gap-2">
+            {FEATURE_CONNECTIONS.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActiveId(p.id)}
+                aria-pressed={p.id === activeId}
+                className={`rounded-full border px-4 py-2 text-[13px] font-medium transition-colors ${
+                  p.id === activeId
+                    ? 'border-[#1E5FEE] bg-slate-950 text-white'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
+                }`}
+                data-testid={`home-connection-chip-${p.id}`}
+              >
+                {p.businessQuestion}
+              </button>
+            ))}
+          </div>
+
+          <article className="mt-8 rounded-2xl border border-black/10 bg-slate-50 p-6 md:p-10 max-w-3xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1E5FEE]">Why it hurts</p>
+            <h3 className="mt-3 text-[22px] font-semibold text-slate-950">{pair.businessQuestion}</h3>
+            <p className="mt-4 text-[15px] leading-relaxed text-slate-600">{pair.businessAnswer}</p>
+          </article>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="connection" className="py-20 md:py-28 border-y border-black/5 bg-white" data-testid="home-feature-connection">
       <div className="max-w-[1100px] mx-auto px-6">

@@ -116,13 +116,12 @@ const BusinessJourney = () => {
     <section id="journey" className="viz-band viz-band-light" data-testid="home-business-journey">
       <div className="viz-inner">
         <header className="viz-head">
-          <p>Living ontology</p>
+          <p>Where growth breaks down</p>
           <h2>
-            The questions that grow the business — <span>one process model.</span>
+            The questions that grow the business — <span>when meaning drifts.</span>
           </h2>
           <p className="viz-lede">
-            Pre-sales, product, post-sales. When the market, the SKU, or the customer changes, the
-            object moves with it.
+            Pre-sales, product, post-sales. When the market, the SKU, or the customer changes, misaligned definitions stall every decision.
           </p>
         </header>
 
@@ -203,7 +202,7 @@ const BusinessJourney = () => {
             <em>{node.pain}</em>
             <span>{node.change}</span>
             <button type="button" data-testid="journey-open-stack" onClick={openStack}>
-              Compiles to {layer?.title}
+              What alignment looks like
               <ArrowRight size={14} />
             </button>
             <small>{journeyById(strategyId)?.short}</small>

@@ -50,7 +50,7 @@ const OrbitTraffic = ({ id, active, rotate, onActivate }) => (
 );
 
 const DecisionAtom = () => {
-  const { openExperience } = useExperience();
+  const { openExperience, isBusiness } = useExperience();
   const [activeId, setActiveId] = useState('metric');
   const part = DECISION_ATOM.find((p) => p.id === activeId) || DECISION_ATOM[0];
 
@@ -58,12 +58,18 @@ const DecisionAtom = () => {
     <section id="product" className="decision-atom" data-testid="home-decision-atom">
       <div className="decision-atom-inner">
         <header className="decision-atom-head">
-          <p>The decision atom</p>
+          <p>{isBusiness ? 'Where decisions break down' : 'The decision atom'}</p>
           <h2>
-            Every decision resolves into <span>four governed parts.</span>
+            {isBusiness ? (
+              <>Four questions behind <span>every number.</span></>
+            ) : (
+              <>Every decision resolves into <span>four governed parts.</span></>
+            )}
           </h2>
           <p className="decision-atom-lede">
-            Metric, slice, report, and source orbit one decision model — distinct responsibilities, one semantic core.
+            {isBusiness
+              ? 'When metric, slice, report, and source aren’t aligned, meetings turn into definition debates — and decisions wait.'
+              : 'Metric, slice, report, and source orbit one decision model — distinct responsibilities, one semantic core.'}
           </p>
         </header>
 
@@ -107,31 +113,33 @@ const DecisionAtom = () => {
             <circle className="atom-core-ring" cx={CX} cy={CY} r="78" />
             <circle className="atom-core-fill" cx={CX} cy={CY} r="68" />
             <text x={CX} y={CY - 10} textAnchor="middle" className="atom-core-kicker">
-              GOVERNED
+              {isBusiness ? 'THE' : 'GOVERNED'}
             </text>
             <text x={CX} y={CY + 18} textAnchor="middle" className="atom-core-name">
-              Decision
+              {isBusiness ? 'Question' : 'Decision'}
             </text>
           </svg>
         </div>
 
-        <div className="atom-pair" data-testid="atom-pair-detail">
+        <div className={`atom-pair${isBusiness ? ' atom-pair-business' : ''}`} data-testid="atom-pair-detail">
           <article>
-            <p>Business · {part.name}</p>
+            <p>{isBusiness ? 'The pain' : 'Business'} · {part.name}</p>
             <h3>{part.tag}</h3>
             <span>{part.business}</span>
             <button type="button" data-testid="atom-open-business" onClick={() => openExperience(EXPERIENCES.business, part.businessTopic)}>
-              Open business topic <ArrowRight size={14} />
+              {isBusiness ? 'See this pain in context' : 'Open business topic'} <ArrowRight size={14} />
             </button>
           </article>
-          <article>
-            <p>Technical · {part.name}</p>
-            <h3>{part.tag}</h3>
-            <span>{part.technical}</span>
-            <button type="button" data-testid="atom-open-technical" onClick={() => openExperience(EXPERIENCES.technical, part.technicalTopic)}>
-              Open technical topic <ArrowRight size={14} />
-            </button>
-          </article>
+          {!isBusiness && (
+            <article>
+              <p>Technical · {part.name}</p>
+              <h3>{part.tag}</h3>
+              <span>{part.technical}</span>
+              <button type="button" data-testid="atom-open-technical" onClick={() => openExperience(EXPERIENCES.technical, part.technicalTopic)}>
+                Open technical topic <ArrowRight size={14} />
+              </button>
+            </article>
+          )}
         </div>
       </div>
     </section>

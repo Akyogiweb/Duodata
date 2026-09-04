@@ -89,32 +89,32 @@ export const FEATURE_CONNECTIONS = [
 export const GET_STARTED_STEPS = [
   {
     n: '01',
-    title: 'Name the question',
-    business: 'Ask in business language — what the number means, who owns it, whether you can trust it.',
+    title: 'Name the argument',
+    business: 'Pick the number your last three meetings couldn’t agree on — revenue, retention, pipeline, margin.',
     technical: 'Name the metric the business already uses. Do not start from a table.',
   },
   {
     n: '02',
-    title: 'Capture the meaning',
-    business: 'See definition, owner, and where it is used — one page the whole company can stand behind.',
+    title: 'Surface the real disagreement',
+    business: 'Who defines it? Who owns it? Where does each team get their version? Map the friction before you fix anything.',
     technical: 'Record formula, slices, owners, and sources as a versioned ontology object.',
   },
   {
     n: '03',
-    title: 'Govern the change',
-    business: 'If the definition moves, it is a decision with a name on it — not a silent spreadsheet edit.',
+    title: 'Put a name on accountability',
+    business: 'When the definition moves, someone decides — not a silent edit in a spreadsheet that breaks twelve reports.',
     technical: 'Move draft → proposed → approved → implemented. Review in Git like any other production asset.',
   },
   {
     n: '04',
-    title: 'Connect the stack',
-    business: 'The same meaning reaches dashboards, reports, and AI answers.',
+    title: 'Align the room',
+    business: 'Product, sales, finance, and operators leave with one story — the same meaning in every conversation.',
     technical: 'Map into Snowflake, Databricks, dbt, BigQuery, and BI through agents — not a second dictionary.',
   },
   {
     n: '05',
-    title: 'Work in your experience',
-    business: 'Keep asking. Switch to Technical in the nav when you need calculation, sources, or lineage.',
+    title: 'Move at the speed of the business',
+    business: 'Strategy shifts. Acquisitions land. New products launch. The meaning moves with you — not three quarters behind.',
     technical: 'Ship in the workspace. Switch to Business in the nav to see the question people actually ask.',
   },
 ];

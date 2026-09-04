@@ -14,11 +14,11 @@ const GetStarted = () => {
       <div className="max-w-[1100px] mx-auto px-6">
         <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">How to get started</p>
         <h2 className="hero-headline text-[36px] md:text-[52px] text-slate-950 max-w-3xl">
-          Five steps. Same product. Your experience.
+          {isBusiness ? 'From confusion to confidence.' : 'Five steps. Same product. Your experience.'}
         </h2>
         <p className="mt-4 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
           {isBusiness
-            ? 'Start with a question the business already argues about. Technical implementation stays one switch away in the nav.'
+            ? 'These are the conversations that happen when a company stops arguing about definitions and starts making decisions.'
             : 'Start from the metric the business already named. The question they ask is the object you govern and ship.'}
         </p>
 

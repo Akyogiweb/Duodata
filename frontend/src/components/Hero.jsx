@@ -18,7 +18,7 @@ const Hero = () => {
           <h1 className="hero-context-word">Context</h1>
           <p className="hero-context-sub">
             {isBusiness
-              ? 'For your metrics, dashboards, data platforms and AI'
+              ? 'When every team has a different answer to the same question'
               : 'For your warehouse, semantic views, BI and agents'}
           </p>
           <button type="button" onClick={demo.open} className="hero-context-cta" data-testid="home-hero-cta">
