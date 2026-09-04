@@ -6,6 +6,7 @@ import ExperienceTopics from '@/components/ExperienceTopics';
 import AudienceBridge from '@/components/AudienceBridge';
 import LogoMarquee from '@/components/LogoMarquee';
 import BusinessMeanings from '@/components/BusinessMeanings';
+import LineageDiagram from '@/components/LineageDiagram';
 import { CTA } from '@/components/Sections';
 import Footer from '@/components/Footer';
 import { useExperience } from '@/context/ExperienceContext';
@@ -20,7 +21,7 @@ const Landing = () => {
       <DuoArchitecture />
       <ExperienceTopics />
       <LogoMarquee />
-      {isBusiness && <BusinessMeanings />}
+      {isBusiness ? <BusinessMeanings /> : <LineageDiagram />}
       <AudienceBridge />
       <CTA />
       <Footer />
