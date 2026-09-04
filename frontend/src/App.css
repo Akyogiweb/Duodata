@@ -1740,7 +1740,9 @@ html[data-experience="technical"] .topic-atom-tag {
   gap: 8px 28px;
   align-items: stretch;
 }
-.viz-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.viz-svg { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
+.viz-node,
+.stack-ring { cursor: pointer; pointer-events: auto; }
 .viz-rail {
   stroke: rgba(232, 238, 247, 0.28);
   stroke-width: 1.15;
@@ -1748,7 +1750,7 @@ html[data-experience="technical"] .topic-atom-tag {
   stroke-linecap: round;
 }
 .viz-halo { fill: none; stroke: rgba(127, 209, 232, 0.55); stroke-width: 1; }
-.viz-node { cursor: pointer; }
+.stack-ring { cursor: pointer; }
 .viz-caption {
   fill: #9aa8bb;
   font-size: 12px;
@@ -1841,7 +1843,6 @@ html[data-experience="technical"] .topic-atom-tag {
   fill: none;
 }
 .stack-shadow { fill: rgba(0, 0, 0, 0.38); }
-.stack-ring { cursor: pointer; }
 .stack-title {
   fill: #fff;
   font-size: 13px;

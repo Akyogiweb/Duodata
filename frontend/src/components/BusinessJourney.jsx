@@ -176,6 +176,7 @@ const BusinessJourney = () => {
                   data-testid={`journey-node-${item.id}`}
                 >
                   {active ? <circle r={p.r + 7} className="viz-halo" /> : null}
+                  <circle r="22" fill="transparent" />
                   <circle
                     r={p.r}
                     fill={cyan ? 'url(#j-cyan)' : 'url(#j-blue)'}
