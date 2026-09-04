@@ -5,7 +5,7 @@ import { useExperience } from '@/context/ExperienceContext';
 const TopicSection = ({ row }) => (
   <article className="topic-section" id={row.id} data-testid={`topic-${row.id}`}>
     <p className="topic-section-kicker">
-      {row.group} — {row.subGroup}
+      {row.group === row.subGroup ? row.group : `${row.group} — ${row.subGroup}`}
     </p>
     <h3 className="hero-headline topic-section-title">{row.category}</h3>
     <p className="topic-section-purpose">{row.purpose}</p>
