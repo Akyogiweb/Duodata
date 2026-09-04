@@ -1,15 +1,20 @@
 import React from 'react';
-import { businessExperienceGroups, technicalExperienceTopics } from '@/mock';
+import { BUSINESS_TOPIC_GROUPS, TECHNICAL_TOPIC_ROWS } from '@/data/experienceTaxonomy';
 import { useExperience } from '@/context/ExperienceContext';
 
-const TopicCard = ({ item }) => (
-  <article className="topic-card" id={item.id} data-testid={`topic-${item.id}`}>
-    <h3 className="topic-card-title">{item.category}</h3>
-    <p className="topic-card-purpose">{item.purpose}</p>
-    <p className="topic-card-tools">
-      <span className="topic-card-tools-label">In Duo Data</span>
-      {item.tools}
+const TopicSection = ({ row }) => (
+  <article className="topic-section" id={row.id} data-testid={`topic-${row.id}`}>
+    <p className="topic-section-kicker">
+      {row.group === row.subGroup ? row.group : `${row.group} — ${row.subGroup}`}
     </p>
+    <h3 className="hero-headline topic-section-title">{row.category}</h3>
+    <p className="topic-section-purpose">{row.purpose}</p>
+    {row.tools ? (
+      <p className="topic-card-tools">
+        <span className="topic-card-tools-label">Tool feature</span>
+        {row.tools}
+      </p>
+    ) : null}
   </article>
 );
 
@@ -21,27 +26,25 @@ const BusinessTopics = () => (
         A section for every job the business needs to do.
       </h2>
       <p className="mt-5 text-slate-600 text-[15px] leading-relaxed">
-        Purpose, consistency, clarity, and AI — each with the category, the Duo Data capability, and why it exists.
+        Seven sections from the product table: purpose, metric consistency, clarity, and AI.
       </p>
     </header>
     <nav className="experience-topics-nav" aria-label="Business topics">
-      {businessExperienceGroups.map((group) => (
+      {BUSINESS_TOPIC_GROUPS.map((group) => (
         <a key={group.id} href={`#${group.id}`} className="experience-topics-nav-link">
           {group.subGroup}
         </a>
       ))}
     </nav>
-    <div className="flex flex-col gap-16 md:gap-20">
-      {businessExperienceGroups.map((group) => (
+    <div className="flex flex-col gap-10">
+      {BUSINESS_TOPIC_GROUPS.map((group) => (
         <section key={group.id} id={group.id} className="experience-topic-group" data-testid={`topic-group-${group.id}`}>
-          <div className="max-w-2xl mb-8">
-            <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">{group.kicker}</p>
-            <h3 className="hero-headline text-[28px] md:text-[36px] text-slate-950">{group.title}</h3>
-            <p className="mt-3 text-slate-600 text-[15px] leading-relaxed">{group.lede}</p>
-          </div>
-          <div className={`grid grid-cols-1 ${group.items.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : ''} gap-5`}>
-            {group.items.map((item) => (
-              <TopicCard key={item.id} item={item} />
+          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-5">
+            Business — {group.subGroup}
+          </p>
+          <div className="flex flex-col gap-5">
+            {group.items.map((row) => (
+              <TopicSection key={row.id} row={row} />
             ))}
           </div>
         </section>
@@ -58,19 +61,19 @@ const TechnicalTopics = () => (
         A section for every layer you ship.
       </h2>
       <p className="mt-5 text-slate-600 text-[15px] leading-relaxed">
-        Ontology, AI governance, the semantic layer, lineage, and reliability — each mapped to Duo Data agents, integrations, and platform apps.
+        Five sections from the product table: ontology, AI governance, semantic layer, lineage, and reliability.
       </p>
     </header>
     <nav className="experience-topics-nav" aria-label="Technical topics">
-      {technicalExperienceTopics.map((item) => (
-        <a key={item.id} href={`#${item.id}`} className="experience-topics-nav-link">
-          {item.category}
+      {TECHNICAL_TOPIC_ROWS.map((row) => (
+        <a key={row.id} href={`#${row.id}`} className="experience-topics-nav-link">
+          {row.category}
         </a>
       ))}
     </nav>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-      {technicalExperienceTopics.map((item) => (
-        <TopicCard key={item.id} item={item} />
+    <div className="flex flex-col gap-5">
+      {TECHNICAL_TOPIC_ROWS.map((row) => (
+        <TopicSection key={row.id} row={row} />
       ))}
     </div>
   </div>

@@ -431,7 +431,8 @@ html[data-experience="technical"] .site-canvas .rounded-xl.border {
   border-color: rgba(30, 95, 238, 0.45);
   background: #fff;
 }
-.topic-card {
+.topic-card,
+.topic-section {
   display: flex;
   flex-direction: column;
   padding: 28px;
@@ -439,6 +440,24 @@ html[data-experience="technical"] .site-canvas .rounded-xl.border {
   border: 1px solid rgba(15, 23, 42, 0.1);
   background: rgba(255, 255, 255, 0.82);
   scroll-margin-top: 96px;
+}
+.topic-section-kicker {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.topic-section-title {
+  font-size: 26px;
+  color: #0a0a0a;
+  margin-bottom: 12px;
+}
+.topic-section-purpose {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #475569;
 }
 .experience-topic-group {
   scroll-margin-top: 96px;
@@ -483,14 +502,18 @@ html[data-experience="technical"] .experience-topics-nav-link:hover {
   border-color: rgba(125, 211, 252, 0.4);
   background: rgba(20, 28, 48, 0.95);
 }
-html[data-experience="technical"] .topic-card {
+html[data-experience="technical"] .topic-card,
+html[data-experience="technical"] .topic-section {
   background: rgba(16, 17, 24, 0.78);
   border-color: rgba(255, 255, 255, 0.1);
 }
-html[data-experience="technical"] .topic-card-title {
+html[data-experience="technical"] .topic-card-title,
+html[data-experience="technical"] .topic-section-title {
   color: #f4f6fb;
 }
-html[data-experience="technical"] .topic-card-purpose {
+html[data-experience="technical"] .topic-card-purpose,
+html[data-experience="technical"] .topic-section-purpose,
+html[data-experience="technical"] .topic-section-kicker {
   color: #94a3b8;
 }
 html[data-experience="technical"] .topic-card-tools {
