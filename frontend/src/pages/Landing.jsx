@@ -25,7 +25,6 @@ const Landing = () => {
       <DuoArchitecture />
       {isBusiness ? <BusinessStory /> : <TechnicalStory />}
       <ExperienceTopics />
-      <FeatureBlocks />
       <LogoMarquee />
       {isBusiness ? (
         <BusinessMeanings />
