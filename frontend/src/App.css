@@ -1750,7 +1750,6 @@ html[data-experience="technical"] .topic-atom-tag {
   stroke-linecap: round;
 }
 .viz-halo { fill: none; stroke: rgba(127, 209, 232, 0.55); stroke-width: 1; }
-.stack-ring { cursor: pointer; }
 .viz-caption {
   fill: #9aa8bb;
   font-size: 12px;
