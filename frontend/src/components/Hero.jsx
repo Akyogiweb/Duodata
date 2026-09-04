@@ -46,7 +46,7 @@ const Hero = () => {
               <h1 className="hero-headline text-[40px] sm:text-[56px] md:text-[80px] lg:text-[92px] text-slate-950 max-w-5xl leading-[0.92]">
                 Define it. Govern it.
                 <br />
-                <span style={{ color: '#7dd3fc' }}>Implement it.</span>
+                <span style={{ color: '#1E5FEE' }}>Implement it.</span>
               </h1>
               <p className="mt-6 max-w-2xl text-slate-600 text-[15px] md:text-[17px] leading-relaxed">
                 The workspace to define, version, map, and ship the same business concepts across your data platforms — connected to the questions the business asks.
