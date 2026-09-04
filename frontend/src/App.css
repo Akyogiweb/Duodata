@@ -1284,4 +1284,15 @@ html[data-experience="technical"] .lineage-core {
   background: rgba(10, 12, 18, 0.95);
   border: 1px solid rgba(30, 95, 238, 0.35);
 }
+.lineage-link {
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: opacity 700ms ease;
+}
+.lineage-dot {
+  transition: opacity 700ms ease;
+}
 

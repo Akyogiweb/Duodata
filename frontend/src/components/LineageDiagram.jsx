@@ -24,6 +24,23 @@ const NODES = {
   ],
 };
 
+const STAGE = { w: 1120, h: 480 };
+const TILE = 72;
+const GAP = 28;
+const COL_H = TILE * 4 + GAP * 3;
+const TILE_TOP = (STAGE.h - COL_H) / 2;
+const tileY = (i) => TILE_TOP + TILE / 2 + i * (TILE + GAP);
+const CORE_W = 248;
+const coreLeft = STAGE.w / 2 - CORE_W / 2;
+const coreRight = STAGE.w / 2 + CORE_W / 2;
+const coreY = (i) => STAGE.h / 2 - 48 + i * 32;
+
+const sCurve = (x0, y0, x1, y1) => {
+  const dx = Math.abs(x1 - x0) * 0.45;
+  const dir = x1 >= x0 ? 1 : -1;
+  return `M ${x0} ${y0} C ${x0 + dir * dx} ${y0}, ${x1 - dir * dx} ${y1}, ${x1} ${y1}`;
+};
+
 const LogoTile = ({ node, revealed, from }) => (
   <div
     className="lineage-logo-tile"
@@ -76,65 +93,79 @@ const LineageDiagram = () => {
           </p>
         </div>
 
-        <div className="relative hidden md:block h-[520px]">
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 520" preserveAspectRatio="none">
+        <div className="hidden md:block overflow-x-auto">
+        <div
+          className="relative mx-auto"
+          style={{ width: STAGE.w, height: STAGE.h }}
+        >
+          <svg
+            className="absolute inset-0 w-full h-full overflow-visible"
+            viewBox={`0 0 ${STAGE.w} ${STAGE.h}`}
+            preserveAspectRatio="xMidYMid meet"
+          >
             <defs>
-              <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#7FD1E8" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#1E5FEE" stopOpacity="0.35" />
+              <linearGradient id="lineage-in" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#7FD1E8" />
+                <stop offset="100%" stopColor="#1E5FEE" />
               </linearGradient>
-              <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#1E5FEE" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#7FD1E8" stopOpacity="0.85" />
+              <linearGradient id="lineage-out" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#1E5FEE" />
+                <stop offset="100%" stopColor="#7FD1E8" />
               </linearGradient>
             </defs>
-            {NODES.sources.map((_, i) => {
-              const y = 36 + i * 96;
-              return (
-                <path
-                  key={`l1-${i}`}
-                  d={`M 88 ${y} C 320 ${y}, 400 260, 560 260`}
-                  stroke="url(#lg1)"
-                  strokeWidth="1.6"
-                  fill="none"
-                  style={{
-                    strokeDasharray: 500,
-                    strokeDashoffset: revealLines1 ? 0 : 500,
-                    transition: 'stroke-dashoffset 1.2s ease',
-                  }}
-                />
-              );
-            })}
-            {NODES.consumers.map((_, i) => {
-              const y = 36 + i * 96;
-              return (
-                <path
-                  key={`l2-${i}`}
-                  d={`M 640 260 C 800 260, 880 ${y}, 1112 ${y}`}
-                  stroke="url(#lg2)"
-                  strokeWidth="1.6"
-                  fill="none"
-                  style={{
-                    strokeDasharray: 500,
-                    strokeDashoffset: revealLines2 ? 0 : 500,
-                    transition: 'stroke-dashoffset 1.2s ease',
-                  }}
-                />
-              );
-            })}
+            {NODES.sources.map((_, i) => (
+              <path
+                key={`l1-${i}`}
+                className="lineage-link"
+                d={sCurve(TILE, tileY(i), coreLeft, coreY(i))}
+                stroke="url(#lineage-in)"
+                style={{ opacity: revealLines1 ? 1 : 0 }}
+              />
+            ))}
+            {NODES.consumers.map((_, i) => (
+              <path
+                key={`l2-${i}`}
+                className="lineage-link"
+                d={sCurve(coreRight, coreY(i), STAGE.w - TILE, tileY(i))}
+                stroke="url(#lineage-out)"
+                style={{ opacity: revealLines2 ? 1 : 0 }}
+              />
+            ))}
+            {NODES.sources.map((_, i) => (
+              <circle
+                key={`d1-${i}`}
+                className="lineage-dot"
+                cx={coreLeft}
+                cy={coreY(i)}
+                r="2.5"
+                fill="#1E5FEE"
+                style={{ opacity: revealLines1 ? 1 : 0 }}
+              />
+            ))}
+            {NODES.consumers.map((_, i) => (
+              <circle
+                key={`d2-${i}`}
+                className="lineage-dot"
+                cx={coreRight}
+                cy={coreY(i)}
+                r="2.5"
+                fill="#7FD1E8"
+                style={{ opacity: revealLines2 ? 1 : 0 }}
+              />
+            ))}
           </svg>
 
-          <div className="absolute left-0 top-0 w-[88px] flex flex-col gap-6">
+          <div className="absolute left-0 top-0 bottom-0 w-[72px] flex flex-col justify-center gap-7">
             {NODES.sources.map((s) => (
-              <LogoTile key={s.id} node={s} revealed={revealSources} from="-24px" />
+              <LogoTile key={s.id} node={s} revealed={revealSources} from="-16px" />
             ))}
           </div>
 
           <div
-            className="absolute left-1/2 top-1/2 w-[240px] p-5 rounded-2xl lineage-core shadow-2xl transition-all duration-700"
+            className="absolute left-1/2 top-1/2 w-[248px] p-5 rounded-2xl lineage-core shadow-2xl transition-all duration-700"
             style={{
               opacity: revealMetrics ? 1 : 0,
-              transform: `translate(-50%, -50%) scale(${revealMetrics ? 1 : 0.9})`,
+              transform: `translate(-50%, -50%) scale(${revealMetrics ? 1 : 0.98})`,
             }}
           >
             <div className="flex items-center gap-2 mb-3">
@@ -169,11 +200,12 @@ const LineageDiagram = () => {
             </div>
           </div>
 
-          <div className="absolute right-0 top-0 w-[88px] flex flex-col gap-6 items-end">
+          <div className="absolute right-0 top-0 bottom-0 w-[72px] flex flex-col justify-center gap-7 items-end">
             {NODES.consumers.map((c) => (
-              <LogoTile key={c.id} node={c} revealed={revealConsumers} from="24px" />
+              <LogoTile key={c.id} node={c} revealed={revealConsumers} from="16px" />
             ))}
           </div>
+        </div>
         </div>
 
         <div className="md:hidden flex flex-col items-center gap-4">
