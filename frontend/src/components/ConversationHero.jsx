@@ -1,7 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { Plus, Mic, ChevronDown, ArrowUp } from 'lucide-react';
-import { FEATURE_CONNECTIONS } from '@/data/featureConnections';
-import { EXPERIENCES, useExperience } from '@/context/ExperienceContext';
 
 export const CONVERSATIONS = [
   {
@@ -14,6 +12,11 @@ export const CONVERSATIONS = [
       'Net leverage ratio ↓',
       'Invested capital remained relatively stable',
     ],
+    details: {
+      calculation: 'MOIC = Total Value ÷ Invested Capital, using the definition your investment committee approved.',
+      sources: 'Portfolio valuation system and fund accounting — the same sources in your Q2 board pack.',
+      ownership: 'Investment committee · Approved for executive reporting',
+    },
   },
   {
     id: 'trust',
@@ -25,6 +28,11 @@ export const CONVERSATIONS = [
       'Calculated as Total Value ÷ Invested Capital',
       'Used in the Q2 board pack, LP report, and portfolio review',
     ],
+    details: {
+      calculation: 'One agreed formula — not three versions hiding in different dashboards.',
+      sources: 'Every report that uses this metric points back to the same definition.',
+      ownership: 'A named owner stands behind the number when it changes.',
+    },
   },
   {
     id: 'feedback',
@@ -36,6 +44,11 @@ export const CONVERSATIONS = [
       'Accounts with a guided first week renew at a higher rate',
       'Sales can now lead with the same recommendation the product team is shipping',
     ],
+    details: {
+      calculation: 'Recommendation strength comes from feedback volume, renewal lift, and segment fit.',
+      sources: 'Post-purchase surveys, support tickets, and customer success notes.',
+      ownership: 'Customer success · Shared with product and sales',
+    },
   },
   {
     id: 'sales',
@@ -47,16 +60,21 @@ export const CONVERSATIONS = [
       'Growth buyers ask how quickly meaning reaches the product and the customer',
       'One shared definition lets every team speak with the same intelligence',
     ],
+    details: {
+      calculation: 'Pipeline and win-rate views use the same customer and revenue definitions.',
+      sources: 'CRM, finance, and product usage — aligned to one customer story.',
+      ownership: 'Sales leadership · Aligned with finance and product',
+    },
   },
 ];
 
 const ConversationHero = () => {
-  const { openExperience } = useExperience();
-  const [query, setQuery] = useState('');
-  const [activeId, setActiveId] = useState(null);
+  const [query, setQuery] = useState(CONVERSATIONS[0].question);
+  const [activeId, setActiveId] = useState('moic');
+  const [detailKey, setDetailKey] = useState(null);
 
   const active = useMemo(
-    () => CONVERSATIONS.find((c) => c.id === activeId) || null,
+    () => CONVERSATIONS.find((c) => c.id === activeId) || CONVERSATIONS[0],
     [activeId]
   );
 
@@ -71,11 +89,7 @@ const ConversationHero = () => {
       CONVERSATIONS[0];
     setQuery(match.question);
     setActiveId(match.id);
-  };
-
-  const openTechnical = () => {
-    const pair = FEATURE_CONNECTIONS.find((p) => p.conversationId === activeId) || FEATURE_CONNECTIONS[0];
-    openExperience(EXPERIENCES.technical, pair.technicalSection);
+    setDetailKey(null);
   };
 
   const onSubmit = (e) => {
@@ -83,10 +97,20 @@ const ConversationHero = () => {
     ask();
   };
 
+  const detailLabels = {
+    calculation: 'See calculation',
+    sources: 'See sources',
+    ownership: 'See who owns it',
+  };
+
   return (
-    <div className="gemini-ask" data-testid="home-business-conversation">
-      <div className="gemini-glow" aria-hidden />
-      <h1 className="gemini-heading">Ask the number. Trust the meaning.</h1>
+    <div className="gemini-ask gemini-ask-hero" data-testid="home-business-conversation">
+      <p className="gemini-eyebrow">Ask about your business</p>
+      <h1 className="gemini-heading">
+        Understand your business data.<br />
+        <span className="gemini-heading-accent">Ask better questions.</span>
+      </h1>
+
       <form className="gemini-bar" onSubmit={onSubmit}>
         <button
           type="button"
@@ -97,14 +121,14 @@ const ConversationHero = () => {
           <Plus size={20} strokeWidth={1.75} />
         </button>
         <label htmlFor="duo-ask" className="sr-only">
-          Ask Duo Data
+          Ask Duodata
         </label>
         <input
           id="duo-ask"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Ask Duo Data"
+          placeholder="What is driving the change in MOIC this quarter?"
           className="gemini-input"
           autoComplete="off"
         />
@@ -119,7 +143,7 @@ const ConversationHero = () => {
           type="submit"
           className="gemini-send"
           data-testid="home-ask-duo-data"
-          aria-label="Ask Duo Data"
+          aria-label="Ask Duodata"
         >
           <ArrowUp size={18} strokeWidth={2.2} />
         </button>
@@ -138,31 +162,31 @@ const ConversationHero = () => {
         ))}
       </div>
 
-      {active && (
-        <div className="gemini-answer" data-testid="home-conversation-answer">
-          <h3 className="text-[18px] md:text-[20px] font-semibold text-slate-950 mb-3">{active.answerTitle}</h3>
-          <p className="text-[13px] text-slate-500 mb-2">The primary drivers were:</p>
-          <ul className="space-y-2 mb-5">
-            {active.bullets.map((b) => (
-              <li key={b} className="text-[14px] text-slate-800 flex gap-2">
-                <span className="text-[#1E5FEE] mt-0.5">•</span>
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-medium">
-            <button type="button" onClick={openTechnical} className="text-[#1E5FEE] hover:underline">
-              See calculation
+      <div className="gemini-answer gemini-answer-visible" data-testid="home-conversation-answer">
+        <p className="gemini-answer-question">{active.question}</p>
+        <h3 className="gemini-answer-title">{active.answerTitle}</h3>
+        <p className="gemini-answer-kicker">The primary drivers were:</p>
+        <ul className="gemini-answer-list">
+          {active.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+        <div className="gemini-answer-links">
+          {Object.entries(detailLabels).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setDetailKey(detailKey === key ? null : key)}
+              className={detailKey === key ? 'is-active' : ''}
+            >
+              {label}
             </button>
-            <button type="button" onClick={openTechnical} className="text-[#1E5FEE] hover:underline">
-              See sources
-            </button>
-            <button type="button" onClick={openTechnical} className="text-[#1E5FEE] hover:underline">
-              See lineage
-            </button>
-          </div>
+          ))}
         </div>
-      )}
+        {detailKey && active.details?.[detailKey] && (
+          <p className="gemini-answer-detail">{active.details[detailKey]}</p>
+        )}
+      </div>
     </div>
   );
 };

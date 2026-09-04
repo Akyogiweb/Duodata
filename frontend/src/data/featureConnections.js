@@ -122,14 +122,14 @@ export const GET_STARTED_STEPS = [
 export const SITE_FAQS = [
   {
     q: 'Do we run two products — one for business, one for data?',
-    a: 'No. Duo Data is one product with two experiences. Business and technical teams work on the same metrics, slices, reports, and sources.',
+    a: 'No. Duodata is one product with two experiences. Business and technical teams work on the same metrics, slices, reports, and sources.',
   },
   {
     q: 'How do we get started?',
     a: 'Choose an experience, name a metric the business already argues about, capture its meaning, then govern and map it into your warehouse. The five steps on this page are the path.',
   },
   {
-    q: 'Does Duo Data replace Snowflake, Databricks, or dbt?',
+    q: 'Does Duodata replace Snowflake, Databricks, or dbt?',
     a: 'No. It sits between the business question and those platforms. Semantics compile into native objects — semantic views, metric views, models — where your data already lives.',
   },
   {

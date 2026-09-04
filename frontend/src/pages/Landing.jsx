@@ -1,7 +1,7 @@
 import React from 'react';
 import SiteLayout from '@/components/SiteLayout';
 import Hero from '@/components/Hero';
-import DecisionAtom from '@/components/DecisionAtom';
+import BusinessStory from '@/components/BusinessStory';
 import BusinessJourney from '@/components/BusinessJourney';
 import TechnicalProposition from '@/components/TechnicalProposition';
 import GetStarted from '@/components/GetStarted';
@@ -11,7 +11,6 @@ import AudienceBridge from '@/components/AudienceBridge';
 import SalesProof from '@/components/SalesProof';
 import LogoMarquee from '@/components/LogoMarquee';
 import BusinessMeanings from '@/components/BusinessMeanings';
-import LineageDiagram from '@/components/LineageDiagram';
 import MeaningProblem from '@/components/sections/MeaningProblem';
 import BusinessExecutivePain from '@/components/sections/BusinessExecutivePain';
 import AISection from '@/components/sections/AISection';
@@ -19,6 +18,7 @@ import BeforeAfter from '@/components/sections/BeforeAfter';
 import Governance from '@/components/sections/Governance';
 import GitBridge from '@/components/sections/GitBridge';
 import PlatformIntegration from '@/components/sections/PlatformIntegration';
+import LineageDiagram from '@/components/LineageDiagram';
 import MegaDiagram from '@/components/sections/MegaDiagram';
 import TwoSides from '@/components/sections/TwoSides';
 import VideoShowcase from '@/components/VideoShowcase';
@@ -33,20 +33,20 @@ const Landing = () => {
   return (
     <SiteLayout>
       <Hero />
+      {isBusiness && <BusinessStory />}
       <LogoMarquee />
       <SalesProof />
       <Testimonials />
       {isBusiness ? (
         <>
-          <BusinessJourney />
           <MeaningProblem />
+          <BusinessJourney />
           <ExperienceTopics />
           <BeforeAfter />
           <AISection />
           <BusinessExecutivePain />
-          <DecisionAtom />
-          <FeatureConnection />
           <BusinessMeanings />
+          <FeatureConnection />
           <UseCases />
           <GetStarted />
         </>
