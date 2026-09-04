@@ -1,37 +1,33 @@
 import { useEffect, useState } from 'react';
 import BrandMark from './BrandMark';
-import { DUO_BLUE, DUO_CYAN } from '../lib/brand';
+import { DUO_CYAN } from '../lib/brand';
 import { FEATURE_CONNECTIONS } from '../data/featureConnections';
 
-const TIMING = { enter: 500, draw: 1400, hold: 2400, exit: 500, gap: 280 };
+const TIMING = { enter: 400, draw: 1100, hold: 2800, exit: 400, gap: 320 };
 
-const IDLE = [
-  { x: 11, y: 58, slug: 'snowflake', color: '#29B5E8', label: 'Snowflake' },
-  { x: 28, y: 64, slug: 'databricks', color: '#FF3621', label: 'Databricks' },
-  { x: 72, y: 63, slug: 'dbt', color: '#FF694A', label: 'dbt' },
-  { x: 88, y: 57, slug: 'googlebigquery', color: '#4285F4', label: 'BigQuery' },
+const PLATFORMS = [
+  { x: 16, y: 74, slug: 'snowflake', color: '#29B5E8', label: 'Snowflake' },
+  { x: 36, y: 78, slug: 'databricks', color: '#FF3621', label: 'Databricks' },
+  { x: 64, y: 78, slug: 'dbt', color: '#FF694A', label: 'dbt' },
+  { x: 84, y: 74, slug: 'googlebigquery', color: '#4285F4', label: 'BigQuery' },
 ];
 
-const STAGES = [
-  { qx: 16, qy: 18, lx: 18, ly: 62 },
-  { qx: 82, qy: 16, lx: 84, ly: 60 },
-  { qx: 14, qy: 22, lx: 30, ly: 66 },
-  { qx: 84, qy: 20, lx: 70, ly: 64 },
-  { qx: 18, qy: 14, lx: 86, ly: 58 },
-];
+const QUESTION_ANCHOR = { x: 50, y: 10 };
 
-const curve = (s) => {
-  const midY = (s.qy + s.ly) / 2;
-  return `M ${s.qx} ${s.qy} C ${s.qx} ${midY}, ${s.lx} ${midY}, ${s.lx} ${s.ly}`;
+/** Top → down → platform: consistent vertical flow */
+const verticalPath = (qx, qy, lx, ly) => {
+  const elbowY = qy + (ly - qy) * 0.58;
+  return `M ${qx} ${qy} L ${qx} ${elbowY} L ${lx} ${elbowY} L ${lx} ${ly}`;
 };
 
 export default function QuestionCycle({ experience }) {
   const questions = FEATURE_CONNECTIONS.map((pair) => ({
-    q: experience === 'technical' ? pair.technicalQuestion : pair.businessQuestion,
+    q: pair.technicalQuestion,
     slug: pair.slug,
     color: pair.color,
     label: pair.label,
   }));
+
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState('enter');
 
@@ -41,6 +37,8 @@ export default function QuestionCycle({ experience }) {
   }, [experience]);
 
   useEffect(() => {
+    if (experience !== 'technical') return undefined;
+
     const delays = { enter: TIMING.enter, draw: TIMING.draw, hold: TIMING.hold, exit: TIMING.exit };
     const t = setTimeout(() => {
       if (phase === 'exit') {
@@ -52,37 +50,38 @@ export default function QuestionCycle({ experience }) {
       setPhase(order[order.indexOf(phase) + 1]);
     }, delays[phase] + (phase === 'exit' ? TIMING.gap : 0));
     return () => clearTimeout(t);
-  }, [phase, questions.length]);
+  }, [phase, questions.length, experience]);
+
+  if (experience !== 'technical') return null;
 
   const item = questions[idx];
-  const stage = STAGES[idx % STAGES.length];
-  const d = curve(stage);
+  const platform = PLATFORMS.find((p) => p.slug === item.slug) || PLATFORMS[1];
+  const d = verticalPath(QUESTION_ANCHOR.x, QUESTION_ANCHOR.y + 4, platform.x, platform.y - 5);
   const visible = phase !== 'exit';
   const drawing = phase === 'draw' || phase === 'hold';
-  const stroke = experience === 'technical' ? DUO_CYAN : DUO_BLUE;
 
   return (
-    <div className="hero-cycle" data-testid="home-question-cycle" aria-hidden={false}>
-      {IDLE.map((tile) => (
+    <div className="hero-cycle hero-cycle-technical" data-testid="home-question-cycle" aria-hidden>
+      {PLATFORMS.map((tile) => (
         <div
           key={tile.label}
           className={`hero-idle-tile ${item.slug === tile.slug && drawing ? 'is-live' : ''}`}
           style={{ left: `${tile.x}%`, top: `${tile.y}%` }}
         >
           <span className="hero-idle-mark">
-            <BrandMark slug={tile.slug} color={tile.color} size={22} label={tile.label} />
+            <BrandMark slug={tile.slug} color={tile.color} size={20} label={tile.label} />
           </span>
           <em>{tile.label}</em>
         </div>
       ))}
 
       <div
-        className="hero-q-chip"
+        className="hero-q-chip hero-q-chip-top"
         style={{
-          left: `${stage.qx}%`,
-          top: `${stage.qy}%`,
+          left: `${QUESTION_ANCHOR.x}%`,
+          top: `${QUESTION_ANCHOR.y}%`,
           opacity: visible ? 1 : 0,
-          transform: `translate(-50%, -50%) translateY(${visible ? 0 : -8}px)`,
+          transform: `translate(-50%, 0) translateY(${visible ? 0 : -6}px)`,
         }}
         data-testid="home-question-rail"
       >
@@ -94,40 +93,32 @@ export default function QuestionCycle({ experience }) {
         <path
           d={d}
           fill="none"
-          stroke={stroke}
-          strokeWidth="0.35"
+          stroke={DUO_CYAN}
+          strokeWidth="0.1"
           strokeLinecap="round"
+          strokeLinejoin="round"
           pathLength="1"
+          className="hero-cycle-path"
           style={{
             strokeDasharray: 1,
             strokeDashoffset: drawing ? 0 : 1,
-            opacity: visible ? 1 : 0,
-            transition: `stroke-dashoffset ${TIMING.draw}ms cubic-bezier(0.4,0,0.2,1), opacity 400ms ease`,
+            opacity: visible ? 0.42 : 0,
+            transition: `stroke-dashoffset ${TIMING.draw}ms cubic-bezier(0.4,0,0.2,1), opacity 350ms ease`,
           }}
         />
-        {drawing && visible ? (
-          <>
-            <circle r="0.7" fill={stroke}>
-              <animateMotion dur="2.8s" repeatCount="indefinite" path={d} />
-            </circle>
-            <circle r="0.5" fill="#ffffff" stroke={stroke} strokeWidth="0.18">
-              <animateMotion dur="3.4s" begin="-1.2s" repeatCount="indefinite" path={d} />
-            </circle>
-          </>
-        ) : null}
       </svg>
 
       <div
         className="hero-live-logo"
         style={{
-          left: `${stage.lx}%`,
-          top: `${stage.ly}%`,
+          left: `${platform.x}%`,
+          top: `${platform.y}%`,
           opacity: drawing && visible ? 1 : 0,
-          transform: `translate(-50%, -50%) scale(${drawing && visible ? 1 : 0.9})`,
+          transform: `translate(-50%, -50%) scale(${drawing && visible ? 1 : 0.94})`,
         }}
       >
         <div className="hero-live-mark">
-          <BrandMark slug={item.slug} color={item.color} size={28} label={item.label} />
+          <BrandMark slug={item.slug} color={item.color} size={24} label={item.label} />
         </div>
         <em>{item.label}</em>
       </div>

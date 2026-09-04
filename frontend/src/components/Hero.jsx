@@ -14,7 +14,6 @@ const Hero = () => {
     return (
       <section id="hero" className="hero-shell hero-shell-business" data-testid="home-hero">
         <div className="hero-stage hero-stage-conversation">
-          <QuestionCycle experience={experience} />
           <ConversationHero />
           <div className="hero-business-cta">
             <button type="button" onClick={demo.open} className="pill-btn-primary" data-testid="home-hero-cta">
