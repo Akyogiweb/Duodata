@@ -1260,3 +1260,28 @@ html[data-experience="technical"] .experience-topics-nav-link {
   font-size: 12px;
 }
 
+.lineage-logo-tile {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(10, 10, 10, 0.08);
+  box-shadow: 0 10px 30px rgba(30, 95, 238, 0.08);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+html[data-experience="technical"] .lineage-logo-tile {
+  background: rgba(16, 17, 24, 0.92);
+  border-color: rgba(127, 209, 232, 0.18);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.lineage-core {
+  background: #0a0a0a;
+  color: #fff;
+}
+html[data-experience="technical"] .lineage-core {
+  background: rgba(10, 12, 18, 0.95);
+  border: 1px solid rgba(30, 95, 238, 0.35);
+}
+
