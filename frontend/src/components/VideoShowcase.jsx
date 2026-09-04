@@ -27,7 +27,7 @@ const VideoShowcase = ({ page = false }) => {
       <div className="mx-auto max-w-[1440px] px-5 md:px-8">
         <header className="mx-auto mb-12 grid max-w-[1200px] gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
           <div className="max-w-3xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#7FD1E8]" data-testid="video-showcase-eyebrow">Duo in motion / 07 films</p>
+            <p className={`${page ? 'page-eyebrow font-mono tracking-[0.2em]' : 'font-mono text-[10px] uppercase tracking-[0.2em] text-[#7FD1E8]'}`} data-testid="video-showcase-eyebrow">Duo in motion / 07 films</p>
             <h1 className={`hero-headline mt-4 leading-none text-white ${page ? 'text-4xl sm:text-5xl lg:text-6xl' : 'text-4xl sm:text-5xl'}`} data-testid="video-showcase-title">
               Watch governed meaning become working data.
             </h1>

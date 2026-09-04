@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import BookDemoModal from "@/components/BookDemoModal";
+import WaveField from "@/components/WaveField";
+import HashScrollHandler from "@/components/HashScrollHandler";
 import ExperienceGate from "@/components/ExperienceGate";
 
 const GlobalDemoModal = () => {
@@ -22,6 +24,7 @@ function App() {
         <DemoModalProvider>
         <ExperienceProvider>
           <ExperienceGate />
+          <HashScrollHandler />
           <div className="site-canvas">
           <Routes>
             <Route path="/" element={<Landing />} />
