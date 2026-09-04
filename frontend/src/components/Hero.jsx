@@ -6,6 +6,7 @@ import { useExperience } from '@/context/ExperienceContext';
 import ExperienceSwitch from '@/components/ExperienceSwitch';
 import ConversationHero from '@/components/ConversationHero';
 import TechnicalWorkspace from '@/components/TechnicalWorkspace';
+import QuestionCycle from '@/components/QuestionCycle';
 
 const FixedGrid = () => (
   <div
@@ -21,12 +22,13 @@ const FixedGrid = () => (
 
 const Hero = () => {
   const demo = useDemoModal();
-  const { isBusiness } = useExperience();
+  const { isBusiness, experience } = useExperience();
 
   return (
-    <section className="relative w-full overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
+    <section id="hero" className="relative w-full overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
       <FixedGrid />
-      <div className="relative max-w-[1200px] mx-auto px-6">
+      <QuestionCycle experience={experience} />
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6">
         {isBusiness ? (
           <div className="flex flex-col items-center text-center">
             <div className="mb-8">
