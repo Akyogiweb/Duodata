@@ -41,7 +41,7 @@ export const Testimonials = () => {
   const items = isBusiness ? businessTestimonials : technicalTestimonials;
 
   return (
-    <section className="py-24 md:py-32">
+    <section className="py-24 md:py-32" data-testid="home-testimonials">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-14">
           <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">
@@ -52,15 +52,30 @@ export const Testimonials = () => {
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {items.map((t) => (
-            <div key={t.author} className="p-8 rounded-2xl border border-black/10 bg-white/80 flex flex-col">
-              <Quote size={22} className="text-slate-400 mb-4" />
-              <p className="text-[15px] text-slate-800 leading-relaxed mb-6 flex-1">
+          {items.map((t, i) => (
+            <div
+              key={t.author}
+              className={`p-8 rounded-2xl flex flex-col ${
+                i === 0
+                  ? 'bg-slate-950 text-white border border-slate-950 md:col-span-1'
+                  : 'border border-black/10 bg-white/80'
+              }`}
+            >
+              <Quote size={22} className={i === 0 ? 'text-[#7FD1E8] mb-4' : 'text-slate-400 mb-4'} />
+              <p className={`text-[15px] leading-relaxed mb-6 flex-1 ${i === 0 ? 'text-white' : 'text-slate-800'}`}>
                 “{t.quote}”
               </p>
-              <div>
-                <div className="text-[13px] font-semibold text-slate-900">{t.author}</div>
-                <div className="text-[12px] text-slate-500">{t.company}</div>
+              <div className="flex items-center gap-3">
+                <span
+                  className="grid h-10 w-10 place-items-center rounded-full text-[12px] font-semibold"
+                  style={{ background: i === 0 ? '#1E5FEE' : 'rgba(30,95,238,0.12)', color: i === 0 ? '#fff' : '#1E5FEE' }}
+                >
+                  {t.author.split(' ').map((w) => w[0]).slice(0, 2).join('')}
+                </span>
+                <div>
+                  <div className={`text-[13px] font-semibold ${i === 0 ? 'text-white' : 'text-slate-900'}`}>{t.author}</div>
+                  <div className={`text-[12px] ${i === 0 ? 'text-slate-400' : 'text-slate-500'}`}>{t.company}</div>
+                </div>
               </div>
             </div>
           ))}
@@ -75,36 +90,28 @@ export const CTA = () => {
   const { isBusiness } = useExperience();
 
   return (
-    <section id="get-started" className="py-24 md:py-32">
-      <div className="max-w-4xl mx-auto text-center px-6">
-        <h2 className="hero-headline text-[48px] md:text-[80px] text-slate-950">
-          {isBusiness ? (
-            <>
-              Ask better questions. <span style={{ color: '#1E5FEE' }}>Trust the answer.</span>
-            </>
-          ) : (
-            <>
-              Ship the meaning. <span style={{ color: '#1E5FEE' }}>Keep it true.</span>
-            </>
-          )}
+    <section id="get-started" className="py-16 md:py-24 px-6">
+      <div className="cta-band mx-auto max-w-[1100px] px-8 py-16 md:px-16 md:py-20 text-center">
+        <p className="text-[11px] tracking-[0.28em] uppercase font-medium mb-4 opacity-80">Next step</p>
+        <h2 className="hero-headline text-[40px] md:text-[64px] text-white">
+          {isBusiness ? 'See your metrics on Duo in 45 minutes.' : 'Map Duo onto your stack in 45 minutes.'}
         </h2>
-        <p className="mt-6 max-w-xl mx-auto text-slate-600 text-[15px] leading-relaxed">
+        <p className="mt-5 max-w-xl mx-auto text-[15px] leading-relaxed text-white/80">
           {isBusiness
-            ? 'Give product, sales, and operators a simple way to understand metrics — connected to how those metrics are actually implemented.'
-            : 'Give platform and engineering teams a workspace to define, govern, and implement the same concepts the business already uses.'}
+            ? 'Bring one number the business argues about. We will show definition, owner, and how it is implemented.'
+            : 'Bring one metric and a platform. We will show ontology, Git, and a native semantic object.'}
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <button onClick={demo.open} className="pill-btn-dark">
+          <button onClick={demo.open} className="pill-btn-on-blue">
             Book a demo <ArrowRight size={16} />
           </button>
-          {!isBusiness && (
-            <Link to="/explore" className="px-5 py-2.5 rounded-full border border-slate-300 text-[14px] font-medium text-slate-900 hover:bg-slate-50 transition-colors">
-              Open the workspace
-            </Link>
-          )}
-          {isBusiness && (
-            <Link to="/case-studies" className="px-5 py-2.5 rounded-full border border-slate-300 text-[14px] font-medium text-slate-900 hover:bg-slate-50 transition-colors">
+          {isBusiness ? (
+            <Link to="/case-studies" className="px-5 py-2.5 rounded-full border border-white/30 text-[14px] font-medium text-white hover:bg-white/10">
               Read case studies
+            </Link>
+          ) : (
+            <Link to="/explore" className="px-5 py-2.5 rounded-full border border-white/30 text-[14px] font-medium text-white hover:bg-white/10">
+              Open the workspace
             </Link>
           )}
         </div>

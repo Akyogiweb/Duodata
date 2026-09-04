@@ -29,7 +29,7 @@ const AudienceBridge = () => {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
-            className="pill-btn-dark"
+            className="pill-btn-primary"
             data-testid="home-bridge-switch"
             onClick={() => openExperience(copy.next, 'connection')}
           >

@@ -39,7 +39,7 @@ const GetStarted = () => {
         </ol>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <button type="button" onClick={demo.open} className="pill-btn-dark">
+          <button type="button" onClick={demo.open} className="pill-btn-primary">
             Book a walkthrough <ArrowRight size={16} />
           </button>
           {!isBusiness && (

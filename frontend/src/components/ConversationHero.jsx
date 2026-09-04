@@ -86,7 +86,7 @@ const ConversationHero = () => {
   return (
     <div className="gemini-ask" data-testid="home-business-conversation">
       <div className="gemini-glow" aria-hidden />
-      <h1 className="gemini-heading">Any new ideas to explore?</h1>
+      <h1 className="gemini-heading">Ask the number. Trust the meaning.</h1>
       <form className="gemini-bar" onSubmit={onSubmit}>
         <button
           type="button"

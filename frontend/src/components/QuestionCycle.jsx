@@ -66,7 +66,7 @@ export default function QuestionCycle({ experience }) {
   const stroke = experience === 'technical' ? DUO_CYAN : DUO_BLUE;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[min(560px,72vh)] overflow-visible" aria-hidden>
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[min(560px,72vh)] overflow-visible opacity-60" aria-hidden>
       <div
         className="absolute left-1/2 z-10 w-[min(92vw,640px)] -translate-x-1/2 text-center transition-all duration-700"
         style={{
