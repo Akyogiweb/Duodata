@@ -1819,6 +1819,14 @@ html[data-experience="technical"] .topic-atom-tag {
   text-transform: uppercase;
   font-family: Inter, system-ui, sans-serif;
 }
+.prop-disc-sub.is-ink,
+.prop-disc-title.is-ink {
+  fill: #0a0a0a;
+}
+#journey,
+#proposition {
+  scroll-margin-top: 96px;
+}
 .prop-disc.is-active ellipse:first-of-type {
   stroke: #fff;
   stroke-width: 1.5;

@@ -25,10 +25,10 @@ const Disc = ({ layer, cy, active, onActivate }) => {
       <path d={wall} fill={side} />
       <ellipse cx={CX} cy={cy} rx={rx} ry={ry} fill={fill} />
       <ellipse cx={CX} cy={cy} rx={rx - 18} ry={Math.max(10, ry - 8)} fill="none" stroke="rgba(255,255,255,0.22)" />
-      <text x={CX} y={cy - 2} textAnchor="middle" className="prop-disc-title">
+      <text x={CX} y={cy - 2} textAnchor="middle" className={`prop-disc-title ${layer.id === 'consumption' ? 'is-ink' : ''}`}>
         {title}
       </text>
-      <text x={CX} y={cy + 16} textAnchor="middle" className="prop-disc-sub">
+      <text x={CX} y={cy + 16} textAnchor="middle" className={`prop-disc-sub ${layer.id === 'consumption' ? 'is-ink' : ''}`}>
         {sub}
       </text>
     </g>

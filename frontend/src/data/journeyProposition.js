@@ -22,7 +22,7 @@ export const VALUE_LAYERS = [
     id: 'consumption',
     title: 'Consumption interfaces',
     sub: 'Board · QBR · BI · AI',
-    fill: '#5ec4de',
+    fill: '#6ecfe6',
     side: '#3aa9c6',
     rx: 340,
     depth: 28,
