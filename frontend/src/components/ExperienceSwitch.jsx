@@ -2,12 +2,14 @@ import React from 'react';
 import { EXPERIENCES, useExperience } from '@/context/ExperienceContext';
 
 const ExperienceSwitch = ({ size = 'md', className = '', onSelect, testId = 'home-experience-switch' }) => {
-  const { experience, setExperience } = useExperience();
+  const { experience, setExperience, hasChosen } = useExperience();
   const compact = size === 'sm';
   const choose = (value) => {
     setExperience(value);
     onSelect?.(value);
   };
+
+  if (!hasChosen) return null;
 
   return (
     <div
