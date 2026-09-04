@@ -38,4 +38,13 @@ describe('experience taxonomy cross-check', () => {
     const ids = EXPERIENCE_TAXONOMY.map((row) => row.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  test('every row pairs to the other experience and an atom part', () => {
+    EXPERIENCE_TAXONOMY.forEach((row) => {
+      const pair = EXPERIENCE_TAXONOMY.find((item) => item.id === row.pairId);
+      expect(pair).toBeTruthy();
+      expect(pair.experience).not.toBe(row.experience);
+      expect(['metric', 'slice', 'report', 'source']).toContain(row.atom);
+    });
+  });
 });

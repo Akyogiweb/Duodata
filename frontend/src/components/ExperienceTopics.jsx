@@ -1,6 +1,7 @@
 import React from 'react';
-import { BUSINESS_TOPIC_GROUPS, TECHNICAL_TOPIC_ROWS } from '@/data/experienceTaxonomy';
-import { useExperience } from '@/context/ExperienceContext';
+import { BUSINESS_TOPIC_GROUPS, TECHNICAL_TOPIC_ROWS, pairOf } from '@/data/experienceTaxonomy';
+import { EXPERIENCES, useExperience } from '@/context/ExperienceContext';
+import { ArrowRight } from 'lucide-react';
 
 const ONTOLOGY = ['Metrics', 'Slices', 'Reports', 'Sources'];
 
@@ -144,6 +145,10 @@ const Stage = ({ id }) => {
 
 const TopicSection = ({ row, index }) => {
   const n = String(index + 1).padStart(2, '0');
+  const { openExperience } = useExperience();
+  const pair = pairOf(row);
+  const nextExperience = row.experience === 'business' ? EXPERIENCES.technical : EXPERIENCES.business;
+
   return (
     <article className="topic-section chapter" id={row.id} data-testid={`topic-${row.id}`}>
       <div className="chapter-index" aria-hidden>
@@ -152,6 +157,7 @@ const TopicSection = ({ row, index }) => {
       <div className="chapter-copy">
         <p className="topic-section-kicker">
           {row.group === row.subGroup ? row.group : `${row.group} — ${row.subGroup}`}
+          {row.atom ? <span className="topic-atom-tag">{row.atom}</span> : null}
         </p>
         <h3 className="topic-section-title">{row.category}</h3>
         <p className="topic-section-purpose">{row.purpose}</p>
@@ -160,6 +166,18 @@ const TopicSection = ({ row, index }) => {
             <span className="topic-card-tools-label">Tool feature</span>
             {row.tools}
           </p>
+        ) : null}
+        {pair ? (
+          <button
+            type="button"
+            className="topic-pair-link"
+            data-testid={`topic-pair-${row.id}`}
+            onClick={() => openExperience(nextExperience, pair.id)}
+          >
+            {row.experience === 'business' ? 'Technical connection' : 'Business connection'}
+            <span>{pair.category}</span>
+            <ArrowRight size={14} />
+          </button>
         ) : null}
       </div>
       <div className="chapter-stage" aria-hidden>

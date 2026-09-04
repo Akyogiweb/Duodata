@@ -54,11 +54,11 @@ const MeaningBridge = ({ lean }) => (
     </g>
     <g className="bridge-packets">
       <Packet fill="#1E5FEE" delay="0s" />
-      <Packet fill="#1E5FEE" delay="1.6s" />
+      <Packet fill="#ffffff" delay="1.6s" />
       <Packet fill="#1E5FEE" delay="3.2s" />
-      <Packet fill="#7FD1E8" delay="0.8s" reverse />
-      <Packet fill="#7FD1E8" delay="2.4s" reverse />
-      <Packet fill="#7FD1E8" delay="4s" reverse />
+      <Packet fill="#ffffff" delay="0.8s" reverse />
+      <Packet fill="#1E5FEE" delay="2.4s" reverse />
+      <Packet fill="#ffffff" delay="4s" reverse />
     </g>
   </svg>
 );

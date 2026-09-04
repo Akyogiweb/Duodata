@@ -6,8 +6,12 @@ import { ArrowRight } from 'lucide-react';
 
 const FeatureConnection = () => {
   const { isBusiness, openExperience } = useExperience();
+  const [atomFilter, setAtomFilter] = useState(null);
   const [activeId, setActiveId] = useState(FEATURE_CONNECTIONS[0].id);
-  const pair = FEATURE_CONNECTIONS.find((p) => p.id === activeId) || FEATURE_CONNECTIONS[0];
+  const visible = atomFilter
+    ? FEATURE_CONNECTIONS.filter((p) => p.atom === atomFilter)
+    : FEATURE_CONNECTIONS;
+  const pair = visible.find((p) => p.id === activeId) || visible[0] || FEATURE_CONNECTIONS[0];
   const other = isBusiness ? EXPERIENCES.technical : EXPERIENCES.business;
   const otherSection = isBusiness ? pair.technicalSection : pair.businessSection;
 
@@ -19,11 +23,30 @@ const FeatureConnection = () => {
           Every business question has a technical home.
         </h2>
         <p className="mt-4 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
-          Pick a question. See what the business means, then how it is implemented — ontology, governance, lineage, or platform mapping.
+          Pick a question. Each one is tagged to a Decision Atom part — metric, slice, report, or source — then connected to the technical section that implements it.
         </p>
 
+        <div className="mt-8 flex flex-wrap gap-2">
+          {['metric', 'slice', 'report', 'source'].map((atom) => (
+            <button
+              key={atom}
+              type="button"
+              onClick={() => {
+                setAtomFilter((current) => (current === atom ? null : atom));
+                const first = FEATURE_CONNECTIONS.find((p) => p.atom === atom);
+                if (first) setActiveId(first.id);
+              }}
+              className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
+                atomFilter === atom ? 'border-[#1E5FEE] bg-slate-950 text-white' : 'border-slate-200 text-slate-500'
+              }`}
+            >
+              {atom}
+            </button>
+          ))}
+        </div>
+
         <div className="mt-10 flex flex-wrap gap-2">
-          {FEATURE_CONNECTIONS.map((p) => (
+          {visible.map((p) => (
             <button
               key={p.id}
               type="button"
@@ -56,7 +79,7 @@ const FeatureConnection = () => {
               <h3 className="text-[22px] font-semibold">{pair.technicalQuestion}</h3>
             </div>
             <p className="mt-4 text-[14px] leading-relaxed text-slate-300">{pair.technicalAnswer}</p>
-            <p className="mt-5 text-[12px] uppercase tracking-[0.16em] text-slate-500">{pair.feature}</p>
+            <p className="mt-5 text-[12px] uppercase tracking-[0.16em] text-slate-500">{pair.feature} · {pair.atom}</p>
           </article>
         </div>
 
