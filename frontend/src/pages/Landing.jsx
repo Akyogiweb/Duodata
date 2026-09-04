@@ -9,7 +9,7 @@ import AudienceBridge from '@/components/AudienceBridge';
 import LogoMarquee from '@/components/LogoMarquee';
 import ProductScreenshot from '@/components/ProductScreenshot';
 import LineageDiagram from '@/components/LineageDiagram';
-import FeatureBlocks from '@/components/FeatureBlocks';
+import ExperienceTopics from '@/components/ExperienceTopics';
 import DataSourcesSection from '@/components/DataSourcesSection';
 import { UseCases, Testimonials, CTA } from '@/components/Sections';
 import Footer from '@/components/Footer';
@@ -24,6 +24,7 @@ const Landing = () => {
       <Hero />
       <DuoArchitecture />
       {isBusiness ? <BusinessStory /> : <TechnicalStory />}
+      <ExperienceTopics />
       <FeatureBlocks />
       <LogoMarquee />
       {isBusiness ? (

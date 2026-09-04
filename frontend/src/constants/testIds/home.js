@@ -10,4 +10,5 @@ export const HOME = {
 	experienceGate: 'home-experience-gate',
 	gateBusiness: 'home-gate-business',
 	gateTechnical: 'home-gate-technical',
+	experienceTopics: 'home-experience-topics',
 };
