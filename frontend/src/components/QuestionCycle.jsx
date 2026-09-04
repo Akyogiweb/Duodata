@@ -1,20 +1,7 @@
 import { useEffect, useState } from 'react';
 import BrandMark from './BrandMark';
 import { DUO_BLUE, DUO_CYAN } from '../lib/brand';
-
-const BUSINESS_QUESTIONS = [
-  { q: 'How is enterprise Revenue defined?', slug: 'snowflake', color: '#29B5E8', label: 'Snowflake' },
-  { q: 'Who owns Net Retention?', slug: 'databricks', color: '#FF3621', label: 'Databricks' },
-  { q: 'Why does pipeline coverage disagree?', slug: 'dbt', color: '#FF694A', label: 'dbt' },
-  { q: 'What is our true Customer Count?', slug: 'googlebigquery', color: '#4285F4', label: 'BigQuery' },
-];
-
-const TECHNICAL_QUESTIONS = [
-  { q: 'Where is the source of truth for ARR?', slug: 'snowflake', color: '#29B5E8', label: 'Snowflake' },
-  { q: 'Which dbt model feeds this metric?', slug: 'dbt', color: '#FF694A', label: 'dbt' },
-  { q: 'Who last published this definition?', slug: 'databricks', color: '#FF3621', label: 'Databricks' },
-  { q: 'What happens if the warehouse schema drifts?', slug: 'googlebigquery', color: '#4285F4', label: 'BigQuery' },
-];
+import { FEATURE_CONNECTIONS } from '../data/featureConnections';
 
 const TIMING = {
   enter: 650,
@@ -32,7 +19,12 @@ const SOURCE_POS = [
 ];
 
 export default function QuestionCycle({ experience }) {
-  const questions = experience === 'technical' ? TECHNICAL_QUESTIONS : BUSINESS_QUESTIONS;
+  const questions = FEATURE_CONNECTIONS.map((pair) => ({
+    q: experience === 'technical' ? pair.technicalQuestion : pair.businessQuestion,
+    slug: pair.slug,
+    color: pair.color,
+    label: pair.label,
+  }));
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState('enter');
 

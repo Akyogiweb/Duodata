@@ -2,7 +2,7 @@ import React from 'react';
 import { EXPERIENCES, useExperience } from '@/context/ExperienceContext';
 
 const AudienceBridge = () => {
-  const { isBusiness, setExperience } = useExperience();
+  const { isBusiness, openExperience } = useExperience();
 
   const copy = isBusiness
     ? {
@@ -31,10 +31,7 @@ const AudienceBridge = () => {
             type="button"
             className="pill-btn-dark"
             data-testid="home-bridge-switch"
-            onClick={() => {
-              setExperience(copy.next);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onClick={() => openExperience(copy.next, 'connection')}
           >
             {copy.action}
           </button>

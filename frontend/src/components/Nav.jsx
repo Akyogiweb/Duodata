@@ -43,21 +43,15 @@ const Nav = () => {
   const location = useLocation();
   const { isBusiness } = useExperience();
 
-  const navLinks = isBusiness
-    ? [
-        { label: 'Product', href: '/#product', type: 'anchor' },
-        { label: 'Topics', href: '/#experience', type: 'anchor' },
-        { label: 'AI', href: '/#ai', type: 'anchor' },
-        { label: 'Videos', href: '/videos', type: 'route' },
-        { label: 'Case Studies', href: '/case-studies', type: 'route' },
-      ]
-    : [
-        { label: 'Product', href: '/#product', type: 'anchor' },
-        { label: 'Topics', href: '/#experience', type: 'anchor' },
-        { label: 'Workspace', href: '/explore', type: 'route' },
-        { label: 'Videos', href: '/videos', type: 'route' },
-        { label: 'Case Studies', href: '/case-studies', type: 'route' },
-      ];
+  const navLinks = [
+    { label: 'Product', href: '/#product', type: 'anchor' },
+    { label: 'Start', href: '/#start', type: 'anchor' },
+    { label: 'Topics', href: '/#experience', type: 'anchor' },
+    { label: 'Connection', href: '/#connection', type: 'anchor' },
+    ...(isBusiness ? [] : [{ label: 'Workspace', href: '/explore', type: 'route' }]),
+    { label: 'Videos', href: '/videos', type: 'route' },
+    { label: 'Case Studies', href: '/case-studies', type: 'route' },
+  ];
 
   const goHomeIfNeeded = () => {
     if (location.pathname !== '/') navigate('/');
@@ -71,7 +65,7 @@ const Nav = () => {
           {navLinks.map((l) => <NavLink key={l.label} link={l} />)}
           <button onClick={demo.open} className="pill-btn-ghost">Book a demo</button>
         </div>
-        <div className="hidden md:block ml-2">
+        <div className="ml-auto md:ml-2">
           <ExperienceSwitch size="sm" testId="nav-experience-switch" onSelect={goHomeIfNeeded} />
         </div>
         <button onClick={demo.open} className="pill-btn-dark ml-2">
@@ -88,7 +82,6 @@ const Nav = () => {
       </nav>
       {open && (
         <div className="absolute top-16 left-4 right-4 lg:hidden site-nav-menu rounded-2xl shadow-xl p-4 flex flex-col gap-2">
-          <ExperienceSwitch size="sm" testId="nav-mobile-experience-switch" onSelect={() => { goHomeIfNeeded(); setOpen(false); }} />
           {navLinks.map((l) => <NavLink key={l.label} link={l} onClick={() => setOpen(false)} />)}
           <button onClick={() => { setOpen(false); demo.open(); }} className="pill-btn-ghost text-left">Book a demo</button>
         </div>

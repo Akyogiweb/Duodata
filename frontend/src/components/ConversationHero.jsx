@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Plus, Mic, ChevronDown, ArrowUp } from 'lucide-react';
+import { FEATURE_CONNECTIONS } from '@/data/featureConnections';
 import { EXPERIENCES, useExperience } from '@/context/ExperienceContext';
 
 export const CONVERSATIONS = [
@@ -50,7 +51,7 @@ export const CONVERSATIONS = [
 ];
 
 const ConversationHero = () => {
-  const { setExperience } = useExperience();
+  const { openExperience } = useExperience();
   const [query, setQuery] = useState('');
   const [activeId, setActiveId] = useState(null);
 
@@ -73,9 +74,8 @@ const ConversationHero = () => {
   };
 
   const openTechnical = () => {
-    setExperience(EXPERIENCES.technical);
-    const el = document.getElementById('product');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const pair = FEATURE_CONNECTIONS.find((p) => p.conversationId === activeId) || FEATURE_CONNECTIONS[0];
+    openExperience(EXPERIENCES.technical, pair.technicalSection);
   };
 
   const onSubmit = (e) => {

@@ -3,7 +3,6 @@ import { ChevronRight, ShieldCheck, Lock } from 'lucide-react';
 import { complianceBadges } from '@/mock';
 import { useDemoModal } from '@/context/DemoModalContext';
 import { useExperience } from '@/context/ExperienceContext';
-import ExperienceSwitch from '@/components/ExperienceSwitch';
 import ConversationHero from '@/components/ConversationHero';
 import TechnicalWorkspace from '@/components/TechnicalWorkspace';
 import QuestionCycle from '@/components/QuestionCycle';
@@ -31,12 +30,12 @@ const Hero = () => {
       <div className="relative z-10 max-w-[1200px] mx-auto px-6">
         {isBusiness ? (
           <div className="flex flex-col items-center text-center">
-            <div className="mb-8">
-              <ExperienceSwitch />
-            </div>
+            <p className="text-[11px] md:text-[12px] tracking-[0.32em] uppercase font-medium text-slate-500 mb-5">
+              Business experience
+            </p>
             <ConversationHero />
             <p className="mt-8 max-w-md text-[13px] text-slate-500">
-              Answers in business language — calculation, sources, and lineage stay one switch away.
+              Answers in business language. Switch to Technical in the top bar for calculation, sources, and lineage.
             </p>
           </div>
         ) : (
@@ -51,11 +50,8 @@ const Hero = () => {
                 <span style={{ color: '#1E5FEE' }}>Implement it.</span>
               </h1>
               <p className="mt-6 max-w-2xl text-slate-600 text-[15px] md:text-[17px] leading-relaxed">
-                The workspace to define, version, map, and ship the same business concepts across your data platforms — connected to the questions the business asks.
+                The workspace to define, version, map, and ship the same business concepts — each one paired with the question the business asks.
               </p>
-              <div className="mt-8">
-                <ExperienceSwitch />
-              </div>
             </div>
             <div className="mt-12 md:mt-16">
               <TechnicalWorkspace />
