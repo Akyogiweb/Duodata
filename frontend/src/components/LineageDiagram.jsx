@@ -89,11 +89,11 @@ const LineageDiagram = () => {
               </linearGradient>
             </defs>
             {NODES.sources.map((_, i) => {
-              const y = 60 + i * 120;
+              const y = 36 + i * 96;
               return (
                 <path
                   key={`l1-${i}`}
-                  d={`M 200 ${y} C 400 ${y}, 400 260, 560 260`}
+                  d={`M 88 ${y} C 320 ${y}, 400 260, 560 260`}
                   stroke="url(#lg1)"
                   strokeWidth="1.6"
                   fill="none"
@@ -106,11 +106,11 @@ const LineageDiagram = () => {
               );
             })}
             {NODES.consumers.map((_, i) => {
-              const y = 60 + i * 120;
+              const y = 36 + i * 96;
               return (
                 <path
                   key={`l2-${i}`}
-                  d={`M 640 260 C 800 260, 800 ${y}, 1000 ${y}`}
+                  d={`M 640 260 C 800 260, 880 ${y}, 1112 ${y}`}
                   stroke="url(#lg2)"
                   strokeWidth="1.6"
                   fill="none"
