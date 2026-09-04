@@ -58,7 +58,7 @@
 .experience-gate {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,6 +66,9 @@
   overflow-y: auto;
   background: #07111f;
   color: #fff;
+}
+body.experience-gate-open {
+  overflow: hidden;
 }
 .gate-grid {
   position: absolute;
@@ -1982,7 +1985,7 @@ html[data-experience="technical"] .topic-atom-tag {
 }
 .viz-board {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
   gap: 8px 28px;
   align-items: stretch;
 }
@@ -2109,6 +2112,208 @@ html[data-experience="technical"] .topic-atom-tag {
 .stack-ring.is-active .stack-title { letter-spacing: 0.14em; }
 #journey,
 #proposition { scroll-margin-top: 96px; }
+
+.journey-evolution {
+  margin: 8px 0 20px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+}
+.journey-evolution-kicker {
+  margin: 0 0 12px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.journey-evolution-triggers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.journey-evolution-pill {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fff;
+  transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+.journey-evolution-pill strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.journey-evolution-pill span {
+  display: block;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #64748b;
+}
+.journey-evolution-pill.is-active {
+  border-color: rgba(30, 95, 238, 0.35);
+  box-shadow: 0 8px 24px rgba(30, 95, 238, 0.08);
+  transform: translateY(-1px);
+}
+.journey-evolution-pill.is-active strong { color: #1E5FEE; }
+.journey-evolution-active {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #475569;
+}
+.journey-evolution-active span {
+  color: #1E5FEE;
+  font-weight: 600;
+}
+
+.journey-canvas {
+  position: relative;
+  min-height: 420px;
+}
+.journey-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.journey-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.96);
+  color: #334155;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: min(180px, 28vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: border-color 200ms ease, color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.journey-label:hover,
+.journey-label.is-path {
+  border-color: rgba(30, 95, 238, 0.28);
+  color: #1e293b;
+}
+.journey-label.is-active {
+  border-color: rgba(30, 95, 238, 0.45);
+  color: #1E5FEE;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(30, 95, 238, 0.12);
+  transform: translate(-50%, -50%) scale(1.03);
+  z-index: 2;
+}
+.journey-stage-rail {
+  stroke: rgba(15, 23, 42, 0.06);
+  stroke-width: 1;
+  stroke-dasharray: 4 6;
+}
+.viz-rail.is-live {
+  stroke: rgba(30, 95, 238, 0.42);
+  stroke-width: 1.4;
+}
+.journey-pulse {
+  animation: journey-pulse 2.4s ease-in-out infinite;
+}
+@keyframes journey-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
+}
+
+.journey-drift {
+  margin: 16px 0 14px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+.journey-drift-kicker {
+  margin: 0 0 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+}
+.journey-drift-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+.journey-drift-col span {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.journey-drift-col.is-was span { color: #94a3b8; }
+.journey-drift-col.is-now span { color: #1E5FEE; }
+.journey-drift-col p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1e293b;
+}
+.journey-drift-col.is-was p { color: #64748b; }
+.journey-drift-arrow {
+  display: flex;
+  align-items: center;
+  color: #1E5FEE;
+  font-size: 18px;
+  font-weight: 600;
+  padding-top: 18px;
+}
+.journey-layer-hint {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #475569;
+}
+.journey-auto-note,
+.journey-resume {
+  margin-top: 12px;
+  font-size: 12px;
+}
+.journey-auto-note {
+  color: #94a3b8;
+  margin-bottom: 0;
+}
+.journey-resume {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #1E5FEE;
+  font-weight: 600;
+  cursor: pointer;
+}
+.journey-hud {
+  max-width: 340px;
+}
+
+@media (max-width: 960px) {
+  .journey-evolution-triggers { grid-template-columns: 1fr; }
+  .journey-drift-row { grid-template-columns: 1fr; }
+  .journey-drift-arrow {
+    justify-content: center;
+    padding: 0;
+    transform: rotate(90deg);
+  }
+  .journey-label {
+    font-size: 12px;
+    padding: 6px 10px;
+    max-width: 42vw;
+  }
+}
 
 @media (max-width: 960px) {
   .viz-board { grid-template-columns: 1fr; }
@@ -2346,7 +2551,15 @@ html[data-experience="business"] .atom-pair p { color: #1E5FEE; }
 html[data-experience="business"] .atom-pair h3 { color: #0a0a0a; }
 html[data-experience="business"] .atom-pair span { color: #475569; }
 html[data-experience="business"] .atom-pair button { color: #1E5FEE; }
-html[data-experience="business"] .viz-rail { stroke: rgba(15, 23, 42, 0.22); }
+html[data-experience="business"] .viz-rail { stroke: rgba(15, 23, 42, 0.16); }
+html[data-experience="business"] .viz-rail.is-live { stroke: rgba(30, 95, 238, 0.5); }
+html[data-experience="business"] .journey-evolution {
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+html[data-experience="business"] .journey-drift {
+  background: #f8fafc;
+}
 html[data-experience="business"] .viz-caption { fill: #475569; }
 html[data-experience="business"] .viz-caption.is-active { fill: #0a0a0a; }
 html[data-experience="business"] .viz-hud {
