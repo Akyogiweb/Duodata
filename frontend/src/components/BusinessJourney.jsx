@@ -12,16 +12,16 @@ import {
   visibleJourneyIds,
 } from '@/data/journeyProposition';
 
-const W = 1120;
+const W = 920;
+const H = 560;
 const ROOT = JOURNEY_NODES.find((node) => !node.parent);
-
-const STAGE_Y = { 0: 72, 1: 210, 2: 360, 3: 510 };
-const STRATEGY_X = [180, 560, 940];
+const STAGE_Y = [78, 210, 352, 490];
+const STRATEGY_X = [160, 460, 760];
 
 const STAGE_LABEL = {
   model: 'Process model',
   'pre-sales': 'Pre-sales',
-  product: 'Product journey',
+  product: 'Product',
   'post-sales': 'Post-sales',
 };
 
@@ -29,23 +29,24 @@ function layout(activeId) {
   const visible = visibleJourneyIds(activeId);
   const strategies = childrenOf(ROOT.id);
   const pos = new Map();
-  pos.set(ROOT.id, { x: 560, y: STAGE_Y[0], r: 16 });
+  pos.set(ROOT.id, { x: 460, y: STAGE_Y[0], r: 9, depth: 0 });
   strategies.forEach((node, i) => {
-    pos.set(node.id, { x: STRATEGY_X[i], y: STAGE_Y[1], r: 12 });
+    pos.set(node.id, { x: STRATEGY_X[i], y: STAGE_Y[1], r: 7, depth: 1 });
   });
 
   const placeKids = (parentId, depth) => {
     const kids = childrenOf(parentId).filter((node) => visible.has(node.id));
     if (!kids.length) return;
     const parent = pos.get(parentId);
-    const span = Math.max(220, kids.length * 200);
+    const gap = depth === 2 ? 168 : 156;
+    const span = (kids.length - 1) * gap;
     const start = parent.x - span / 2;
-    const step = kids.length === 1 ? 0 : span / (kids.length - 1);
     kids.forEach((kid, i) => {
       pos.set(kid.id, {
-        x: Math.min(1000, Math.max(120, kids.length === 1 ? parent.x : start + i * step)),
+        x: Math.min(860, Math.max(70, kids.length === 1 ? parent.x : start + i * gap)),
         y: STAGE_Y[depth],
-        r: depth >= 3 ? 8 : 10,
+        r: depth >= 3 ? 5.5 : 6.5,
+        depth,
       });
       placeKids(kid.id, depth + 1);
     });
@@ -57,27 +58,45 @@ function layout(activeId) {
   return { pos, visible, strategyId: strategy.id };
 }
 
-function forks(pos, visible) {
-  const edges = [];
+function rails(pos, visible) {
+  const groups = new Map();
   JOURNEY_NODES.forEach((node) => {
     if (!node.parent || !visible.has(node.id) || !visible.has(node.parent)) return;
-    const from = pos.get(node.parent);
-    const to = pos.get(node.id);
-    if (!from || !to) return;
-    const barY = (from.y + to.y) / 2;
-    edges.push({
-      id: `${node.parent}-${node.id}`,
-      d: `M ${from.x} ${from.y + from.r} V ${barY} H ${to.x} V ${to.y - to.r}`,
-    });
+    if (!groups.has(node.parent)) groups.set(node.parent, []);
+    groups.get(node.parent).push(node.id);
   });
-  return edges;
+  return [...groups.entries()].map(([parentId, kidIds]) => {
+    const p = pos.get(parentId);
+    const kids = kidIds.map((id) => pos.get(id));
+    const barY = p.y + (kids[0].y - p.y) * 0.46;
+    return { parentId, p, kids, barY };
+  });
 }
 
-const Traffic = ({ d, delay, fill }) => (
-  <circle r="3.2" cx="560" cy="72" fill={fill} className="journey-dot">
-    <animateMotion dur="6.5s" begin={delay} repeatCount="indefinite" path={d} />
+function elbow(p, k, barY) {
+  return `M ${p.x} ${p.y + p.r} V ${barY} H ${k.x} V ${k.y - k.r}`;
+}
+
+const Traffic = ({ d, delay, fill, r }) => (
+  <circle r={r} cx="460" cy="78" fill={fill} className="journey-dot" filter="url(#j-glow)">
+    <animateMotion dur="7.5s" begin={delay} repeatCount="indefinite" path={d} />
   </circle>
 );
+
+const wrap = (text, max = 18) => {
+  const words = text.split(' ');
+  const lines = [];
+  let cur = '';
+  words.forEach((word) => {
+    const next = cur ? `${cur} ${word}` : word;
+    if (next.length > max) {
+      if (cur) lines.push(cur);
+      cur = word;
+    } else cur = next;
+  });
+  if (cur) lines.push(cur);
+  return lines.slice(0, 2);
+};
 
 const BusinessJourney = () => {
   const { openExperience } = useExperience();
@@ -85,7 +104,7 @@ const BusinessJourney = () => {
   const node = journeyById(activeId) || journeyById(DEFAULT_JOURNEY_ID);
   const layer = layerById(node.layer);
   const { pos, visible, strategyId } = useMemo(() => layout(activeId), [activeId]);
-  const edges = useMemo(() => forks(pos, visible), [pos, visible]);
+  const forks = useMemo(() => rails(pos, visible), [pos, visible]);
   const chain = ancestorsOf(node.id);
 
   const openStack = () => {
@@ -94,93 +113,100 @@ const BusinessJourney = () => {
   };
 
   return (
-    <section id="journey" className="business-journey" data-testid="home-business-journey">
-      <div className="business-journey-inner">
-        <header className="chapter-head">
+    <section id="journey" className="viz-band viz-band-light" data-testid="home-business-journey">
+      <div className="viz-inner">
+        <header className="viz-head">
           <p>Living ontology</p>
-          <h2>The questions that grow the business — one process model.</h2>
-          <p className="chapter-lede">
-            Pre-sales, product, and post-sales all move. Duo Data is the dynamic ontology underneath:
-            a new market, a new product cut, or a new customer demand changes the object — not a second
-            version of the truth.
+          <h2>
+            The questions that grow the business — <span>one process model.</span>
+          </h2>
+          <p className="viz-lede">
+            Pre-sales, product, post-sales. When the market, the SKU, or the customer changes, the
+            object moves with it.
           </p>
         </header>
 
-        <div className="journey-canvas">
-          <div className="journey-mobile">
-            {JOURNEY_NODES.filter((item) => visible.has(item.id)).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={item.id === activeId ? 'is-active' : ''}
-                onClick={() => setActiveId(item.id)}
-              >
-                {STAGE_LABEL[item.stage]} — {item.label}
-              </button>
-            ))}
-          </div>
-          <svg className="journey-svg" viewBox={`0 0 ${W} 620`} role="img" aria-labelledby="journey-title">
+        <div className="viz-board">
+          <svg className="viz-svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="journey-title">
             <title id="journey-title">Business growth questions as a living ontology tree</title>
             <defs>
-              <filter id="journey-glow" x="-80%" y="-80%" width="260%" height="260%">
-                <feGaussianBlur stdDeviation="2.2" result="blur" />
+              <filter id="j-glow" x="-90%" y="-90%" width="280%" height="280%">
+                <feGaussianBlur stdDeviation="1.8" result="b" />
                 <feMerge>
-                  <feMergeNode in="blur" />
+                  <feMergeNode in="b" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
+              <radialGradient id="j-cyan" cx="35%" cy="30%">
+                <stop offset="0%" stopColor="#d9f6ff" />
+                <stop offset="55%" stopColor="#7FD1E8" />
+                <stop offset="100%" stopColor="#3aa8c2" />
+              </radialGradient>
+              <radialGradient id="j-blue" cx="35%" cy="30%">
+                <stop offset="0%" stopColor="#9db7ff" />
+                <stop offset="55%" stopColor="#1E5FEE" />
+                <stop offset="100%" stopColor="#143fa8" />
+              </radialGradient>
             </defs>
-            {edges.map((edge, i) => (
-              <g key={edge.id}>
-                <path d={edge.d} className="journey-edge" fill="none" />
-                <Traffic d={edge.d} delay={`${(i % 5) * 0.7}s`} fill={i % 2 ? '#ffffff' : '#1E5FEE'} />
-                <Traffic d={edge.d} delay={`${1.8 + (i % 4) * 0.55}s`} fill={i % 2 ? '#1E5FEE' : '#ffffff'} />
-              </g>
-            ))}
+            {forks.map((fork) =>
+              fork.kids.map((k, i) => {
+                const d = elbow(fork.p, k, fork.barY);
+                return (
+                  <g key={`${fork.parentId}-${i}`}>
+                    <path d={d} className="viz-rail" fill="none" />
+                    <Traffic d={d} delay={`${i * 1.1}s`} fill="#1E5FEE" r="2.4" />
+                    <Traffic d={d} delay={`${2.4 + i * 0.9}s`} fill="#ffffff" r="2" />
+                  </g>
+                );
+              })
+            )}
             {JOURNEY_NODES.filter((item) => visible.has(item.id)).map((item) => {
               const p = pos.get(item.id);
               const active = item.id === activeId;
               const onPath = chain.some((step) => step.id === item.id);
-              const tone = item.parent === null || item.parent === ROOT.id ? 'cyan' : 'blue';
+              const cyan = p.depth < 2;
+              const lines = wrap(item.short);
+              const labelY = item.parent ? p.r + 18 : -(p.r + 16 + (lines.length - 1) * 14);
               return (
                 <g
                   key={item.id}
-                  className="journey-node"
+                  className="viz-node"
                   transform={`translate(${p.x} ${p.y})`}
                   onClick={() => setActiveId(item.id)}
-                  style={{ cursor: 'pointer' }}
                   data-testid={`journey-node-${item.id}`}
                 >
+                  {active ? <circle r={p.r + 7} className="viz-halo" /> : null}
                   <circle
-                    r={p.r + (active ? 4 : 0)}
-                    className={`journey-orb is-${tone} ${active ? 'is-active' : ''} ${onPath ? 'is-path' : ''}`}
-                    filter="url(#journey-glow)"
+                    r={p.r}
+                    fill={cyan ? 'url(#j-cyan)' : 'url(#j-blue)'}
+                    filter="url(#j-glow)"
+                    className={onPath ? 'viz-orb is-path' : 'viz-orb'}
                   />
-                  <foreignObject x={-110} y={item.parent ? p.r + 10 : -p.r - 52} width="220" height="48">
-                    <div className={`journey-label ${active ? 'is-active' : ''} ${item.parent ? '' : 'is-root'}`}>
-                      {item.label}
-                    </div>
-                  </foreignObject>
+                  <text className={`viz-caption ${active ? 'is-active' : ''}`}>
+                    {lines.map((line, i) => (
+                      <tspan key={line} x="0" y={labelY + i * 14} textAnchor="middle">
+                        {line}
+                      </tspan>
+                    ))}
+                  </text>
                 </g>
               );
             })}
           </svg>
-        </div>
 
-        <div className="journey-detail" data-testid="journey-detail">
-          <p>
-            {STAGE_LABEL[node.stage]} · {node.atom}
-          </p>
-          <h3>{node.label}</h3>
-          <span className="journey-pain">{node.pain}</span>
-          <span className="journey-change">{node.change}</span>
-          <button type="button" data-testid="journey-open-stack" onClick={openStack}>
-            How this compiles — {layer?.title}
-            <ArrowRight size={14} />
-          </button>
-          <small>
-            Active strategy: {journeyById(strategyId)?.label}
-          </small>
+          <aside className="viz-hud" data-testid="journey-detail">
+            <p>
+              {STAGE_LABEL[node.stage]} · {node.atom}
+            </p>
+            <h3>{node.label}</h3>
+            <em>{node.pain}</em>
+            <span>{node.change}</span>
+            <button type="button" data-testid="journey-open-stack" onClick={openStack}>
+              Compiles to {layer?.title}
+              <ArrowRight size={14} />
+            </button>
+            <small>{journeyById(strategyId)?.short}</small>
+          </aside>
         </div>
       </div>
     </section>
