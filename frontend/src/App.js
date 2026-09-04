@@ -8,7 +8,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { DemoModalProvider, useDemoModal } from "@/context/DemoModalContext";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import BookDemoModal from "@/components/BookDemoModal";
-import WaveField from "@/components/WaveField";
 import ExperienceGate from "@/components/ExperienceGate";
 
 const GlobalDemoModal = () => {
@@ -22,8 +21,6 @@ function App() {
       <BrowserRouter>
         <DemoModalProvider>
         <ExperienceProvider>
-          <WaveField />
-          <div className="site-grain" aria-hidden />
           <ExperienceGate />
           <div className="site-canvas">
           <Routes>
