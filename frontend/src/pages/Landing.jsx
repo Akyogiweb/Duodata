@@ -1,5 +1,5 @@
 import React from 'react';
-import Nav from '@/components/Nav';
+import SiteLayout from '@/components/SiteLayout';
 import Hero from '@/components/Hero';
 import DecisionAtom from '@/components/DecisionAtom';
 import GetStarted from '@/components/GetStarted';
@@ -23,15 +23,13 @@ import VideoShowcase from '@/components/VideoShowcase';
 import TrustStrip from '@/components/TrustStrip';
 import SiteFaq from '@/components/SiteFaq';
 import { CTA, Testimonials, UseCases } from '@/components/Sections';
-import Footer from '@/components/Footer';
 import { useExperience } from '@/context/ExperienceContext';
 
 const Landing = () => {
   const { isBusiness } = useExperience();
 
   return (
-    <div className="min-h-screen relative">
-      <Nav />
+    <SiteLayout>
       <Hero />
       <LogoMarquee />
       <SalesProof />
@@ -64,8 +62,7 @@ const Landing = () => {
       <SiteFaq />
       <AudienceBridge />
       <CTA />
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 };
 

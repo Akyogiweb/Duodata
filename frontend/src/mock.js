@@ -1,12 +1,5 @@
 // Mock data for Duodata clone
 
-export const navLinks = [
-  { label: 'Product', href: '#product' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'Resources', href: '#resources' },
-  { label: 'Pricing', href: '#pricing' },
-];
-
 export const heroFloatingLabels = [
   { id: 1, text: 'Define revenue with lineage', position: 'top-left' },
   { id: 2, text: 'Governed metric owners', position: 'top-center' },
@@ -267,45 +260,4 @@ export const slicesMock = [
 export const useCases = businessUseCases;
 export const testimonials = businessTestimonials;
 export const featureBlocks = businessFeatures;
-
-export const footerColumns = [
-  {
-    title: 'Product',
-    links: [
-      { label: 'How to get started', href: '/#start' },
-      { label: 'Feature connection', href: '/#connection' },
-      { label: 'Shared semantics', href: '/#product' },
-      { label: 'Workspace', href: '/explore' },
-      { label: 'Videos', href: '/videos' },
-      { label: 'Case studies', href: '/case-studies' },
-    ],
-  },
-  {
-    title: 'Business topics',
-    links: [
-      { label: 'Purpose', href: '/#purpose' },
-      { label: 'Metric consistency', href: '/#metric-consistency' },
-      { label: 'Clarity', href: '/#clarity' },
-      { label: 'AI', href: '/#business-ai' },
-    ],
-  },
-  {
-    title: 'Technical topics',
-    links: [
-      { label: 'Metric ontology', href: '/#metric-ontology' },
-      { label: 'AI governance', href: '/#ai-governance' },
-      { label: 'Semantic layer', href: '/#semantic-layer' },
-      { label: 'Data lineage', href: '/#data-lineage' },
-      { label: 'AI reliability', href: '/#ai-reliability' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'Security', href: '/#security' },
-      { label: 'FAQ', href: '/#faq' },
-      { label: 'Contact', href: '/#get-started' },
-    ],
-  },
-];
 

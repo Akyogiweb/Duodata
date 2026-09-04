@@ -1,16 +1,13 @@
 import React from 'react';
-import Nav from '@/components/Nav';
-import Footer from '@/components/Footer';
+import SiteLayout from '@/components/SiteLayout';
 import VideoShowcase from '@/components/VideoShowcase';
 
 export default function VideosPage() {
   return (
-    <div className="min-h-screen bg-[#07080c]" data-testid="videos-page">
-      <Nav />
-      <main>
+    <SiteLayout>
+      <main data-testid="videos-page">
         <VideoShowcase page />
       </main>
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 }

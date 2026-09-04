@@ -1,11 +1,13 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Nav from '@/components/Nav';
-import Footer from '@/components/Footer';
+import SiteLayout from '@/components/SiteLayout';
+import Container from '@/components/Container';
+import PageHeader from '@/components/PageHeader';
+import DuoButton from '@/components/DuoButton';
 import { caseStudies } from '@/mockCaseStudies';
 import { ArrowRight, ArrowLeft, Quote, CheckCircle2, Share2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useDemoModal } from '@/context/DemoModalContext';
+import { DUO_BLUE } from '@/lib/brand';
 
 const CardTag = ({ children }) => (
   <span className="text-[11px] font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
@@ -16,21 +18,14 @@ const CardTag = ({ children }) => (
 const CaseStudiesIndex = () => {
   const demo = useDemoModal();
   return (
-    <div className="min-h-screen relative">
-      <Nav />
-      <div className="pt-32 pb-16">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Resources — Case studies</p>
-          <h1 className="hero-headline text-[48px] md:text-[80px] text-slate-950 max-w-4xl">
-            Enterprises that stopped fighting about <span style={{ color: '#1E5FEE' }}>numbers.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
-            In-depth stories from private markets and enterprise data teams. Every case study is downloadable and safe to share with your CDO, procurement or board.
-          </p>
-        </div>
-      </div>
+    <SiteLayout>
+      <PageHeader
+        eyebrow="Resources — Case studies"
+        title={<>Enterprises that stopped fighting about <span style={{ color: DUO_BLUE }}>numbers.</span></>}
+        description="In-depth stories from private markets and enterprise data teams. Every case study is downloadable and safe to share with your CDO, procurement or board."
+      />
 
-      <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6 pb-24">
+      <Container className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-24">
         {caseStudies.map((c) => (
           <Link
             to={`/case-studies/${c.slug}`}
@@ -67,21 +62,18 @@ const CaseStudiesIndex = () => {
             </div>
           </Link>
         ))}
-      </div>
+      </Container>
 
-      {/* CTA banner */}
       <div className="bg-slate-50 border-y border-black/5 py-16">
-        <div className="max-w-3xl mx-auto text-center px-6">
+        <Container size="faq" className="text-center">
           <h3 className="hero-headline text-[32px] md:text-[44px] text-slate-950">Want a copy for your team?</h3>
           <p className="mt-4 text-slate-600 text-[15px]">Every case study has a PDF version, sanitized for procurement, security and board review.</p>
-          <Button onClick={demo.open} className="mt-6 bg-slate-900 hover:bg-slate-800 text-white rounded-full px-5">
-            Request PDF pack <ArrowRight size={16} className="ml-1" />
-          </Button>
-        </div>
+          <DuoButton variant="dark" onClick={demo.open} className="mt-6">
+            Request PDF pack <ArrowRight size={16} />
+          </DuoButton>
+        </Container>
       </div>
-
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 };
 
@@ -92,14 +84,12 @@ export const CaseStudyDetail = () => {
 
   if (!c) {
     return (
-      <div className="min-h-screen relative">
-        <Nav />
+      <SiteLayout>
         <div className="pt-40 pb-32 text-center">
           <p className="text-slate-500">Case study not found.</p>
           <Link to="/case-studies" className="arrow-link mt-4 inline-flex">Back to case studies</Link>
         </div>
-        <Footer />
-      </div>
+      </SiteLayout>
     );
   }
 
@@ -111,10 +101,9 @@ export const CaseStudyDetail = () => {
   ];
 
   return (
-    <div className="min-h-screen relative">
-      <Nav />
+    <SiteLayout>
       <div className="pt-32 pb-10">
-        <div className="max-w-[900px] mx-auto px-6">
+        <Container size="narrow">
           <Link to="/case-studies" className="inline-flex items-center gap-2 text-[13px] text-slate-500 hover:text-slate-900 mb-8">
             <ArrowLeft size={14} /> All case studies
           </Link>
@@ -127,14 +116,14 @@ export const CaseStudyDetail = () => {
               <div className="text-[12px] text-slate-500">{c.industry}</div>
             </div>
           </div>
-          <h1 className="hero-headline text-[38px] md:text-[56px] text-slate-950">{c.headline}</h1>
+          <h1 className="hero-headline page-title text-[38px] md:text-[56px]">{c.headline}</h1>
           <div className="flex flex-wrap gap-2 mt-6">
             {c.tags.map((t) => <CardTag key={t}>{t}</CardTag>)}
           </div>
-        </div>
+        </Container>
       </div>
 
-      <div className="max-w-[900px] mx-auto px-6 pb-24">
+      <Container size="narrow" className="pb-24">
         <div className="grid grid-cols-3 gap-4 mb-14">
           {c.stats.map((s) => (
             <div key={s.label} className="rounded-2xl bg-slate-900 text-white py-8 px-6 text-center">
@@ -184,18 +173,16 @@ export const CaseStudyDetail = () => {
             <div className="text-[12px] text-slate-500">Send the sanitized PDF to your CDO, procurement or board.</div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="rounded-full">
-              <Share2 size={14} className="mr-2" /> Copy link
-            </Button>
-            <Button onClick={demo.open} className="bg-slate-900 hover:bg-slate-800 text-white rounded-full">
-              Book a demo <ArrowRight size={14} className="ml-1" />
-            </Button>
+            <DuoButton variant="outline">
+              <Share2 size={14} /> Copy link
+            </DuoButton>
+            <DuoButton variant="dark" onClick={demo.open}>
+              Book a demo <ArrowRight size={14} />
+            </DuoButton>
           </div>
         </div>
-      </div>
-
-      <Footer />
-    </div>
+      </Container>
+    </SiteLayout>
   );
 };
 

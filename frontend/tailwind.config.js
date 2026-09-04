@@ -13,6 +13,14 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
+        duo: {
+          blue: '#1E5FEE',
+          cyan: '#7FD1E8',
+          ink: '#0a0a0a',
+          fog: '#f8fafc',
+          muted: '#64748b',
+          dark: '#07080c',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -75,6 +83,12 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
+      },
+      maxWidth: {
+        'site-content': '1200px',
+        'site-narrow': '900px',
+        'site-wide': '1440px',
+        'site-faq': '800px',
       }
     }
   },

@@ -761,6 +761,46 @@ html[data-experience="technical"] .cta-band {
 }
 .pill-btn-ghost:hover { background: rgba(0,0,0,0.05); }
 
+.pill-btn-ghost.nav-link-active {
+  background: rgba(30, 95, 238, 0.1);
+  color: #1E5FEE;
+  font-weight: 600;
+}
+html[data-experience="technical"] .pill-btn-ghost.nav-link-active {
+  background: rgba(127, 209, 232, 0.12);
+  color: #7FD1E8;
+}
+
+.page-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+html[data-experience="technical"] .page-eyebrow {
+  color: #94a3b8;
+}
+.page-title {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  color: #020617;
+  max-width: 56rem;
+}
+html[data-experience="technical"] .page-title {
+  color: #f8fafc;
+}
+.page-description {
+  margin-top: 1.5rem;
+  max-width: 42rem;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.65;
+}
+html[data-experience="technical"] .page-description {
+  color: #94a3b8;
+}
+
 .duo-switch {
   display: inline-flex;
   padding: 4px;

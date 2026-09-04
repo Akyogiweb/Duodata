@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-import Nav from '@/components/Nav';
-import Footer from '@/components/Footer';
+import SiteLayout from '@/components/SiteLayout';
+import Container from '@/components/Container';
+import PageHeader from '@/components/PageHeader';
+import { DUO_BLUE } from '@/lib/brand';
 import { Search, Plus, Filter, ChevronDown, BookOpen, Layers, FileText, Database, Settings, Trash2, X, Upload } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -53,7 +55,7 @@ const StatusPill = ({ status, onChange }) => {
 const SidebarItem = ({ Icon, label, count, active }) => (
   <div
     className={`flex items-center justify-between px-2 py-1.5 rounded-md cursor-pointer transition-colors ${
-      active ? 'bg-blue-500/10 text-blue-300' : 'text-slate-300 hover:bg-white/5'
+      active ? 'bg-duo-blue/10 text-duo-cyan' : 'text-slate-300 hover:bg-white/5'
     }`}
   >
     <div className="flex items-center gap-2">
@@ -135,7 +137,7 @@ const NewSliceDialog = ({ open, onOpenChange, onCreate }) => {
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="text-slate-300 hover:bg-white/10">Cancel</Button>
-            <Button type="submit" disabled={saving || !form.name.trim()} className="bg-blue-500 hover:bg-blue-600 text-white">
+            <Button type="submit" disabled={saving || !form.name.trim()} className="bg-duo-blue hover:bg-duo-blue/90 text-white">
               {saving ? 'Saving...' : 'Create slice'}
             </Button>
           </DialogFooter>
@@ -229,26 +231,20 @@ const ExplorePage = () => {
   }), [slices]);
 
   return (
-    <div className="min-h-screen relative">
-      <Nav />
-      <div className="pt-32 pb-8">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">Live demo — technical workspace</p>
-          <h1 className="hero-headline text-[42px] md:text-[64px] text-slate-950 max-w-3xl">
-            Define it. Govern it.<br /><span style={{ color: '#1E5FEE' }}>Implement it in real time.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-slate-600 text-[15px] leading-relaxed">
-            This is the technical side of Duo Data: a live sandbox for slices, ownership, status, and sources. Every change persists.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3 text-[13px]">
-            <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 border border-blue-100">Implemented · {counts.Implemented}</span>
-            <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-100">Approved · {counts.Approved}</span>
-            <span className="px-3 py-1 rounded-full bg-violet-500/10 text-violet-700 border border-violet-100">Proposed · {counts.Proposed}</span>
-          </div>
+    <SiteLayout>
+      <PageHeader
+        eyebrow="Live demo — technical workspace"
+        title={<>Define it. Govern it.<br /><span style={{ color: DUO_BLUE }}>Implement it in real time.</span></>}
+        description="This is the technical side of Duodata: a live sandbox for slices, ownership, status, and sources. Every change persists."
+      >
+        <div className="mt-6 flex flex-wrap gap-3 text-[13px]">
+          <span className="px-3 py-1 rounded-full bg-duo-blue/10 text-duo-blue border border-duo-blue/20">Implemented · {counts.Implemented}</span>
+          <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-100">Approved · {counts.Approved}</span>
+          <span className="px-3 py-1 rounded-full bg-violet-500/10 text-violet-700 border border-violet-100">Proposed · {counts.Proposed}</span>
         </div>
-      </div>
+      </PageHeader>
 
-      <div className="max-w-[1200px] mx-auto px-6 pb-24">
+      <Container className="pb-24">
         <div className="browser-frame">
           <div className="flex items-center gap-2 px-4 py-3 bg-[#141416] border-b border-white/5">
             <div className="flex gap-1.5">
@@ -281,7 +277,7 @@ const ExplorePage = () => {
             <main className="flex-1 p-6">
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-6 text-[13px]">
-                  <span className="text-white font-medium border-b-2 border-blue-400 pb-1">Slices</span>
+                  <span className="text-white font-medium border-b-2 border-duo-cyan pb-1">Slices</span>
                   <span className="text-slate-500">List View</span>
                   <span className="text-slate-500">Hierarchy View</span>
                 </div>
@@ -293,7 +289,7 @@ const ExplorePage = () => {
                   >
                     <Upload size={14} className="mr-1.5" /> Bulk import
                   </Button>
-                  <Button onClick={() => setNewOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white text-[13px] font-medium px-3 py-1.5 rounded-md flex items-center gap-1.5 h-auto">
+                  <Button onClick={() => setNewOpen(true)} className="bg-duo-blue hover:bg-duo-blue/90 text-white text-[13px] font-medium px-3 py-1.5 rounded-md flex items-center gap-1.5 h-auto">
                     <Plus size={14} /> New Slice
                   </Button>
                 </div>
@@ -364,7 +360,7 @@ const ExplorePage = () => {
             </main>
           </div>
         </div>
-      </div>
+      </Container>
 
       <NewSliceDialog open={newOpen} onOpenChange={setNewOpen} onCreate={createSlice} />
       <BulkImportDialog
@@ -377,8 +373,7 @@ const ExplorePage = () => {
         open={!!detailSlice}
         onOpenChange={(o) => { if (!o) setDetailSlice(null); }}
       />
-      <Footer />
-    </div>
+    </SiteLayout>
   );
 };
 
