@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Mic, ChevronDown, ArrowUp } from 'lucide-react';
 
 export const CONVERSATIONS = [
@@ -68,34 +68,85 @@ export const CONVERSATIONS = [
   },
 ];
 
+const TYPE_MS = 34;
+const PAUSE_BEFORE_ANSWER = 500;
+const ANSWER_HOLD = 4200;
+const GAP_BETWEEN = 600;
+
 const ConversationHero = () => {
-  const [query, setQuery] = useState(CONVERSATIONS[0].question);
-  const [activeId, setActiveId] = useState('moic');
+  const [cycleIndex, setCycleIndex] = useState(0);
+  const [typedText, setTypedText] = useState('');
+  const [phase, setPhase] = useState('typing');
+  const [isAuto, setIsAuto] = useState(true);
+  const [manualQuery, setManualQuery] = useState('');
   const [detailKey, setDetailKey] = useState(null);
+  const charIndex = useRef(0);
 
   const active = useMemo(
-    () => CONVERSATIONS.find((c) => c.id === activeId) || CONVERSATIONS[0],
-    [activeId]
+    () => CONVERSATIONS[cycleIndex] || CONVERSATIONS[0],
+    [cycleIndex]
   );
 
-  const ask = (text) => {
-    const raw = (typeof text === 'string' ? text : query).trim();
-    const match =
-      CONVERSATIONS.find((c) => c.question.toLowerCase() === raw.toLowerCase()) ||
-      CONVERSATIONS.find((c) => raw.toLowerCase().includes('moic')) ||
-      CONVERSATIONS.find((c) => raw.toLowerCase().includes('trust')) ||
-      CONVERSATIONS.find((c) => raw.toLowerCase().includes('feedback') || raw.toLowerCase().includes('recommend')) ||
-      CONVERSATIONS.find((c) => raw.toLowerCase().includes('sell') || raw.toLowerCase().includes('customer')) ||
-      CONVERSATIONS[0];
-    setQuery(match.question);
-    setActiveId(match.id);
+  const showAnswer = phase === 'answer';
+
+  useEffect(() => {
+    if (!isAuto) return undefined;
+
+    const question = CONVERSATIONS[cycleIndex].question;
+
+    if (phase === 'typing') {
+      charIndex.current = 0;
+      setTypedText('');
+      setDetailKey(null);
+
+      const timer = window.setInterval(() => {
+        charIndex.current += 1;
+        setTypedText(question.slice(0, charIndex.current));
+        if (charIndex.current >= question.length) {
+          window.clearInterval(timer);
+          window.setTimeout(() => setPhase('answer'), PAUSE_BEFORE_ANSWER);
+        }
+      }, TYPE_MS);
+
+      return () => window.clearInterval(timer);
+    }
+
+    if (phase === 'answer') {
+      const timer = window.setTimeout(() => setPhase('gap'), ANSWER_HOLD);
+      return () => window.clearTimeout(timer);
+    }
+
+    if (phase === 'gap') {
+      const timer = window.setTimeout(() => {
+        setCycleIndex((i) => (i + 1) % CONVERSATIONS.length);
+        setPhase('typing');
+      }, GAP_BETWEEN);
+      return () => window.clearTimeout(timer);
+    }
+
+    return undefined;
+  }, [phase, cycleIndex, isAuto]);
+
+  const selectConversation = (conv) => {
+    const index = CONVERSATIONS.findIndex((c) => c.id === conv.id);
+    setIsAuto(false);
+    setCycleIndex(index >= 0 ? index : 0);
+    setManualQuery(conv.question);
+    setTypedText(conv.question);
+    setPhase('answer');
     setDetailKey(null);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    ask();
+    const raw = (isAuto ? active.question : manualQuery).trim();
+    const match =
+      CONVERSATIONS.find((c) => c.question.toLowerCase() === raw.toLowerCase()) ||
+      CONVERSATIONS[0];
+    selectConversation(match);
   };
+
+  const kicker = active.id === 'moic' ? 'The primary drivers were:' : 'What this means:';
 
   const detailLabels = {
     calculation: 'See calculation',
@@ -116,22 +167,49 @@ const ConversationHero = () => {
           type="button"
           className="gemini-icon-btn"
           aria-label="Suggested questions"
-          onClick={() => ask(CONVERSATIONS[0].question)}
+          onClick={() => selectConversation(CONVERSATIONS[0])}
         >
           <Plus size={20} strokeWidth={1.75} />
         </button>
         <label htmlFor="duo-ask" className="sr-only">
           Ask Duodata
         </label>
-        <input
-          id="duo-ask"
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="What is driving the change in MOIC this quarter?"
-          className="gemini-input"
-          autoComplete="off"
-        />
+        <div
+          className="gemini-input-wrap"
+          onClick={() => {
+            if (isAuto) {
+              setIsAuto(false);
+              setManualQuery(active.question);
+            }
+          }}
+        >
+          {isAuto ? (
+            <div
+              className="gemini-input gemini-input-typed"
+              aria-live="polite"
+              data-testid="home-ask-input"
+            >
+              {typedText ? (
+                <span className="gemini-input-text">{typedText}</span>
+              ) : (
+                <span className="gemini-input-placeholder">Ask Duodata a business question…</span>
+              )}
+              {phase === 'typing' && <span className="gemini-cursor" aria-hidden />}
+            </div>
+          ) : (
+            <input
+              id="duo-ask"
+              type="text"
+              value={manualQuery}
+              onChange={(e) => setManualQuery(e.target.value)}
+              onFocus={() => setIsAuto(false)}
+              placeholder="Ask Duodata a business question…"
+              className="gemini-input"
+              autoComplete="off"
+              data-testid="home-ask-input"
+            />
+          )}
+        </div>
         <span className="gemini-mode" title="Business experience">
           Trusted
           <ChevronDown size={14} strokeWidth={2} />
@@ -154,39 +232,41 @@ const ConversationHero = () => {
           <button
             key={c.id}
             type="button"
-            onClick={() => ask(c.question)}
-            className={`gemini-chip ${activeId === c.id ? 'is-active' : ''}`}
+            onClick={() => selectConversation(c)}
+            className={`gemini-chip ${active.id === c.id && showAnswer ? 'is-active' : ''}`}
           >
             {c.chip}
           </button>
         ))}
       </div>
 
-      <div className="gemini-answer gemini-answer-visible" data-testid="home-conversation-answer">
-        <p className="gemini-answer-question">{active.question}</p>
-        <h3 className="gemini-answer-title">{active.answerTitle}</h3>
-        <p className="gemini-answer-kicker">The primary drivers were:</p>
-        <ul className="gemini-answer-list">
-          {active.bullets.map((b) => (
-            <li key={b}>{b}</li>
-          ))}
-        </ul>
-        <div className="gemini-answer-links">
-          {Object.entries(detailLabels).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setDetailKey(detailKey === key ? null : key)}
-              className={detailKey === key ? 'is-active' : ''}
-            >
-              {label}
-            </button>
-          ))}
+      {showAnswer && (
+        <div className="gemini-answer gemini-answer-pop" data-testid="home-conversation-answer">
+          <p className="gemini-answer-question">{active.question}</p>
+          <h3 className="gemini-answer-title">{active.answerTitle}</h3>
+          <p className="gemini-answer-kicker">{kicker}</p>
+          <ul className="gemini-answer-list">
+            {active.bullets.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+          <div className="gemini-answer-links">
+            {Object.entries(detailLabels).map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setDetailKey(detailKey === key ? null : key)}
+                className={detailKey === key ? 'is-active' : ''}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {detailKey && active.details?.[detailKey] && (
+            <p className="gemini-answer-detail">{active.details[detailKey]}</p>
+          )}
         </div>
-        {detailKey && active.details?.[detailKey] && (
-          <p className="gemini-answer-detail">{active.details[detailKey]}</p>
-        )}
-      </div>
+      )}
     </div>
   );
 };
