@@ -4,8 +4,15 @@ export const primaryNavLinks = (isBusiness) => [
   { label: 'Product', href: isBusiness ? '/#business-story' : '/#product', type: 'anchor', sectionId: isBusiness ? 'business-story' : 'product' },
   { label: 'Start', href: '/#start', type: 'anchor', sectionId: 'start' },
   { label: 'Topics', href: '/#experience', type: 'anchor', sectionId: 'experience' },
-  ...(isBusiness ? [] : [{ label: 'Connection', href: '/#connection', type: 'anchor', sectionId: 'connection' }]),
-  ...(isBusiness ? [{ label: 'Questions', href: '/#connection', type: 'anchor', sectionId: 'connection' }] : []),
+  {
+    label: isBusiness ? 'Journey' : 'Stack',
+    href: isBusiness ? '/#journey' : '/#proposition',
+    type: 'anchor',
+    sectionId: isBusiness ? 'journey' : 'proposition',
+  },
+  ...(isBusiness
+    ? [{ label: 'Questions', href: '/#connection', type: 'anchor', sectionId: 'connection' }]
+    : [{ label: 'Connection', href: '/#connection', type: 'anchor', sectionId: 'connection' }]),
   ...(isBusiness ? [] : [{ label: 'Workspace', href: '/explore', type: 'route' }]),
   { label: 'Videos', href: '/videos', type: 'route' },
   { label: 'Case Studies', href: '/case-studies', type: 'route' },
