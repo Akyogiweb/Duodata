@@ -19,6 +19,7 @@ import Governance from '@/components/sections/Governance';
 import GitBridge from '@/components/sections/GitBridge';
 import PlatformIntegration from '@/components/sections/PlatformIntegration';
 import LineageDiagram from '@/components/LineageDiagram';
+import MetricLineage from '@/components/sections/MetricLineage';
 import MegaDiagram from '@/components/sections/MegaDiagram';
 import TwoSides from '@/components/sections/TwoSides';
 import VideoShowcase from '@/components/VideoShowcase';
@@ -57,6 +58,7 @@ const Landing = () => {
           <GitBridge />
           <PlatformIntegration />
           <LineageDiagram />
+          <MetricLineage />
           <MegaDiagram />
           <TwoSides />
           <UseCases />

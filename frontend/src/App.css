@@ -1460,7 +1460,201 @@ html[data-experience="technical"] .lineage-core {
   transition: opacity 700ms ease;
 }
 
-/* Scroll-triggered reveal */
+/* MOIC metric lineage (technical) */
+.metric-lineage-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.55);
+}
+.metric-lineage-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 51;
+  width: min(920px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.28);
+  background: #eceef1;
+}
+.metric-lineage-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #3d4248;
+  color: #fff;
+}
+.metric-lineage-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.metric-lineage-modal-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+.metric-lineage-modal-title {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.metric-lineage-modal-close {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+}
+.metric-lineage-modal-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.metric-lineage-modal-body {
+  padding: 28px 20px 32px;
+  background: #eceef1;
+  overflow: auto;
+}
+.metric-lineage-preview {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+}
+.metric-lineage-preview-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #3d4248;
+  color: #fff;
+}
+.metric-lineage-preview-label {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+.metric-lineage-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+}
+.metric-lineage-expand:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+.metric-lineage-preview-body {
+  display: block;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: #eceef1;
+  cursor: zoom-in;
+  text-align: left;
+}
+.metric-lineage-canvas {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+  background: #eceef1;
+}
+.metric-lineage-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.metric-lineage-nodes {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+}
+.metric-lineage-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 14px 12px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  text-align: center;
+}
+.metric-lineage-node-source {
+  border: 2px dashed #c5cad3;
+}
+.metric-lineage-node-intermediate,
+.metric-lineage-node-metric {
+  border: 1px solid #d8dde5;
+}
+.metric-lineage-node-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.25;
+}
+.metric-lineage-node-code {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+.metric-lineage-badge {
+  display: inline-flex;
+  margin-top: 4px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #1E5FEE;
+}
+.metric-lineage-edge {
+  stroke: #9aa3af;
+  stroke-width: 1.75;
+}
+.metric-lineage-edge-dashed {
+  stroke-dasharray: 6 5;
+}
+.metric-lineage-edge-solid {
+  stroke: #6b7280;
+}
+
+@media (max-width: 767px) {
+  .metric-lineage-canvas,
+  .metric-lineage-nodes {
+    min-height: 520px;
+    overflow-x: auto;
+  }
+  .metric-lineage-nodes {
+    min-width: 820px;
+  }
+}
+
 .reveal-block {
   opacity: 0;
   transform: translateY(18px);
