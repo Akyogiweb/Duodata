@@ -4,7 +4,7 @@ const DECK = 'M 48 214 H 752';
 const DECK_BACK = 'M 752 214 H 48';
 
 const Packet = ({ fill, delay, reverse }) => (
-  <circle r="5" fill={fill}>
+  <circle r="5" cx={reverse ? 752 : 48} cy="214" fill={fill}>
     <animateMotion
       dur="4.8s"
       begin={delay}
