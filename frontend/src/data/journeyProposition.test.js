@@ -22,6 +22,7 @@ describe('journey proposition', () => {
       expect(['metric', 'slice', 'report', 'source']).toContain(node.atom);
       expect(node.pain).toBeTruthy();
       expect(node.change).toBeTruthy();
+      expect(node.short.length).toBeLessThan(28);
     });
   });
 
