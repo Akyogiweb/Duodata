@@ -68,7 +68,7 @@ const BookDemoModal = ({ open, onOpenChange }) => {
             <p className="text-slate-600 text-sm mt-2 max-w-sm">
               Andreas will send a Reclaim link within one business day so we can walk through the metric ontology on your stack.
             </p>
-            <Button onClick={() => handleClose(false)} className="mt-6 bg-slate-900 hover:bg-slate-800 text-white rounded-full px-5">
+            <Button onClick={() => handleClose(false)} className="mt-6 bg-[#1E5FEE] hover:bg-[#164ad4] text-white rounded-full px-5">
               Close
             </Button>
           </div>
@@ -135,7 +135,7 @@ const BookDemoModal = ({ open, onOpenChange }) => {
               </div>
               <DialogFooter>
                 <Button type="button" variant="ghost" onClick={() => handleClose(false)} className="rounded-full">Cancel</Button>
-                <Button type="submit" disabled={loading} className="bg-slate-900 hover:bg-slate-800 text-white rounded-full px-5">
+                <Button type="submit" disabled={loading} className="bg-[#1E5FEE] hover:bg-[#164ad4] text-white rounded-full px-5">
                   {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                   {loading ? 'Submitting...' : 'Request demo'}
                 </Button>

@@ -6,6 +6,7 @@ import GetStarted from '@/components/GetStarted';
 import ExperienceTopics from '@/components/ExperienceTopics';
 import FeatureConnection from '@/components/FeatureConnection';
 import AudienceBridge from '@/components/AudienceBridge';
+import SalesProof from '@/components/SalesProof';
 import LogoMarquee from '@/components/LogoMarquee';
 import BusinessMeanings from '@/components/BusinessMeanings';
 import LineageDiagram from '@/components/LineageDiagram';
@@ -32,6 +33,9 @@ const Landing = () => {
     <div className="min-h-screen relative">
       <Nav />
       <Hero />
+      <LogoMarquee />
+      <SalesProof />
+      <Testimonials />
       <DuoArchitecture />
       <GetStarted />
       <ExperienceTopics />
@@ -53,10 +57,8 @@ const Landing = () => {
           <MegaDiagram />
         </>
       )}
-      <LogoMarquee />
       <TwoSides />
       <UseCases />
-      <Testimonials />
       <VideoShowcase />
       <TrustStrip />
       <SiteFaq />

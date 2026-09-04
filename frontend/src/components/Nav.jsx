@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDemoModal } from '@/context/DemoModalContext';
 import { DuodataFullLogo } from '@/components/DuodataMark';
@@ -63,14 +63,12 @@ const Nav = () => {
         <Logo />
         <div className="hidden lg:flex items-center gap-1 ml-4">
           {navLinks.map((l) => <NavLink key={l.label} link={l} />)}
-          <button onClick={demo.open} className="pill-btn-ghost">Book a demo</button>
         </div>
         <div className="ml-auto md:ml-2">
           <ExperienceSwitch size="sm" testId="nav-experience-switch" onSelect={goHomeIfNeeded} />
         </div>
-        <button onClick={demo.open} className="pill-btn-dark ml-2">
-          Get started for free
-          <ChevronRight size={16} strokeWidth={2.2} />
+        <button onClick={demo.open} className="pill-btn-primary ml-2">
+          Book a demo
         </button>
         <button
           className="lg:hidden ml-1 p-2 rounded-full site-nav-icon"
@@ -83,7 +81,7 @@ const Nav = () => {
       {open && (
         <div className="absolute top-16 left-4 right-4 lg:hidden site-nav-menu rounded-2xl shadow-xl p-4 flex flex-col gap-2">
           {navLinks.map((l) => <NavLink key={l.label} link={l} onClick={() => setOpen(false)} />)}
-          <button onClick={() => { setOpen(false); demo.open(); }} className="pill-btn-ghost text-left">Book a demo</button>
+          <button onClick={() => { setOpen(false); demo.open(); }} className="pill-btn-primary text-center">Book a demo</button>
         </div>
       )}
     </div>

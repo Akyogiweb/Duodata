@@ -1,6 +1,5 @@
 import React from 'react';
-import { dataConnectors, businessTeams } from '@/mock';
-import { useExperience } from '@/context/ExperienceContext';
+import { dataConnectors } from '@/mock';
 import BrandMark from '@/components/BrandMark';
 
 const SLUGS = {
@@ -11,7 +10,7 @@ const SLUGS = {
   Tableau: { slug: 'tableau', color: '#E97627' },
   'Power BI': { slug: 'powerbi', color: '#F2C811' },
   Looker: { slug: 'looker', color: '#4285F4' },
-  MetricFlow: { slug: 'dbt', color: '#7C3AED' },
+  MetricFlow: { slug: 'dbt', color: '#FF694A' },
 };
 
 const ConnectorPill = ({ name, color }) => {
@@ -23,37 +22,23 @@ const ConnectorPill = ({ name, color }) => {
       ) : (
         <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
       )}
+      <span className="text-sm font-medium text-slate-800">{name}</span>
     </div>
   );
 };
 
-const TeamPill = ({ name, color }) => (
-  <div className="flex items-center gap-2 px-4 py-2 mx-3 rounded-full border border-slate-200 bg-white shadow-sm whitespace-nowrap">
-    <div className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
-    <span className="text-sm font-medium text-slate-800">{name}</span>
-  </div>
-);
-
 const LogoMarquee = () => {
-  const { isBusiness } = useExperience();
-  const items = isBusiness ? businessTeams : dataConnectors;
-  const list = [...items, ...items];
+  const list = [...dataConnectors, ...dataConnectors];
 
   return (
-    <section className="py-16 bg-slate-50/50 border-y border-black/5 overflow-hidden">
+    <section className="py-14 border-y border-black/5 overflow-hidden" data-testid="home-logo-marquee">
       <p className="text-center text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-8">
-        {isBusiness
-          ? 'The teams who ask the questions'
-          : 'Meaning that reaches the stack you already run'}
+        Works with the platforms you already pay for
       </p>
       <div className="marquee">
-        {list.map((c, i) =>
-          isBusiness ? (
-            <TeamPill key={`${c.name}-${i}`} name={c.name} color={c.color} />
-          ) : (
-            <ConnectorPill key={`${c.name}-${i}`} name={c.name} color={c.color} />
-          )
-        )}
+        {list.map((c, i) => (
+          <ConnectorPill key={`${c.name}-${i}`} name={c.name} color={c.color} />
+        ))}
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
 import React from 'react';
-import { ChevronRight, ShieldCheck, Lock } from 'lucide-react';
-import { complianceBadges } from '@/mock';
+import { ChevronRight } from 'lucide-react';
 import { useDemoModal } from '@/context/DemoModalContext';
 import { useExperience } from '@/context/ExperienceContext';
 import ConversationHero from '@/components/ConversationHero';
@@ -34,8 +33,8 @@ const Hero = () => {
               Business experience
             </p>
             <ConversationHero />
-            <p className="mt-8 max-w-md text-[13px] text-slate-500">
-              Answers in business language. Switch to Technical in the top bar for calculation, sources, and lineage.
+            <p className="mt-8 max-w-lg text-[14px] text-slate-600">
+              One governed meaning for product, sales, and operators — the same object your data team implements.
             </p>
           </div>
         ) : (
@@ -60,26 +59,18 @@ const Hero = () => {
         )}
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <button onClick={demo.open} className="pill-btn-dark" data-testid="home-hero-cta">
-            Get started for free
+          <button onClick={demo.open} className="pill-btn-primary" data-testid="home-hero-cta">
+            Book a demo
             <ChevronRight size={16} strokeWidth={2.2} />
           </button>
+          <a href="#start" className="px-5 py-2.5 rounded-full border border-slate-300 text-[14px] font-medium text-slate-900 hover:bg-white/80">
+            See how to start
+          </a>
         </div>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-x-10 gap-y-4 opacity-80">
-          {complianceBadges.map((b, i) => {
-            const Icon = i % 2 === 0 ? ShieldCheck : Lock;
-            return (
-              <div key={b.id} className="flex items-center gap-2">
-                <Icon size={16} className="text-slate-500" />
-                <div className="leading-tight">
-                  <div className="text-[11px] font-semibold text-slate-700">{b.label}</div>
-                  <div className="text-[10px] text-slate-500">{b.sub}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <p className="mt-10 text-center text-[12px] tracking-[0.18em] uppercase text-slate-500">
+          SOC 2 Type II · GDPR · ISO 27001 · HIPAA ready
+        </p>
       </div>
     </section>
   );
