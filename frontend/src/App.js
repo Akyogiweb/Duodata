@@ -11,6 +11,7 @@ import BookDemoModal from "@/components/BookDemoModal";
 import WaveField from "@/components/WaveField";
 import HashScrollHandler from "@/components/HashScrollHandler";
 import ExperienceGate from "@/components/ExperienceGate";
+import LegalPage from "@/pages/Legal";
 
 const GlobalDemoModal = () => {
   const { isOpen, setIsOpen } = useDemoModal();
@@ -23,6 +24,8 @@ function App() {
       <BrowserRouter>
         <DemoModalProvider>
         <ExperienceProvider>
+          <WaveField />
+          <div className="site-grain" aria-hidden />
           <ExperienceGate />
           <HashScrollHandler />
           <div className="site-canvas">
@@ -32,6 +35,9 @@ function App() {
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/videos" element={<VideosPage />} />
+            <Route path="/privacy" element={<LegalPage slug="privacy" />} />
+            <Route path="/terms" element={<LegalPage slug="terms" />} />
+            <Route path="/status" element={<LegalPage slug="status" />} />
           </Routes>
           </div>
           <GlobalDemoModal />

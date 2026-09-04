@@ -155,7 +155,7 @@ export const technicalTestimonials = [
   },
   {
     quote:
-      'Our agents only work because the meaning is shared. Duo Data is the contract between the business and the stack.',
+      'Our agents only work because the meaning is shared. Duodata is the contract between the business and the stack.',
     author: 'Chief Data Officer',
     company: 'PE-backed fintech',
   },
@@ -208,11 +208,11 @@ export const businessOutcomes = [
   },
   {
     title: 'Faster recommendations after purchase',
-    body: 'Customer feedback after the sale becomes a trusted signal — so you can recommend the next product or service quickly, with the same language the rest of the company uses.',
+    body: 'Post-purchase feedback becomes a trusted signal — recommend the next product or service quickly, with the same language the rest of the company uses.',
   },
   {
-    title: 'Direction changes, meaning stays governed',
-    body: 'When the business changes course, the definitions move with it. Strategy is captured in living business meaning — not a slide that went stale last quarter.',
+    title: 'Direction changes without losing the thread',
+    body: 'When the business shifts strategy, the definitions move with it. Meaning stays current — not trapped in a slide from last quarter.',
   },
   {
     title: 'Sales intelligence for a diverse audience',

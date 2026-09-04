@@ -18,7 +18,7 @@ const ExperienceGate = () => {
           <DuodataFullLogo height={22} />
         </div>
         <h1 id="experience-gate-title" className="sr-only">
-          Choose your Duo Data experience
+          Choose your Duodata experience
         </h1>
         <p className="gate-lede">One shared meaning. Two ways in.</p>
 

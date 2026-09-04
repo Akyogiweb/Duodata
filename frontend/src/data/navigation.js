@@ -1,10 +1,11 @@
 /** Central navigation config — single source of truth for nav and footer links. */
 
 export const primaryNavLinks = (isBusiness) => [
-  { label: 'Product', href: '/#product', type: 'anchor', sectionId: 'product' },
+  { label: 'Product', href: isBusiness ? '/#business-story' : '/#product', type: 'anchor', sectionId: isBusiness ? 'business-story' : 'product' },
   { label: 'Start', href: '/#start', type: 'anchor', sectionId: 'start' },
   { label: 'Topics', href: '/#experience', type: 'anchor', sectionId: 'experience' },
-  { label: 'Connection', href: '/#connection', type: 'anchor', sectionId: 'connection' },
+  ...(isBusiness ? [] : [{ label: 'Connection', href: '/#connection', type: 'anchor', sectionId: 'connection' }]),
+  ...(isBusiness ? [{ label: 'Questions', href: '/#connection', type: 'anchor', sectionId: 'connection' }] : []),
   ...(isBusiness ? [] : [{ label: 'Workspace', href: '/explore', type: 'route' }]),
   { label: 'Videos', href: '/videos', type: 'route' },
   { label: 'Case Studies', href: '/case-studies', type: 'route' },
@@ -12,8 +13,15 @@ export const primaryNavLinks = (isBusiness) => [
 
 const productLinks = (isBusiness) => [
   { label: 'How to get started', href: '/#start' },
-  { label: 'Feature connection', href: '/#connection' },
-  { label: 'Shared semantics', href: '/#product' },
+  ...(isBusiness
+    ? [
+        { label: 'Ask your business', href: '/#hero' },
+        { label: 'Common questions', href: '/#connection' },
+      ]
+    : [
+        { label: 'Feature connection', href: '/#connection' },
+        { label: 'Shared semantics', href: '/#product' },
+      ]),
   ...(isBusiness ? [] : [{ label: 'Workspace', href: '/explore' }]),
   { label: 'Videos', href: '/videos' },
   { label: 'Case studies', href: '/case-studies' },
@@ -50,8 +58,8 @@ export const footerColumns = (isBusiness) => [
 ];
 
 export const legalLinks = [
-  { label: 'Privacy', href: '#' },
-  { label: 'Terms', href: '#' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
   { label: 'Security', href: '/#security' },
-  { label: 'Status', href: '#' },
+  { label: 'Status', href: '/status' },
 ];
