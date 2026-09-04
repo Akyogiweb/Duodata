@@ -6,7 +6,7 @@ const columns = [
   { icon: BarChart3, label: 'Dashboard', value: '$42M', color: '#1E5FEE' },
   { icon: Database, label: 'SQL / Warehouse', value: '$39M', color: '#0a0a0a' },
   { icon: FileSpreadsheet, label: 'Spreadsheet', value: '$41M', color: '#2B9EC4' },
-  { icon: Sparkles, label: 'AI / Agent', value: '?', color: '#4F7CF5' },
+  { icon: Sparkles, label: 'AI / Agent', value: '?', color: '#1E5FEE' },
 ];
 
 const MeaningProblem = () => {

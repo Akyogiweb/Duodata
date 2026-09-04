@@ -2,11 +2,11 @@ import React from 'react';
 import { GitCommit, Package } from 'lucide-react';
 
 const stages = [
-  { name: 'Draft', color: '#94a3b8' },
-  { name: 'Proposed', color: '#7FD1E8' },
-  { name: 'Approved', color: '#1E5FEE' },
-  { name: 'Implemented', color: '#0a0a0a' },
-  { name: 'Obsolete', color: '#64748b' },
+  { name: 'Draft', color: '#94a3b8', ink: false },
+  { name: 'Proposed', color: '#7FD1E8', ink: true },
+  { name: 'Approved', color: '#4F7CF5', ink: false },
+  { name: 'Implemented', color: '#1E5FEE', ink: false },
+  { name: 'Obsolete', color: '#64748b', ink: false },
 ];
 
 const Governance = () => (
@@ -32,8 +32,8 @@ const Governance = () => (
           {stages.map((s, i) => (
             <React.Fragment key={s.name}>
               <div
-                className="px-4 py-2 rounded-full text-[13px] font-semibold text-white shadow-sm"
-                style={{ background: s.color }}
+                className="px-4 py-2 rounded-full text-[13px] font-semibold shadow-sm"
+                style={{ background: s.color, color: s.ink ? '#0a0a0a' : '#fff' }}
               >
                 {s.name}
               </div>

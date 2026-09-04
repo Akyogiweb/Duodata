@@ -25,10 +25,10 @@ const TIMING = {
 };
 
 const SOURCE_POS = [
-  { x: 14, y: 86 },
-  { x: 38, y: 90 },
-  { x: 62, y: 86 },
-  { x: 86, y: 90 },
+  { x: 12, y: 56 },
+  { x: 88, y: 60 },
+  { x: 16, y: 70 },
+  { x: 84, y: 66 },
 ];
 
 export default function QuestionCycle({ experience }) {
@@ -66,22 +66,18 @@ export default function QuestionCycle({ experience }) {
   const drawing = phase === 'draw' || phase === 'hold';
 
   const startX = 50;
-  const startY = 22;
-  const dx = src.x - startX;
+  const startY = 34;
   const dy = src.y - startY;
-  const c1x = startX + dx * 0.18;
-  const c1y = startY + dy * 0.42;
-  const c2x = src.x - dx * 0.12;
-  const c2y = src.y - dy * 0.18;
-  const d = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${src.x} ${src.y}`;
+  const d = `M ${startX} ${startY} C ${startX} ${startY + dy * 0.58}, ${src.x} ${src.y - dy * 0.42}, ${src.x} ${src.y}`;
 
   const stroke = experience === 'technical' ? DUO_CYAN : DUO_BLUE;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[min(420px,55vh)] overflow-visible" aria-hidden>
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[min(560px,72vh)] overflow-visible" aria-hidden>
       <div
-        className="absolute left-1/2 top-[8%] z-10 w-[min(92vw,640px)] -translate-x-1/2 text-center transition-all duration-700"
+        className="absolute left-1/2 z-10 w-[min(92vw,640px)] -translate-x-1/2 text-center transition-all duration-700"
         style={{
+          top: 210,
           opacity: visible ? 1 : 0,
           transform: visible ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-10px)',
         }}
