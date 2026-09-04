@@ -3,20 +3,27 @@ import BrandMark from './BrandMark';
 import { DUO_BLUE, DUO_CYAN } from '../lib/brand';
 import { FEATURE_CONNECTIONS } from '../data/featureConnections';
 
-const TIMING = {
-  enter: 650,
-  draw: 1500,
-  hold: 2100,
-  exit: 700,
-  gap: 450,
-};
+const TIMING = { enter: 500, draw: 1400, hold: 2400, exit: 500, gap: 280 };
 
-const SOURCE_POS = [
-  { x: 11, y: 40 },
-  { x: 89, y: 42 },
-  { x: 14, y: 48 },
-  { x: 86, y: 46 },
+const IDLE = [
+  { x: 11, y: 58, slug: 'snowflake', color: '#29B5E8', label: 'Snowflake' },
+  { x: 28, y: 64, slug: 'databricks', color: '#FF3621', label: 'Databricks' },
+  { x: 72, y: 63, slug: 'dbt', color: '#FF694A', label: 'dbt' },
+  { x: 88, y: 57, slug: 'googlebigquery', color: '#4285F4', label: 'BigQuery' },
 ];
+
+const STAGES = [
+  { qx: 16, qy: 18, lx: 18, ly: 62 },
+  { qx: 82, qy: 16, lx: 84, ly: 60 },
+  { qx: 14, qy: 22, lx: 30, ly: 66 },
+  { qx: 84, qy: 20, lx: 70, ly: 64 },
+  { qx: 18, qy: 14, lx: 86, ly: 58 },
+];
+
+const curve = (s) => {
+  const midY = (s.qy + s.ly) / 2;
+  return `M ${s.qx} ${s.qy} C ${s.qx} ${midY}, ${s.lx} ${midY}, ${s.lx} ${s.ly}`;
+};
 
 export default function QuestionCycle({ experience }) {
   const questions = FEATURE_CONNECTIONS.map((pair) => ({
@@ -34,12 +41,7 @@ export default function QuestionCycle({ experience }) {
   }, [experience]);
 
   useEffect(() => {
-    const delays = {
-      enter: TIMING.enter,
-      draw: TIMING.draw,
-      hold: TIMING.hold,
-      exit: TIMING.exit,
-    };
+    const delays = { enter: TIMING.enter, draw: TIMING.draw, hold: TIMING.hold, exit: TIMING.exit };
     const t = setTimeout(() => {
       if (phase === 'exit') {
         setIdx((i) => (i + 1) % questions.length);
@@ -53,89 +55,81 @@ export default function QuestionCycle({ experience }) {
   }, [phase, questions.length]);
 
   const item = questions[idx];
-  const src = SOURCE_POS[idx % SOURCE_POS.length];
+  const stage = STAGES[idx % STAGES.length];
+  const d = curve(stage);
   const visible = phase !== 'exit';
   const drawing = phase === 'draw' || phase === 'hold';
-
-  const startX = 50;
-  const startY = 38;
-  const dir = src.x >= startX ? 1 : -1;
-  const dx = Math.abs(src.x - startX) * 0.5;
-  const d = `M ${startX} ${startY} C ${startX + dir * dx} ${startY}, ${src.x - dir * dx} ${src.y}, ${src.x} ${src.y}`;
-
   const stroke = experience === 'technical' ? DUO_CYAN : DUO_BLUE;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[min(560px,72vh)] overflow-visible opacity-60" aria-hidden>
-      <div
-        className="absolute left-1/2 z-10 w-[min(92vw,640px)] -translate-x-1/2 text-center transition-all duration-700"
-        style={{
-          top: 210,
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-10px)',
-        }}
-      >
-        <p
-          className={`inline-block rounded-full border px-5 py-2.5 text-[13px] font-medium tracking-tight shadow-lg backdrop-blur-md sm:text-[15px] ${
-            experience === 'technical'
-              ? 'border-white/15 bg-[#0c1220]/80 text-white'
-              : 'border-black/10 bg-white/85 text-slate-950'
-          }`}
-          style={{ fontFamily: 'var(--font-sans)' }}
+    <div className="hero-cycle" data-testid="home-question-cycle" aria-hidden={false}>
+      {IDLE.map((tile) => (
+        <div
+          key={tile.label}
+          className={`hero-idle-tile ${item.slug === tile.slug && drawing ? 'is-live' : ''}`}
+          style={{ left: `${tile.x}%`, top: `${tile.y}%` }}
         >
-          {item.q}
-        </p>
+          <span className="hero-idle-mark">
+            <BrandMark slug={tile.slug} color={tile.color} size={22} label={tile.label} />
+          </span>
+          <em>{tile.label}</em>
+        </div>
+      ))}
+
+      <div
+        className="hero-q-chip"
+        style={{
+          left: `${stage.qx}%`,
+          top: `${stage.qy}%`,
+          opacity: visible ? 1 : 0,
+          transform: `translate(-50%, -50%) translateY(${visible ? 0 : -8}px)`,
+        }}
+        data-testid="home-question-rail"
+      >
+        <i className="hero-q-dot" />
+        <span>{item.q}</span>
       </div>
 
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid meet"
-        fill="none"
-      >
+      <svg className="hero-cycle-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path
           d={d}
+          fill="none"
           stroke={stroke}
-          strokeWidth="0.55"
+          strokeWidth="0.35"
           strokeLinecap="round"
           pathLength="1"
           style={{
             strokeDasharray: 1,
             strokeDashoffset: drawing ? 0 : 1,
             opacity: visible ? 1 : 0,
-            transition: `stroke-dashoffset ${TIMING.draw}ms cubic-bezier(0.4,0,0.2,1), opacity 500ms ease`,
+            transition: `stroke-dashoffset ${TIMING.draw}ms cubic-bezier(0.4,0,0.2,1), opacity 400ms ease`,
           }}
         />
-        <circle
-          cx={src.x}
-          cy={src.y}
-          r="1.1"
-          fill={stroke}
-          style={{
-            opacity: drawing && visible ? 1 : 0,
-            transition: 'opacity 400ms ease',
-          }}
-        />
+        {drawing && visible ? (
+          <>
+            <circle r="0.7" fill={stroke}>
+              <animateMotion dur="2.8s" repeatCount="indefinite" path={d} />
+            </circle>
+            <circle r="0.5" fill="#ffffff" stroke={stroke} strokeWidth="0.18">
+              <animateMotion dur="3.4s" begin="-1.2s" repeatCount="indefinite" path={d} />
+            </circle>
+          </>
+        ) : null}
       </svg>
 
       <div
-        className="absolute z-10 transition-all duration-700"
+        className="hero-live-logo"
         style={{
-          left: `${src.x}%`,
-          top: `${src.y}%`,
-          transform: `translate(-50%, -50%) scale(${drawing && visible ? 1 : 0.86})`,
+          left: `${stage.lx}%`,
+          top: `${stage.ly}%`,
           opacity: drawing && visible ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${drawing && visible ? 1 : 0.9})`,
         }}
       >
-        <div
-          className={`flex h-12 w-12 items-center justify-center rounded-2xl border shadow-md ${
-            experience === 'technical'
-              ? 'border-white/10 bg-[#10182a]'
-              : 'border-black/[0.08] bg-white'
-          }`}
-        >
-          <BrandMark slug={item.slug} color={item.color} size={26} label={item.label} />
+        <div className="hero-live-mark">
+          <BrandMark slug={item.slug} color={item.color} size={28} label={item.label} />
         </div>
+        <em>{item.label}</em>
       </div>
     </div>
   );

@@ -68,6 +68,16 @@ const Nav = () => {
   const { isBusiness } = useExperience();
 
   const navLinks = primaryNavLinks(isBusiness);
+  const navLinks = [
+    { label: 'Product', href: '/#product', type: 'anchor' },
+    { label: 'Start', href: '/#start', type: 'anchor' },
+    { label: 'Topics', href: '/#experience', type: 'anchor' },
+    { label: isBusiness ? 'Journey' : 'Stack', href: isBusiness ? '/#journey' : '/#proposition', type: 'anchor' },
+    { label: 'Connection', href: '/#connection', type: 'anchor' },
+    ...(isBusiness ? [] : [{ label: 'Workspace', href: '/explore', type: 'route' }]),
+    { label: 'Videos', href: '/videos', type: 'route' },
+    { label: 'Case Studies', href: '/case-studies', type: 'route' },
+  ];
 
   const navigateToSection = (link) => {
     const sectionId = link.sectionId || parseSectionId(link.href);
