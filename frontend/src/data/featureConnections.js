@@ -14,6 +14,7 @@ export const FEATURE_CONNECTIONS = [
     technicalAnswer:
       'The same object compiles to a versioned YAML contract and a native Snowflake semantic view.',
     technicalSection: 'git',
+    atom: 'metric',
   },
   {
     id: 'ownership',
@@ -30,6 +31,7 @@ export const FEATURE_CONNECTIONS = [
     technicalAnswer:
       'Lifecycle, owners, and releases sit on the metric: draft → proposed → approved → implemented.',
     technicalSection: 'governance',
+    atom: 'metric',
   },
   {
     id: 'disagreement',
@@ -46,6 +48,7 @@ export const FEATURE_CONNECTIONS = [
     technicalAnswer:
       'Lineage traces the business name through models, sources, and the platforms that actually run it.',
     technicalSection: 'lineage',
+    atom: 'source',
   },
   {
     id: 'customer-count',
@@ -62,6 +65,24 @@ export const FEATURE_CONNECTIONS = [
     technicalAnswer:
       'Agents capture schema and deploy the governed object into the warehouse, BI, and AI — so drift is visible.',
     technicalSection: 'platforms',
+    atom: 'report',
+  },
+  {
+    id: 'segment',
+    conversationId: 'sales',
+    feature: 'Slices',
+    slug: 'databricks',
+    color: '#FF3621',
+    label: 'Databricks',
+    businessQuestion: 'For which customers is this number true?',
+    businessAnswer:
+      'The approved slices — segment, region, vintage — are the only lenses the business is allowed to use.',
+    businessSection: 'metric-detail',
+    technicalQuestion: 'Which dimensions compile into the metric view?',
+    technicalAnswer:
+      'Governed slices become native dimensions on the semantic object, not a second filter layer in BI.',
+    technicalSection: 'platforms',
+    atom: 'slice',
   },
 ];
 

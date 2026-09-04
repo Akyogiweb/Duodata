@@ -2,7 +2,7 @@ import { FEATURE_CONNECTIONS, GET_STARTED_STEPS, SITE_FAQS } from './featureConn
 
 describe('feature connections', () => {
   test('pairs every business question with a technical section', () => {
-    expect(FEATURE_CONNECTIONS).toHaveLength(4);
+    expect(FEATURE_CONNECTIONS.length).toBeGreaterThanOrEqual(4);
     FEATURE_CONNECTIONS.forEach((pair) => {
       expect(pair.businessQuestion).toBeTruthy();
       expect(pair.technicalQuestion).toBeTruthy();
@@ -24,5 +24,12 @@ describe('feature connections', () => {
     expect(SITE_FAQS.length).toBeGreaterThanOrEqual(4);
     expect(SITE_FAQS.some((item) => /get started/i.test(item.q))).toBe(true);
     expect(SITE_FAQS.some((item) => /switch/i.test(item.q) || /switch/i.test(item.a))).toBe(true);
+  });
+
+  test('every connection is tagged to a decision atom part', () => {
+    FEATURE_CONNECTIONS.forEach((pair) => {
+      expect(['metric', 'slice', 'report', 'source']).toContain(pair.atom);
+    });
+    expect(new Set(FEATURE_CONNECTIONS.map((p) => p.atom)).size).toBe(4);
   });
 });

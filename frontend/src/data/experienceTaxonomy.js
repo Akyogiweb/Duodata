@@ -1,6 +1,8 @@
 /**
  * Source of truth for landing experience sections.
  * Rows match the product table: Group, Sub Group, Category, Tool Feature, Purpose.
+ * pairId is the counterpart section in the other experience.
+ * atom is Metric | Slice | Report | Source on the Decision Atom.
  */
 export const EXPERIENCE_TAXONOMY = [
   {
@@ -11,6 +13,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Business meaning, definition, and goal',
     tools: 'Metric ontology — metrics, slices, reports, and sources',
     purpose: 'Explain conflicting definitions across teams.',
+    pairId: 'metric-ontology',
+    atom: 'metric',
   },
   {
     id: 'context-rot',
@@ -20,6 +24,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Context rot',
     tools: 'Governance platform',
     purpose: 'Explain how business context degrades over time.',
+    pairId: 'semantic-layer',
+    atom: 'report',
   },
   {
     id: 'context-slip',
@@ -29,6 +35,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Context slip',
     tools: 'Governance platform',
     purpose: 'Explain how small definition changes create downstream errors.',
+    pairId: 'data-lineage',
+    atom: 'source',
   },
   {
     id: 'metric-governance',
@@ -38,6 +46,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Metric governance',
     tools: 'Governance',
     purpose: 'Establish why metrics need ownership and controls.',
+    pairId: 'metric-ontology',
+    atom: 'metric',
   },
   {
     id: 'context-drift',
@@ -47,6 +57,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Context drift',
     tools: 'Value driver and governance',
     purpose: 'Explain how business context degrades over time.',
+    pairId: 'ai-reliability',
+    atom: 'slice',
   },
   {
     id: 'institutional-knowledge',
@@ -57,6 +69,8 @@ export const EXPERIENCE_TAXONOMY = [
     tools: 'Metric ontology',
     purpose:
       'Reduce the dependency on experienced employees. Document the organization’s knowledge beyond individuals.',
+    pairId: 'semantic-layer',
+    atom: 'report',
   },
   {
     id: 'ai-business-question',
@@ -66,6 +80,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'AI business question and context',
     tools: 'Value driver, lineage',
     purpose: 'Give AI the business question and the governed context it needs — tied to value drivers and lineage.',
+    pairId: 'ai-governance',
+    atom: 'source',
   },
   {
     id: 'metric-ontology',
@@ -75,6 +91,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Metric ontology',
     tools: 'Lightweight data modeling integration via Duo Data agents',
     purpose: 'Connect context quality to AI outcomes.',
+    pairId: 'business-meaning',
+    atom: 'metric',
   },
   {
     id: 'ai-governance',
@@ -84,6 +102,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'AI governance',
     tools: 'Governed business context for models and agents',
     purpose: 'Explain why AI needs governed business context.',
+    pairId: 'ai-business-question',
+    atom: 'source',
   },
   {
     id: 'semantic-layer',
@@ -93,6 +113,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Semantic layer',
     tools: 'Integration agents / layer',
     purpose: 'Explain the category and concept.',
+    pairId: 'context-rot',
+    atom: 'report',
   },
   {
     id: 'data-lineage',
@@ -102,6 +124,8 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'Data lineage',
     tools: 'Lineage and governance',
     purpose: 'Explain traceability and accountability.',
+    pairId: 'context-slip',
+    atom: 'source',
   },
   {
     id: 'ai-reliability',
@@ -111,11 +135,17 @@ export const EXPERIENCE_TAXONOMY = [
     category: 'AI reliability',
     tools: 'MCP, platform-native apps',
     purpose: 'Connect context quality to AI outcomes.',
+    pairId: 'context-drift',
+    atom: 'slice',
   },
 ];
 
 export const BUSINESS_TOPIC_ROWS = EXPERIENCE_TAXONOMY.filter((row) => row.experience === 'business');
 export const TECHNICAL_TOPIC_ROWS = EXPERIENCE_TAXONOMY.filter((row) => row.experience === 'technical');
+
+export const taxonomyById = (id) => EXPERIENCE_TAXONOMY.find((row) => row.id === id);
+
+export const pairOf = (row) => taxonomyById(row?.pairId);
 
 const GROUP_ANCHORS = {
   Purpose: 'purpose',

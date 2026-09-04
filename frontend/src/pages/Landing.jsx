@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
-import DuoArchitecture from '@/components/DuoArchitecture';
+import DecisionAtom from '@/components/DecisionAtom';
 import GetStarted from '@/components/GetStarted';
 import ExperienceTopics from '@/components/ExperienceTopics';
 import FeatureConnection from '@/components/FeatureConnection';
@@ -36,7 +36,7 @@ const Landing = () => {
       <LogoMarquee />
       <SalesProof />
       <Testimonials />
-      <DuoArchitecture />
+      <DecisionAtom />
       <GetStarted />
       <ExperienceTopics />
       <FeatureConnection />
