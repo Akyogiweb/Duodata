@@ -4,9 +4,9 @@ import useInView from '@/hooks/useInView';
 
 const columns = [
   { icon: BarChart3, label: 'Dashboard', value: '$42M', color: '#1E5FEE' },
-  { icon: Database, label: 'SQL / Warehouse', value: '$39M', color: '#0a0a0a' },
+  { icon: Database, label: 'Finance model', value: '$39M', color: '#0a0a0a' },
   { icon: FileSpreadsheet, label: 'Spreadsheet', value: '$41M', color: '#2B9EC4' },
-  { icon: Sparkles, label: 'AI / Agent', value: '?', color: '#1E5FEE' },
+  { icon: Sparkles, label: 'AI answer', value: '?', color: '#1E5FEE' },
 ];
 
 const MeaningProblem = () => {
@@ -15,25 +15,23 @@ const MeaningProblem = () => {
     <section id="meaning-problem" className="py-24 md:py-32 bg-white border-y border-black/5">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-14">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-slate-500 font-medium mb-3">The real problem</p>
+          <p className="page-eyebrow">The real problem</p>
           <h2 className="hero-headline text-[40px] md:text-[64px] text-slate-950 leading-[0.98]" data-testid="real-problem-heading">
-            From business definition to technical implementation with an integrated semantic foundation
+            Your teams don&apos;t disagree on the numbers.<br />
+            They disagree on what they <span style={{ color: '#1E5FEE' }}>mean.</span>
           </h2>
           <p className="mt-6 text-slate-600 text-[15px] leading-relaxed" data-testid="real-problem-subheading">
-            Connecting metrics, definitions, formulas, slices, reports, sources, ownership, lineage, and technical implementations in one governed system.
+            Every team has a version of the truth. Dashboards, models, spreadsheets, and AI each tell a slightly different story — and leadership is left guessing which one to act on.
           </p>
         </div>
 
-        {/* Divergence visualization */}
         <div className="relative mt-16" ref={vizRef}>
-          {/* Metric at top */}
           <div className="flex justify-center">
             <div className="px-6 py-3 rounded-2xl bg-slate-950 text-white text-[20px] font-semibold tracking-tight shadow-lg">
               &quot;EBITDA&quot;
             </div>
           </div>
 
-          {/* Connector SVG */}
           <svg className="w-full h-24 mt-2" viewBox="0 0 1200 100" preserveAspectRatio="none">
             {columns.map((c, i) => {
               const x = 150 + i * 300;
@@ -53,7 +51,6 @@ const MeaningProblem = () => {
             })}
           </svg>
 
-          {/* 4 columns */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {columns.map((c, i) => {
               const Icon = c.icon;

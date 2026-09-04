@@ -84,19 +84,19 @@ export const technicalFeatures = [
 export const businessUseCases = [
   {
     title: 'Product leaders',
-    body: 'See which metrics actually describe the product. Change the offering with numbers the rest of the company already trusts.',
+    body: 'Stop defending dashboard numbers in roadmap reviews. Know what the metric means before you change what customers experience.',
   },
   {
     title: 'Sales and customer teams',
-    body: 'Walk into a diverse set of accounts with one intelligent story — and turn post-purchase feedback into the next recommendation.',
+    body: 'Walk into every account with one story — not a different definition for finance, product, and the customer’s last QBR.',
   },
   {
     title: 'Operators and finance',
-    body: 'When direction changes, the meaning moves with it. Strategy is not a stale slide; it is the definition people ask questions against.',
+    body: 'When direction changes, debates stay about strategy — not whether the number on slide 14 is the same one in the model.',
   },
   {
     title: 'Executives using AI',
-    body: 'Ask about the business and get an answer grounded in meaning you already own — so AI moves the company the right way.',
+    body: 'Ask bold questions in the room without wondering if the answer is last quarter’s definition dressed up as insight.',
   },
 ];
 

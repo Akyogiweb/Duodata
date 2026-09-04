@@ -85,7 +85,7 @@ const Stage = ({ id }) => {
     return (
       <div className="stage-tenure">
         <div className="is-out">In someone’s head</div>
-        <div className="is-in">In the ontology</div>
+        <div className="is-in">In the organization</div>
       </div>
     );
   }
@@ -93,7 +93,7 @@ const Stage = ({ id }) => {
     return (
       <div className="stage-ask">
         <p>“What changed MOIC — and can I trust it?”</p>
-        <small>Value driver · Lineage · Owned definition</small>
+        <small>Named owner · Agreed definition · Board-ready answer</small>
       </div>
     );
   }
@@ -161,13 +161,19 @@ const TopicSection = ({ row, index }) => {
         </p>
         <h3 className="topic-section-title">{row.category}</h3>
         <p className="topic-section-purpose">{row.purpose}</p>
-        {row.tools ? (
+        {row.experience === 'business' && row.pain ? (
+          <p className="topic-section-pain">
+            <span className="topic-card-tools-label">What it costs</span>
+            {row.pain}
+          </p>
+        ) : null}
+        {row.experience === 'technical' && row.tools ? (
           <p className="topic-card-tools">
             <span className="topic-card-tools-label">Tool feature</span>
             {row.tools}
           </p>
         ) : null}
-        {pair ? (
+        {pair && row.experience !== 'business' ? (
           <button
             type="button"
             className="topic-pair-link"
@@ -192,10 +198,10 @@ const BusinessTopics = () => {
   return (
     <div>
       <header className="chapter-head">
-        <p>Business experience</p>
-        <h2>Seven rooms. One meaning.</h2>
+        <p>What leaders feel</p>
+        <h2>Seven pains. One root cause.</h2>
         <p className="chapter-lede">
-          Purpose, consistency, clarity, then AI — designed as a product, not a spreadsheet.
+          Misaligned meaning shows up everywhere — in meetings, in reports, in AI answers, and in the decisions that follow.
         </p>
       </header>
       <nav className="experience-topics-nav" aria-label="Business topics">

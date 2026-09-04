@@ -94,11 +94,11 @@ export const CTA = () => {
       <div className="cta-band mx-auto max-w-[1100px] px-8 py-16 md:px-16 md:py-20 text-center">
         <p className="text-[11px] tracking-[0.28em] uppercase font-medium mb-4 opacity-80">Next step</p>
         <h2 className="hero-headline text-[40px] md:text-[64px] text-white">
-          {isBusiness ? 'See your metrics on Duo in 45 minutes.' : 'Map Duo onto your stack in 45 minutes.'}
+          {isBusiness ? 'Stop arguing about the number. Start with one conversation.' : 'Map Duodata onto your stack in 45 minutes.'}
         </h2>
         <p className="mt-5 max-w-xl mx-auto text-[15px] leading-relaxed text-white/80">
           {isBusiness
-            ? 'Bring one number the business argues about. We will show definition, owner, and how it is implemented.'
+            ? 'Bring the metric your last three meetings couldn’t agree on. We’ll talk through what it costs the business — and what alignment looks like.'
             : 'Bring one metric and a platform. We will show ontology, Git, and a native semantic object.'}
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
