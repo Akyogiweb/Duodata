@@ -2,6 +2,8 @@ import React from 'react';
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
 import DecisionAtom from '@/components/DecisionAtom';
+import BusinessJourney from '@/components/BusinessJourney';
+import TechnicalProposition from '@/components/TechnicalProposition';
 import GetStarted from '@/components/GetStarted';
 import ExperienceTopics from '@/components/ExperienceTopics';
 import FeatureConnection from '@/components/FeatureConnection';
@@ -42,6 +44,7 @@ const Landing = () => {
       <FeatureConnection />
       {isBusiness ? (
         <>
+          <BusinessJourney />
           <MeaningProblem />
           <MetricDetail />
           <AISection />
@@ -50,6 +53,7 @@ const Landing = () => {
         </>
       ) : (
         <>
+          <TechnicalProposition />
           <Governance />
           <GitBridge />
           <PlatformIntegration />
